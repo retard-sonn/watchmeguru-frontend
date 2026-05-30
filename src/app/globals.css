@@ -1,26 +1,305 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════
+   WATCHMEGURU · EARTHY DESIGN SYSTEM
+   Paper textures · Hand-drawn warmth · Isometric worlds
+   ═══════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-parchment:       #F4EEDB;
+  --color-parchment-deep:  #EBE3C8;
+  --color-moss:            #7BA65B;
+  --color-moss-deep:       #5F8C3E;
+  --color-olive:           #94A84D;
+  --color-olive-deep:      #7A8E38;
+  --color-earthy:          #5B4636;
+  --color-earthy-light:    #7A6554;
+  --color-mustard:         #D9A441;
+  --color-mustard-deep:    #C08A2E;
+  --color-sky:             #78A6D8;
+  --color-sky-light:       #A8C8E8;
+  --color-cream:           #FDF9F0;
+  --color-ink:             #3D2E24;
+  --color-ink-light:       #6B5D52;
+  --color-ink-muted:       #9B8E84;
+
+  --font-heading:  var(--font-nunito);
+  --font-display:  var(--font-baloo);
+  --font-body:     var(--font-dm-sans);
+
+  --radius-card:   24px;
+  --radius-btn:    14px;
+  --radius-badge:  10px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --bg:           #F4EEDB;
+  --bg-alt:       #EBE3C8;
+  --ink:          #3D2E24;
+  --ink-2:        #6B5D52;
+  --ink-3:        #9B8E84;
+  --border:       rgba(91,70,54,0.1);
+  --border-s:     rgba(91,70,54,0.16);
+  --shadow-warm:  0 4px 24px rgba(91,70,54,0.08);
+  --shadow-card:  0 8px 32px rgba(91,70,54,0.06);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif; }
+  ::selection { background: #D9A441; color: #FDF9F0; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-alt); }
+  ::-webkit-scrollbar-thumb { background: var(--border-s); border-radius: 99px; }
+
+  h1, h2, h3, h4 { font-family: var(--font-heading); }
+  h1 { letter-spacing: -0.03em; line-height: 1.08; }
+  h2 { letter-spacing: -0.02em; line-height: 1.14; }
+  h3 { letter-spacing: -0.01em; line-height: 1.22; }
 }
+
+/* ─── Paper Texture Background ──────────────────────────── */
+.texture-bg {
+  position: relative;
+}
+.texture-bg::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── Hand-Drawn Card ──────────────────────────────────── */
+.card-earthy {
+  background: #FDF9F0;
+  border: 1.5px solid rgba(91,70,54,0.1);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 24px rgba(91,70,54,0.06);
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.card-earthy:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(91,70,54,0.1);
+}
+
+.card-terrain {
+  background: linear-gradient(145deg, #FDF9F0 0%, #F4EEDB 100%);
+  border: 1.5px solid rgba(91,70,54,0.08);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 20px rgba(91,70,54,0.05);
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.card-terrain:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(91,70,54,0.12);
+}
+
+/* ─── Buttons ──────────────────────────────────────────── */
+.btn-mustard {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, #D9A441 0%, #C08A2E 100%);
+  color: #FDF9F0;
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  padding: 14px 32px; border-radius: var(--radius-btn); border: none; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(217,164,65,0.3);
+}
+.btn-mustard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(217,164,65,0.4);
+}
+
+.btn-earthy {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: transparent;
+  color: var(--earthy);
+  font-family: var(--font-display); font-size: 16px; font-weight: 600;
+  padding: 14px 32px; border-radius: var(--radius-btn);
+  border: 1.5px solid rgba(91,70,54,0.2); cursor: pointer;
+  transition: all 0.25s; text-decoration: none;
+}
+.btn-earthy:hover { border-color: var(--earthy); background: rgba(91,70,54,0.04); }
+
+.btn-moss {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, #7BA65B 0%, #5F8C3E 100%);
+  color: #FDF9F0;
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  padding: 14px 32px; border-radius: var(--radius-btn); border: none; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(123,166,91,0.3);
+}
+.btn-moss:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(123,166,91,0.4);
+}
+
+/* ─── Animated Text ────────────────────────────────────── */
+.text-mustard-shimmer {
+  background: linear-gradient(110deg, #C08A2E 0%, #E8C65A 35%, #D9A441 65%, #A87020 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+.text-moss-glow {
+  color: var(--moss);
+  text-shadow: 0 0 20px rgba(123,166,91,0.25);
+}
+
+/* ─── Ornament divider ─────────────────────────────────── */
+.ornament-divider {
+  display: flex; align-items: center; gap: 16px; justify-content: center;
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: ""; height: 1px; width: 60px;
+  background: linear-gradient(90deg, transparent, var(--border-s), transparent);
+}
+.ornament-divider span {
+  font-size: 14px; color: var(--ink-3);
+}
+
+/* ─── Animations ──────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes float-med {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%      { transform: translateY(-8px) rotate(0.5deg); }
+  66%      { transform: translateY(4px) rotate(-0.5deg); }
+  100%     { transform: translateY(0px) rotate(0deg); }
+}
+@keyframes float-wide {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  25%      { transform: translate(10px, -14px) scale(1.02); }
+  50%      { transform: translate(-6px, 8px) scale(0.98); }
+  75%      { transform: translate(14px, 4px) scale(1.01); }
+  100%     { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes drift {
+  0%, 100% { transform: translateX(0px); }
+  50%       { transform: translateX(8px); }
+}
+@keyframes pulse-warm {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.03); }
+}
+@keyframes grow-shrink {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%       { transform: rotate(3deg); }
+}
+@keyframes sun-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes vine-grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes badge-pop {
+  0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+  60%  { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes cloud-drift {
+  0%   { transform: translateX(-20%); opacity: 0.5; }
+  50%  { transform: translateX(10%); opacity: 0.8; }
+  100% { transform: translateX(-20%); opacity: 0.5; }
+}
+@keyframes terrain-rise {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.anim-float-slow { animation: float-slow 6s ease-in-out infinite; }
+.anim-float-med  { animation: float-med 4s ease-in-out infinite; }
+.anim-float-wide { animation: float-wide 8s ease-in-out infinite; }
+.anim-drift      { animation: drift 5s ease-in-out infinite; }
+.anim-pulse     { animation: pulse-warm 3s ease-in-out infinite; }
+.anim-grow       { animation: grow-shrink 4s ease-in-out infinite; }
+.anim-leaf       { animation: leaf-sway 3s ease-in-out infinite; }
+.anim-cloud      { animation: cloud-drift 12s ease-in-out infinite; }
+.anim-fadeUp     { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-fadeIn     { animation: fadeIn 0.6s ease forwards; }
+.anim-marquee    { animation: marquee 40s linear infinite; }
+
+/* ─── Staggered animation delays ──────────────────────── */
+.d1 { opacity: 0; animation-delay: 0.06s; }
+.d2 { opacity: 0; animation-delay: 0.14s; }
+.d3 { opacity: 0; animation-delay: 0.24s; }
+.d4 { opacity: 0; animation-delay: 0.38s; }
+.d5 { opacity: 0; animation-delay: 0.52s; }
+.d6 { opacity: 0; animation-delay: 0.68s; }
+.d7 { opacity: 0; animation-delay: 0.86s; }
+
+/* ─── Card hover drawing effect ──────────────────────── */
+.draw-border {
+  position: relative;
+}
+.draw-border::after {
+  content: "";
+  position: absolute; inset: -2px; border-radius: inherit;
+  border: 2px solid transparent;
+  transition: border-color 0.4s ease;
+  pointer-events: none;
+}
+.draw-border:hover::after {
+  border-color: var(--moss);
+}
+
+/* ─── Section separator ───────────────────────────────── */
+.section-wave {
+  position: relative;
+}
+.section-wave::before {
+  content: "";
+  position: absolute; top: -1px; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to bottom, transparent, #F4EEDB 80%);
+  pointer-events: none; z-index: 2;
+}
+
+/* ─── Clerk Overrides ─────────────────────────────────── */
+.cl-card {
+  box-shadow: 0 8px 40px rgba(91,70,54,0.1) !important;
+  border: 1px solid rgba(91,70,54,0.08) !important;
+  border-radius: 20px !important;
+}
+.cl-formButtonPrimary {
+  background: linear-gradient(135deg, #D9A441, #C08A2E) !important;
+  font-weight: 700 !important;
+}
+.cl-footerActionLink { color: #7BA65B !important; font-weight: 600 !important; }
