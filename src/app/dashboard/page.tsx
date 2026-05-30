@@ -148,10 +148,6 @@ export default function DashboardPage() {
   const completeTask = useCompleteTask();
 
   // Check both backend AND localStorage for setup status
-  const backendHasSetup = profile?.setup_complete === true;
-  const savedProfile = !backendHasSetup ? getSavedProfile() : null;
-  const hasSetup = backendHasSetup || (savedProfile?.setup_complete === true);
-
   const scheduleLocked = profile?.schedule_locked ?? savedProfile?.schedule_locked ?? false;
   const studentName = user?.firstName || profile?.name || (savedProfile?.name as string) || "Student";
   const dayStreak = profile?.day_streak || 0;
