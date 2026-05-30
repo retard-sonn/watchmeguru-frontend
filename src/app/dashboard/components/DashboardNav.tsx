@@ -68,7 +68,7 @@ export default function DashboardNav({ onSetup, onUnlock, hasSetup, scheduleLock
             <span className="hidden md:block text-[13px] font-semibold" style={{ color: "var(--ink-light)" }}>
               {user?.firstName || "Student"}
             </span>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           </div>
         </div>
       </div>

@@ -148,7 +148,7 @@ export default function IntegrationsDrawer({ whatsappNumber, discordId, telegram
                 )}
                 <button
                   onClick={() => save.mutate()}
-                  disabled={save.isPending || samePhone}
+                  disabled={save.isPending || !!samePhone}
                   className="btn-moss w-full text-[15px] py-3 disabled:opacity-50"
                 >
                   {save.isPending ? "Saving..." : saved ? "✓ Saved" : "Save & Activate"}
