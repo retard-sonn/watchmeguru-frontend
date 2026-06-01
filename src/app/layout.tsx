@@ -85,6 +85,8 @@ const clerkAppearance = {
 };
 
 import Providers from "./providers";
+import LenisProvider from "@/components/LenisProvider";
+import CustomCursor from "@/components/CustomCursor";
 
 export default function RootLayout({
   children,
@@ -102,7 +104,10 @@ export default function RootLayout({
       <html lang="en" className={`${nunito.variable} ${baloo.variable} ${dmSans.variable} ${manrope.variable} h-full`}>
         <body className="min-h-full overflow-x-hidden" style={{ fontFamily: "var(--font-dm-sans), -apple-system, BlinkMacSystemFont, sans-serif" }}>
           <Providers>
-            {children}
+            <LenisProvider>
+              {children}
+            </LenisProvider>
+            <CustomCursor />
           </Providers>
         </body>
       </html>

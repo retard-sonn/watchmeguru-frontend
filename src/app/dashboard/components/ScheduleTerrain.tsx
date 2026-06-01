@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import EmptyBiome from "@/components/illustrations/EmptyBiome";
 import PlatformSelector from "./PlatformSelector";
+import PomodoroTimer from "./PomodoroTimer";
+import { useXPPopup } from "./XPPopup";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -82,6 +84,8 @@ export default function ScheduleTerrain({ blocks, isLoading, isRest, totalHours,
   const [activeBlock, setActiveBlock] = useState<number | null>(null);
   const [showPlatformSelector, setShowPlatformSelector] = useState(false);
   const [pendingBlockIndex, setPendingBlockIndex] = useState<number | null>(null);
+  const [activePomodoroIndex, setActivePomodoroIndex] = useState<number | null>(null);
+  const { triggerXP } = useXPPopup();
 
   const platforms = connectedPlatforms.filter(Boolean);
 
@@ -145,26 +149,48 @@ export default function ScheduleTerrain({ blocks, isLoading, isRest, totalHours,
 
   if (!blocks || !blocks.length || isRest) {
     return (
-      <section className="py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="card-terrain p-10 flex flex-col items-center text-center">
-            <div className="mb-4"><EmptyBiome /></div>
-            <h3 className="text-[16px] font-bold mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-              {isRest ? "Rest Day" : "No schedule yet"}
-            </h3>
-            <p className="text-[13px] font-medium" style={{ color: "var(--ink-light)" }}>
-              {isRest ? "Enjoy your recovery day. Growth happens during rest too." : "Run the Setup Wizard to generate your AI-powered study plan."}
-            </p>
-          </div>
+      <section className="py-3">
+        <div className="card-terrain p-6 flex flex-col items-center text-center">
+          <motion.div
+            className="mb-3"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            {isRest ? (
+              <span className="text-[44px]">🌴</span>
+            ) : (
+              <div className="mb-1"><EmptyBiome /></div>
+            )}
+          </motion.div>
+          <h3 className="text-[16px] font-extrabold mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
+            {isRest ? "Rest Day 🌿" : "No schedule yet"}
+          </h3>
+          <p className="text-[13px] font-medium max-w-xs" style={{ color: "var(--ink-light)" }}>
+            {isRest
+              ? "Your brain consolidates learning during rest. Come back refreshed tomorrow."
+              : "Run the Setup Wizard to generate your AI-powered study plan."}
+          </p>
+          {isRest && (
+            <motion.div
+              className="mt-3 flex items-center gap-2 px-4 py-2 rounded-full"
+              style={{ background: "rgba(123,166,91,0.08)" }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="text-[12px] font-semibold" style={{ color: "var(--moss)" }}>
+                Recovery builds strength 💪
+              </span>
+            </motion.div>
+          )}
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-6">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="card-terrain p-6">
+    <section className="py-3">
+      <div className="card-terrain p-5">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-[18px] font-bold" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
               Your Study Terrain
@@ -255,7 +281,21 @@ export default function ScheduleTerrain({ blocks, isLoading, isRest, totalHours,
                         Done
                       </span>
                     ) : isActive && !isNowBlock ? (
-                      <SessionTimer />
+                      <div className="flex items-center gap-3">
+                        {/* Toggle to show/hide Pomodoro */}
+                        <button
+                          onClick={() => setActivePomodoroIndex(activePomodoroIndex === i ? null : i)}
+                          className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all"
+                          style={{
+                            color: activePomodoroIndex === i ? "#58CC02" : "var(--moss)",
+                            background: activePomodoroIndex === i ? "rgba(88,204,2,0.1)" : "rgba(123,166,91,0.06)",
+                            border: `1px solid ${activePomodoroIndex === i ? "rgba(88,204,2,0.3)" : "rgba(123,166,91,0.15)"}`,
+                          }}
+                        >
+                          {activePomodoroIndex === i ? "⏱ Hide Timer" : "⏱ Focus Timer"}
+                        </button>
+                        <SessionTimer />
+                      </div>
                     ) : isInProgress ? (
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full anim-pulse" style={{ background: isNowBlock ? "#D9A441" : "#7BA65B" }} />
@@ -277,7 +317,28 @@ export default function ScheduleTerrain({ blocks, isLoading, isRest, totalHours,
               );
             })}
           </div>
-        </div>
+
+          {/* Expanded Pomodoro Timer for active block */}
+          {activePomodoroIndex !== null && blocks[activePomodoroIndex] && (
+            <motion.div
+              className="mt-5 p-4 rounded-2xl flex justify-center"
+              style={{ background: "rgba(88,204,2,0.03)", border: "1px solid rgba(88,204,2,0.1)" }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <PomodoroTimer
+                blockLabel={blocks[activePomodoroIndex].label}
+                blockHours={blocks[activePomodoroIndex].hours || 1}
+                onXPEarned={(amount) => triggerXP(amount, "Pomodoro")}
+                onComplete={() => {
+                  queryClient.invalidateQueries({ queryKey: ["studentProfile"] });
+                }}
+                autoStart
+              />
+            </motion.div>
+          )}
       </div>
 
       <PlatformSelector

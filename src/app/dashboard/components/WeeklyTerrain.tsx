@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import StudyTerrain from "@/components/illustrations/StudyTerrain";
 
 interface DayActivity {
@@ -19,14 +19,10 @@ const DAY_LABELS_FULL: Record<string, string> = { Mon: "Mon", Tue: "Tue", Wed: "
 export default function WeeklyTerrain({ days, isLoading }: Props) {
   if (isLoading) {
     return (
-      <section className="py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="card-terrain p-6 text-center">
-            <div className="w-8 h-8 mx-auto mb-3 rounded-full border-2 border-moss border-t-transparent animate-spin" />
-            <p className="text-[13px] font-medium" style={{ color: "var(--ink-muted)" }}>Loading activity...</p>
-          </div>
-        </div>
-      </section>
+      <div className="card-terrain p-5 text-center">
+        <div className="w-7 h-7 mx-auto mb-2 rounded-full border-2 border-moss border-t-transparent animate-spin" />
+        <p className="text-[12px] font-medium" style={{ color: "var(--ink-muted)" }}>Loading...</p>
+      </div>
     );
   }
 
@@ -35,10 +31,8 @@ export default function WeeklyTerrain({ days, isLoading }: Props) {
   const totalTasks = days.reduce((s, d) => s + d.tasks, 0);
 
   return (
-    <section className="py-6">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="card-terrain p-6">
-          <h2 className="text-[18px] font-bold mb-6" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
+    <div className="card-terrain p-5">
+      <h2 className="text-[15px] font-extrabold mb-4" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
             This Week&apos;s Growth
           </h2>
 
@@ -81,9 +75,7 @@ export default function WeeklyTerrain({ days, isLoading }: Props) {
                 Avg / Day
               </p>
             </div>
-          </div>
-        </div>
       </div>
-    </section>
+    </div>
   );
 }

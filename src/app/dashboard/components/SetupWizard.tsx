@@ -1,401 +1,255 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
-import { GraduationCap, Atom, Calendar, Sword, Scale, Sprout, Sparkles, TriangleAlert, ArrowLeft, ArrowRight } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap";
+import { ArrowRight, Check, Moon, Sun, Zap, Flame, Search, Plus, X } from "lucide-react";
+import { COUNTRIES, searchCountries } from "@/lib/countries";
 
-interface SetupWizardProps {
-  onComplete: () => void;
-  onDismiss: () => void;
-  getToken: () => Promise<string | null>;
-}
+interface Props { onComplete: () => void; onDismiss: () => void; getToken: () => Promise<string | null>; }
 
-const MODES = [
-  { id: "strict", title: "Strict", desc: "Daily check-ins. Miss 3 days — parent gets full report. No exceptions.", Icon: Sword, color: "#DC2626", bg: "rgba(220,38,38,0.04)" },
-  { id: "moderate", title: "Moderate", desc: "Firm but fair. Warnings before escalation. Weekly parent reports.", Icon: Scale, color: "#D9A441", bg: "rgba(217,164,65,0.06)" },
-  { id: "own_pace", title: "Own Pace", desc: "Supportive mentor only. No parent alerts. For the self-disciplined.", Icon: Sprout, color: "#7BA65B", bg: "rgba(123,166,91,0.06)" },
-] as const;
+const IDENTITIES = [
+  { id:"morning", title:"Morning Warrior", icon:<Sun size={28}/>, color:"#D9A441" },
+  { id:"night", title:"Night Owl", icon:<Moon size={28}/>, color:"#78A6D8" },
+  { id:"flexible", title:"Flexible Learner", icon:<Zap size={28}/>, color:"#58CC02" },
+  { id:"grinder", title:"Disciplined Grinder", icon:<Flame size={28}/>, color:"#FF7A00" },
+];
 
-const PRESET_SUBJECTS = ["Physics", "Chemistry", "Math", "Biology", "History", "Geography", "Polity", "Economics", "Aptitude", "English"];
+const PRESET_SUBJECTS = [
+  { id:"physics", label:"Physics", icon:"💎", color:"#0F2167" },
+  { id:"chemistry", label:"Chemistry", icon:"🧪", color:"#7BA65B" },
+  { id:"maths", label:"Mathematics", icon:"🔢", color:"#DC2626" },
+  { id:"biology", label:"Biology", icon:"🌿", color:"#58CC02" },
+  { id:"history", label:"History", icon:"📜", color:"#D9A441" },
+  { id:"english", label:"English", icon:"✍️", color:"#1CB0F6" },
+  { id:"geography", label:"Geography", icon:"🌍", color:"#CE82FF" },
+  { id:"economics", label:"Economics", icon:"📊", color:"#FF7A00" },
+  { id:"cs", label:"Computer Science", icon:"💻", color:"#0F2167" },
+  { id:"business", label:"Business Studies", icon:"💼", color:"#5B4636" },
+  { id:"psychology", label:"Psychology", icon:"🧠", color:"#CE82FF" },
+  { id:"sociology", label:"Sociology", icon:"👥", color:"#78A6D8" },
+];
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-function normalizePhone(phone: string): string {
-  return phone.replace(/[\s\+\-\(\)]/g, "").replace(/^91/, "");
-}
-
-export default function SetupWizard({ onComplete, onDismiss, getToken }: SetupWizardProps) {
-  const [step, setStep] = useState(1);
-  const [examType, setExamType] = useState("");
+export default function SetupWizard({ onComplete, onDismiss, getToken }: Props) {
+  // Step 0: Country, Step 1: Mission, Step 2: Mentor, Step 3: Identity, Step 4: Subjects, Step 5: Review
+  const [step, setStep] = useState(0);
+  const [country, setCountry] = useState("IN");
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+  const [mission, setMission] = useState("");
+  const [customMission, setCustomMission] = useState("");
   const [examDate, setExamDate] = useState("");
-  const [focusSubjects, setFocusSubjects] = useState<string[]>([]);
-  const [customSubject, setCustomSubject] = useState("");
-  const [studentPhone, setStudentPhone] = useState("");
-  const [parentPhone, setParentPhone] = useState("");
-  const [mode, setMode] = useState<"strict" | "moderate" | "own_pace" | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [loaded, setLoaded] = useState(false);
-  const [generatingSchedule, setGeneratingSchedule] = useState(false);
-  const [userPrompt, setUserPrompt] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [dialCode, setDialCode] = useState("+91");
+  const [identity, setIdentity] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [customSubjects, setCustomSubjects] = useState<string[]>([]);
+  const [customSubInput, setCustomSubInput] = useState("");
+  const [mode] = useState("moderate");
+  const [submitting, setSubmitting] = useState(false);
+  const [genStep, setGenStep] = useState(0);
 
-  // Load saved data from localStorage on mount
+  const selectedCountry = COUNTRIES.find(c=>c.code===country) || COUNTRIES[0];
+  const exams = selectedCountry.exams;
+  const filteredCountries = searchCountries(countrySearch);
+
+  // Load saved data
   useEffect(() => {
-    if (loaded) return;
     try {
       const raw = localStorage.getItem("wmg_profile");
-      if (!raw) { setLoaded(true); return; }
-      const saved = JSON.parse(raw);
-      if (saved.exam_type) setExamType(saved.exam_type);
-      if (saved.exam_date) setExamDate(saved.exam_date);
-      if (saved.focus_subjects) {
-        const subjects = typeof saved.focus_subjects === "string"
-          ? (saved.focus_subjects as string).split(",").map((s: string) => s.trim()).filter(Boolean)
-          : [];
-        setFocusSubjects(subjects);
-      }
-      if (saved.channel_handle) setStudentPhone(saved.channel_handle);
-      if (saved.guardian_contact) setParentPhone(saved.guardian_contact);
-      if (saved.mode && ["strict", "moderate", "own_pace"].includes(saved.mode)) {
-        setMode(saved.mode);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.country) { setCountry(saved.country); const c = COUNTRIES.find(x=>x.code===saved.country); if(c)setDialCode(c.dial); }
+        if (saved.exam_type) setMission(saved.exam_type);
+        if (saved.exam_date) setExamDate(saved.exam_date);
+        if (saved.channel_handle) setWhatsapp(saved.channel_handle);
       }
     } catch {}
-    setLoaded(true);
-  }, [loaded]);
-
-  const stepsCount = 4;
-
-  const samePhoneError = normalizePhone(studentPhone) === normalizePhone(parentPhone) && studentPhone.trim() && parentPhone.trim();
-
-  const step1Valid = examType.trim() && examDate.trim();
-  const step2Valid = studentPhone.trim() && parentPhone.trim() && !samePhoneError;
-  const step3Valid = mode !== null;
-  // Step 4 is always valid (review page)
-
-  const nextDisabled =
-    (step === 1 && !step1Valid) ||
-    (step === 2 && !step2Valid) ||
-    (step === 3 && !step3Valid);
-
-  const inputClass = "w-full px-4 py-3.5 rounded-[14px] border text-[14px] outline-none transition-all";
-  const inputStyle: React.CSSProperties = { borderColor: "rgba(91,70,54,0.12)", background: "#F4EEDB", color: "var(--earthy)" };
+  }, []);
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-    setError("");
-    setGeneratingSchedule(true);
-    
-    let generatedSchedule = null;
+    setSubmitting(true); setGenStep(1);
+    let schedule = null;
     const token = await getToken();
-    
-    // First, call AI to generate schedule
     try {
-      const aiRes = await fetch(`${API_BASE}/api/v1/ai/generate-schedule`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({
-          exam_type: examType,
-          focus_subjects: focusSubjects.length > 0 ? focusSubjects.join(", ") : null,
-          user_prompt: userPrompt || "Balanced schedule with regular breaks",
-        }),
+      const r = await fetch(`${API_BASE}/api/v1/generate-schedule`, {
+        method:"POST", headers:{"Content-Type":"application/json", ...(token?{Authorization:`Bearer ${token}`}:{})},
+        body:JSON.stringify({ exam_type:mission||customMission, focus_subjects:[...selectedSubjects,...customSubjects].join(", "), user_prompt:`Identity: ${identity}` }),
       });
-      if (aiRes.ok) {
-        const aiData = await aiRes.json();
-        if (aiData.success && aiData.schedule) {
-          generatedSchedule = aiData.schedule;
-        }
-      } else {
-        console.warn("AI schedule generation returned non-ok status:", aiRes.status);
-      }
-    } catch (e) {
-      console.warn("Could not generate AI schedule:", e);
-    }
-    
-    setGeneratingSchedule(false);
-    
-    const profileData = {
-      exam_type: examType,
-      exam_date: examDate || null,
-      focus_subjects: focusSubjects.length > 0 ? focusSubjects.join(", ") : null,
-      mode,
-      guardian_contact: parentPhone || null,
-      preferred_channel: "whatsapp" as const,
-      channel_handle: studentPhone || null,
-      schedule_locked: mode === "strict",
-      setup_complete: true,
-      schedule_data: generatedSchedule,
+      if (r.ok) { const d = await r.json(); if (d.success) schedule = d.schedule; }
+    } catch {}
+    setGenStep(2);
+    const profile = {
+      country, exam_type:mission||customMission, exam_date:examDate||null,
+      focus_subjects:[...selectedSubjects,...customSubjects].join(", "),
+      mode, preferred_channel:"whatsapp", channel_handle:whatsapp||null,
+      schedule_locked:false, setup_complete:true, schedule_data:schedule,
     };
-    
-    localStorage.setItem("wmg_profile", JSON.stringify(profileData));
-    
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/onboarding/setup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify(profileData),
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        setError(errData.detail || "Setup failed on the server.");
-        setIsSubmitting(false);
-        return;
-      }
-    } catch (err) {
-      console.warn("Backend offline — profile saved locally.");
-    }
-    
-    setIsSubmitting(false);
-    onComplete();
+    localStorage.setItem("wmg_profile", JSON.stringify(profile));
+    try { await fetch(`${API_BASE}/api/v1/onboarding/setup`, { method:"POST", headers:{"Content-Type":"application/json", ...(token?{Authorization:`Bearer ${token}`}:{})}, body:JSON.stringify(profile) }); } catch {}
+    setGenStep(3);
+    setTimeout(() => { setSubmitting(false); onComplete(); }, 2000);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
-      style={{ background: "rgba(61,46,36,0.45)", backdropFilter: "blur(18px)" }}>
-      <motion.div initial={{ opacity: 0, scale: 0.96, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl flex flex-col"
-        style={{ maxHeight: "93vh", background: "#FDF9F0" }}>
+    <div className="fixed inset-0 z-[100] flex flex-col overflow-hidden" style={{ background: "#F4EEDB" }}>
+      {/* Ambient bg */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[10%] w-96 h-96 rounded-full blur-3xl opacity-[0.06]" style={{ background: "radial-gradient(circle, #7BA65B 0%, transparent 70%)" }} />
+        <div className="absolute bottom-[-10%] right-[5%] w-80 h-80 rounded-full blur-3xl opacity-[0.05]" style={{ background: "radial-gradient(circle, #D9A441 0%, transparent 70%)" }} />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+      </div>
 
-        {/* Header */}
-        <div className="px-8 py-5 flex-shrink-0" style={{ background: "linear-gradient(165deg, #3D2E24 0%, #5B4636 60%, #7BA65B 100%)" }}>
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[18px] font-extrabold tracking-tight" style={{ color: "#FDF9F0", fontFamily: "var(--font-baloo)" }}>
-              WatchMe<span style={{ color: "var(--mustard)" }}>Guru</span>
-            </span>
-            <div className="flex items-center gap-3">
-              <span className="text-[12px] font-bold px-3 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.1)", color: "rgba(253,249,240,0.8)" }}>
-                Step {step} of {stepsCount}
-              </span>
-              <button onClick={onDismiss} className="w-7 h-7 rounded-full flex items-center justify-center text-[18px] hover:bg-white/10"
-                style={{ color: "rgba(253,249,240,0.5)" }}>×</button>
+      {/* Top bar */}
+      <div className="relative z-10 flex items-center justify-between px-6 py-4">
+        <span className="text-[16px] font-extrabold" style={{ color:"#3D2E24", fontFamily:"var(--font-baloo)" }}>WatchMe<span style={{color:"#7BA65B"}}>Guru</span><span className="text-[11px] font-medium ml-0.5" style={{color:"#9B8E84"}}>.io</span></span>
+        <button onClick={onDismiss} className="text-[13px] font-bold px-4 py-2 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#9B8E84"}}>Skip for now</button>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 pb-6">
+        <AnimatePresence mode="wait">
+          {submitting ? (
+            <motion.div key="gen" initial={{opacity:0}} animate={{opacity:1}} className="flex flex-col items-center">
+              <span className="text-[64px] mb-4">🌱</span>
+              <h2 className="text-[24px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>
+                {genStep===1?"Creating your mentor...":genStep===2?"Planting your ecosystem...":"Your world is ready!"}
+              </h2>
+              <div className="flex gap-3 mt-4">{[1,2,3].map(i=>(<motion.div key={i} className="w-3 h-3 rounded-full" style={{background:i<=genStep?"#58CC02":"rgba(0,0,0,0.06)"}} animate={i===genStep?{scale:[1,1.4,1]}:{}} transition={{repeat:Infinity,duration:1}}/>))}</div>
+            </motion.div>
+          ) : (
+          <>
+          {/* STEP 0: Country */}
+          {step===0&&<motion.div key="s0" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-md">
+            <h1 className="text-[28px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Where are you from?</h1>
+            <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>This helps us show relevant exams and set up your experience.</p>
+            <div className="relative">
+              <button onClick={()=>setCountryOpen(!countryOpen)} className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl border text-[15px] font-semibold" style={{borderColor:"rgba(0,0,0,0.1)",background:"#FDF9F0"}}>
+                <span className="text-[24px]">{selectedCountry.dial==="+91"?"🇮🇳":selectedCountry.dial==="+1"?"🇺🇸":selectedCountry.dial==="+44"?"🇬🇧":"🌍"}</span>
+                {selectedCountry.name} <span className="text-[#9B8E84] ml-auto">{selectedCountry.dial}</span>
+              </button>
+              {countryOpen&&<div className="absolute top-full mt-2 w-full rounded-2xl border shadow-xl z-50 max-h-60 overflow-y-auto" style={{background:"#FDF9F0",borderColor:"rgba(0,0,0,0.08)"}}>
+                <div className="sticky top-0 p-3 border-b" style={{background:"#FDF9F0",borderColor:"rgba(0,0,0,0.04)"}}>
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{background:"#F4EEDB"}}><Search size={14} style={{color:"#9B8E84"}}/><input autoFocus placeholder="Search country..." value={countrySearch} onChange={e=>setCountrySearch(e.target.value)} className="bg-transparent outline-none text-[13px] w-full" style={{color:"#3D2E24"}}/></div>
+                </div>
+                {filteredCountries.map(c=><button key={c.code} onClick={()=>{setCountry(c.code);setDialCode(c.dial);setCountryOpen(false);setCountrySearch("")}} className="w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-[rgba(0,0,0,0.02)] text-[14px] font-medium" style={{color:"#3D2E24"}}>{c.dial==="+91"?"🇮🇳":c.dial==="+1"?"🇺🇸":c.dial==="+44"?"🇬🇧":"🌍"} {c.name} <span className="ml-auto text-[#9B8E84]">{c.dial}</span></button>)}
+              </div>}
             </div>
-          </div>
-          <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
-            <motion.div className="h-full rounded-full" style={{ background: "var(--mustard)" }}
-              animate={{ width: `${(step / stepsCount) * 100}%` }} transition={{ duration: 0.4 }} />
-          </div>
-        </div>
+            <button onClick={()=>setStep(1)} className="btn-moss w-full mt-6 text-[15px] py-3">Continue <ArrowRight size={16}/></button>
+          </motion.div>}
 
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto">
-          <AnimatePresence mode="wait">
+          {/* STEP 1: Mission (country-aware) */}
+          {step===1&&<motion.div key="s1" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-3xl">
+            <h2 className="text-[26px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What are we helping you become?</h2>
+            <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>Choose your mission — or create your own.</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto mb-4">
+              {exams.map(m=><motion.div key={m.id} onClick={()=>{setMission(m.id);setStep(2)}} className="cursor-pointer p-4 sm:p-5 rounded-3xl text-center border-2 transition-all relative overflow-hidden group" style={{background:"#FDF9F0",borderColor:mission===m.id?m.color:"rgba(0,0,0,0.05)",boxShadow:mission===m.id?`0 0 24px ${m.color}20`:"0 2px 12px rgba(0,0,0,0.03)"}} whileHover={{scale:1.02,y:-2}}>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{background:`radial-gradient(circle at center, ${m.color}08 0%, transparent 70%)`}}/>
+                <span className="text-[36px] block mb-2 relative z-10">{m.emoji}</span>
+                <h3 className="text-[15px] font-extrabold relative z-10" style={{color:mission===m.id?m.color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>{m.title}</h3>
+              </motion.div>)}
+            </div>
+            {/* Custom goal */}
+            <div className="max-w-xs mx-auto">
+              <div className="flex gap-2">
+                <input placeholder="Or type your own goal..." value={customMission} onChange={e=>setCustomMission(e.target.value)}
+                  className="flex-1 px-4 py-3 rounded-xl border text-[13px] outline-none" style={{borderColor:"rgba(0,0,0,0.08)",background:"#FDF9F0"}}/>
+                <button onClick={()=>{if(customMission.trim()){setMission("");setStep(2)}}} disabled={!customMission.trim()}
+                  className="btn-moss text-[13px] py-3 px-4 disabled:opacity-40"><ArrowRight size={16}/></button>
+              </div>
+            </div>
+            <div className="max-w-xs mx-auto mt-4">
+              <label className="text-[11px] font-bold uppercase tracking-widest block mb-2 text-center" style={{color:"#9B8E84"}}>Target Date (optional)</label>
+              <input type="date" value={examDate} onChange={e=>setExamDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border text-[14px] outline-none text-center" style={{borderColor:"rgba(0,0,0,0.08)",background:"#FDF9F0"}}/>
+            </div>
+          </motion.div>}
 
-            {/* ═══ STEP 1 — Your Mission ═══ */}
-            {step === 1 && (
-              <motion.div key="s1" className="p-8" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="text-[24px] font-extrabold tracking-tight mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-                  Your Mission
-                </h2>
-                <p className="text-[14px] mb-7" style={{ color: "var(--ink-light)" }}>What exam are you preparing for?</p>
-                <div className="space-y-5">
-                  <div>
-                    <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>Target Exam</label>
-                    <input type="text" placeholder="e.g. JEE Advanced, NEET, UPSC, CAT, NDA…" value={examType}
-                      onChange={(e) => setExamType(e.target.value)} className={inputClass} style={inputStyle} />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>Exam Date</label>
-                    <input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} className={inputClass} style={inputStyle} />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>Subjects</label>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {PRESET_SUBJECTS.map((subj) => {
-                        const sel = focusSubjects.includes(subj);
-                        return (
-                          <button key={subj} onClick={() => sel ? setFocusSubjects(p => p.filter(s => s !== subj)) : setFocusSubjects(p => [...p, subj])}
-                            className="text-[12px] font-medium px-3 py-1.5 rounded-full border transition-all"
-                            style={{ borderColor: sel ? "rgba(217,164,65,0.4)" : "rgba(91,70,54,0.1)", color: sel ? "#C08A2E" : "var(--ink-light)", background: sel ? "rgba(217,164,65,0.08)" : "transparent" }}>
-                            {sel ? "✓ " : "+ "}{subj}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="flex gap-2">
-                      <input type="text" placeholder="Add custom subject..." value={customSubject}
-                        onChange={(e) => setCustomSubject(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter" && customSubject.trim()) { setFocusSubjects(p => [...p, customSubject.trim()]); setCustomSubject(""); } }}
-                        className={`${inputClass} flex-1`} style={inputStyle} />
-                      <button onClick={() => { if (customSubject.trim()) { setFocusSubjects(p => [...p, customSubject.trim()]); setCustomSubject(""); } }}
-                        className="btn-mustard text-[14px] py-3.5 px-5">Add</button>
-                    </div>
-                    {focusSubjects.filter(s => !PRESET_SUBJECTS.includes(s)).length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {focusSubjects.filter(s => !PRESET_SUBJECTS.includes(s)).map(s => (
-                          <span key={s} className="text-[12px] font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5"
-                            style={{ background: "rgba(91,70,54,0.04)", color: "var(--ink-light)", border: "1px solid rgba(91,70,54,0.08)" }}>
-                            {s}
-                            <button onClick={() => setFocusSubjects(p => p.filter(x => x !== s))} style={{ color: "var(--ink-muted)" }}>×</button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
+          {/* STEP 2: Mentor + WhatsApp with country code */}
+          {step===2&&<motion.div key="s2" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="flex flex-col items-center max-w-md w-full">
+            <span className="text-[64px] mb-4">🦉</span>
+            <h2 className="text-[24px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Meet your mentor</h2>
+            <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>I'll check in on WhatsApp every day.</p>
+            <div className="w-full flex gap-2">
+              {/* Dial code selector */}
+              <div className="relative w-28 flex-shrink-0">
+                <button onClick={()=>{setCountryOpen(true);setCountrySearch("")}} className="w-full px-3 py-4 rounded-2xl border text-[14px] font-semibold flex items-center gap-1" style={{borderColor:"rgba(0,0,0,0.1)",background:"#FDF9F0"}}>{dialCode} ▾</button>
+                {countryOpen&&<div className="absolute top-full mt-1 w-56 rounded-xl border shadow-xl z-50 max-h-48 overflow-y-auto" style={{background:"#FDF9F0",borderColor:"rgba(0,0,0,0.08)"}}>
+                  {COUNTRIES.map(c=><button key={c.code} onClick={()=>{setDialCode(c.dial);setCountryOpen(false)}} className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-[rgba(0,0,0,0.02)] text-[13px] font-medium" style={{color:"#3D2E24"}}>{c.dial==="+91"?"🇮🇳":c.dial==="+1"?"🇺🇸":c.dial==="+44"?"🇬🇧":"🌍"} {c.name} <span className="ml-auto text-[#9B8E84]">{c.dial}</span></button>)}
+                </div>}
+              </div>
+              <input type="tel" placeholder="98765 43210" value={whatsapp} onChange={e=>setWhatsapp(e.target.value)}
+                className="flex-1 px-4 py-4 rounded-2xl border text-[15px] outline-none" style={{borderColor:"rgba(0,0,0,0.1)",background:"#FDF9F0"}}/>
+            </div>
+            <button onClick={()=>setStep(3)} className="btn-moss mt-6 text-[15px] py-3 px-8">Continue <ArrowRight size={16}/></button>
+          </motion.div>}
 
-            {/* ═══ STEP 2 — Connect WhatsApp ═══ */}
-            {step === 2 && (
-              <motion.div key="s2" className="p-8" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="text-[24px] font-extrabold tracking-tight mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-                  Connect WhatsApp
-                </h2>
-                <p className="text-[14px] mb-7" style={{ color: "var(--ink-light)" }}>
-                  WhatsApp is where your mentor lives. You&apos;ll send study proof, get check-ins, and receive session notifications here.
-                </p>
-                <div className="space-y-5">
-                  <div>
-                    <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>
-                      Your WhatsApp Number <span className="text-[#DC2626]">*</span>
-                    </label>
-                    <PhoneInput international defaultCountry="IN" value={studentPhone}
-                      onChange={(value) => setStudentPhone(value || "")}
-                      className="w-full px-4 py-3.5 rounded-[14px] border text-[14px] bg-[#F4EEDB]"
-                      style={{ borderColor: "rgba(91,70,54,0.12)" }} />
-                    <p className="text-[11px] mt-1.5 font-medium" style={{ color: "var(--ink-muted)" }}>
-                      You&apos;ll send photos of your notebook here after each session.
-                    </p>
-                  </div>
-                  <div className="pt-2" style={{ borderTop: "1px solid var(--border)" }}>
-                    <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>
-                      Parent&apos;s WhatsApp <span className="text-[#DC2626]">*</span>
-                    </label>
-                    <PhoneInput international defaultCountry="IN" value={parentPhone}
-                      onChange={(value) => setParentPhone(value || "")}
-                      className="w-full px-4 py-3.5 rounded-[14px] border text-[14px] bg-[#F4EEDB]"
-                      style={{ borderColor: "rgba(91,70,54,0.12)" }} />
-                  </div>
-                  {samePhoneError && (
-                    <p className="text-[12px] font-semibold flex items-center gap-1.5" style={{ color: "#DC2626" }}>
-                      <TriangleAlert size={13} /> Your number cannot be the same as your parent&apos;s number.
-                    </p>
-                  )}
-                  <div className="p-4 rounded-2xl" style={{ background: "rgba(37,211,102,0.04)", border: "1px solid rgba(37,211,102,0.12)" }}>
-                    <p className="text-[12px] font-semibold flex items-center gap-1.5" style={{ color: "#25D366" }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
-                      Messages are free via WhatsApp
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+          {/* STEP 3: Identity */}
+          {step===3&&<motion.div key="s3" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-lg">
+            <h2 className="text-[24px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>When do you shine?</h2>
+            <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>This helps time your sessions perfectly.</p>
+            <div className="grid grid-cols-2 gap-3">
+              {IDENTITIES.map(id=><motion.div key={id.id} onClick={()=>{setIdentity(id.id);setStep(4)}} className="cursor-pointer flex items-center gap-4 p-4 rounded-2xl border-2 transition-all" style={{borderColor:identity===id.id?id.color:"rgba(0,0,0,0.06)",background:identity===id.id?`${id.color}06`:"#FDF9F0"}} whileHover={{scale:1.02}}>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{background:`${id.color}12`,color:id.color}}>{id.icon}</div>
+                <div><h3 className="text-[15px] font-extrabold" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>{id.title}</h3></div>
+                {identity===id.id&&<Check size={20} className="ml-auto" style={{color:id.color}}/>}
+              </motion.div>)}
+            </div>
+          </motion.div>}
 
-            {/* ═══ STEP 3 — Discipline Level ═══ */}
-            {step === 3 && (
-              <motion.div key="s3" className="p-8" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="text-[24px] font-extrabold tracking-tight mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-                  Discipline Level
-                </h2>
-                <p className="text-[14px] mb-7" style={{ color: "var(--ink-light)" }}>How much accountability do you need?</p>
-                <div className="space-y-3">
-                  {MODES.map((m) => (
-                    <div key={m.id} onClick={() => setMode(m.id)}
-                      className="cursor-pointer flex items-start gap-4 p-5 rounded-2xl border-2 transition-all"
-                      style={{ borderColor: mode === m.id ? m.color : "rgba(91,70,54,0.07)", background: mode === m.id ? m.bg : "#FDF9F0" }}>
-                      <div className="mt-0.5 flex-shrink-0" style={{ color: m.color }}><m.Icon size={22} strokeWidth={1.5} /></div>
-                      <div className="flex-1">
-                        <h3 className="text-[15px] font-bold mb-0.5" style={{ color: "var(--earthy)" }}>{m.title}</h3>
-                        <p className="text-[13px]" style={{ color: "var(--ink-light)" }}>{m.desc}</p>
-                      </div>
-                      {mode === m.id && <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-[11px] font-bold" style={{ background: m.color }}>✓</div>}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+          {/* STEP 4: Subjects with custom */}
+          {step===4&&<motion.div key="s4" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-lg">
+            <h2 className="text-[24px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What will grow your tree?</h2>
+            <p className="text-[14px] font-medium mb-4 text-center" style={{color:"#6B5D52"}}>Each subject becomes part of your ecosystem.</p>
+            {/* Preset subjects */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {PRESET_SUBJECTS.map(s=>{const sel=selectedSubjects.includes(s.id);return(
+                <button key={s.id} onClick={()=>sel?setSelectedSubjects(p=>p.filter(x=>x!==s.id)):setSelectedSubjects(p=>[...p,s.id])}
+                  className="px-3 py-2 rounded-full text-[12px] font-bold border transition-all" style={{borderColor:sel?s.color:"rgba(0,0,0,0.08)",background:sel?`${s.color}10`:"#FDF9F0",color:sel?s.color:"#3D2E24"}}>{sel?"✓ ":""}{s.label}</button>
+              )})}
+            </div>
+            {/* Custom subject input */}
+            <div className="flex gap-2 mb-4">
+              <input placeholder="Add custom subject..." value={customSubInput} onChange={e=>setCustomSubInput(e.target.value)}
+                onKeyDown={e=>{if(e.key==="Enter"&&customSubInput.trim()){setCustomSubjects(p=>[...p,customSubInput.trim()]);setCustomSubInput("")}}}
+                className="flex-1 px-4 py-2.5 rounded-xl border text-[13px] outline-none" style={{borderColor:"rgba(0,0,0,0.08)",background:"#FDF9F0"}}/>
+              <button onClick={()=>{if(customSubInput.trim()){setCustomSubjects(p=>[...p,customSubInput.trim()]);setCustomSubInput("")}}}
+                className="btn-moss text-[13px] py-2.5 px-4 flex items-center gap-1"><Plus size={14}/> Add</button>
+            </div>
+            {/* Custom subject chips */}
+            {customSubjects.length>0&&<div className="flex flex-wrap gap-2 mb-4">
+              {customSubjects.map(s=><span key={s} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold" style={{background:"rgba(88,204,2,0.08)",color:"#58CC02",border:"1px solid rgba(88,204,2,0.15)"}}>{s}<X size={13} className="cursor-pointer hover:text-[#DC2626]" onClick={()=>setCustomSubjects(p=>p.filter(x=>x!==s))}/></span>)}
+            </div>}
+            <button onClick={()=>setStep(5)} disabled={selectedSubjects.length===0&&customSubjects.length===0}
+              className="btn-moss w-full text-[15px] py-3 disabled:opacity-40">Continue <ArrowRight size={16}/></button>
+          </motion.div>}
 
-            {/* ═══ STEP 4 — Review & Begin ═══ */}
-            {step === 4 && (
-              <motion.div key="s4" className="p-8" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 className="text-[24px] font-extrabold tracking-tight mb-1" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-                  All Set!
-                </h2>
-                <p className="text-[14px] mb-6" style={{ color: "var(--ink-light)" }}>Here&apos;s your summary. Your AI schedule will generate automatically.</p>
-                <div className="space-y-2 mb-6">
-                  {[
-                    { label: "Exam", value: examType, icon: <GraduationCap size={14} strokeWidth={1.5} /> },
-                    { label: "Date", value: examDate ? new Date(examDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—", icon: <Calendar size={14} strokeWidth={1.5} /> },
-                    ...(focusSubjects.length > 0 ? [{ label: "Subjects", value: focusSubjects.join(", "), icon: <Atom size={14} strokeWidth={1.5} /> }] : []),
-                    { label: "WhatsApp", value: studentPhone, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> },
-                    { label: "Parent", value: parentPhone, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="#7BA65B"><circle cx="12" cy="8" r="4" stroke="#7BA65B" strokeWidth="1.5" fill="none"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#7BA65B" strokeWidth="1.5" fill="none"/></svg> },
-                    mode ? { label: "Mode", value: MODES.find(m => m.id === mode)!.title, icon: MODES.find(m => m.id === mode)! && (() => { const Im = MODES.find(m => m.id === mode)!; return <Im.Icon size={14} strokeWidth={1.5} />; })() } : { label: "Mode", value: "—", icon: null },
-                  ].filter(Boolean).map((item, i) => {
-                    if (!item) return null;
-                    return (
-                      <div key={i} className="flex justify-between items-center py-3 px-4 rounded-xl" style={{ background: "#F4EEDB", border: "1px solid var(--border)" }}>
-                        <span className="text-[11px] font-bold uppercase tracking-widest flex items-center gap-1.5" style={{ color: "var(--ink-muted)" }}>
-                          {item.icon}{item.label}
-                        </span>
-                        <span className="text-[13px] font-semibold text-right max-w-[60%]" style={{ color: "var(--earthy)" }}>{item.value}</span>
-                      </div>
-                    );
-                  })}
+          {/* STEP 5: Review + Launch */}
+          {step===5&&<motion.div key="s5" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="flex flex-col items-center max-w-sm w-full">
+            <div className="text-[56px] mb-4">{exams.find(m=>m.id===mission)?.emoji||"🎯"}</div>
+            <h2 className="text-[24px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Your world is ready</h2>
+            <div className="w-full space-y-2 mb-6">
+              {[{l:"Country",v:selectedCountry.name},{l:"Goal",v:exams.find(m=>m.id===mission)?.title||customMission||"—"},{l:"Identity",v:IDENTITIES.find(i=>i.id===identity)?.title},{l:"Subjects",v:selectedSubjects.length+"/12 selected"}].map(r=>
+                <div key={r.l} className="flex justify-between py-2.5 px-4 rounded-xl" style={{background:"#FDF9F0",border:"1px solid rgba(0,0,0,0.04)"}}>
+                  <span className="text-[11px] font-bold uppercase" style={{color:"#9B8E84"}}>{r.l}</span>
+                  <span className="text-[12px] font-semibold text-right max-w-[60%]" style={{color:"#3D2E24"}}>{r.v||"—"}</span>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-[11px] font-bold mb-2 uppercase tracking-widest" style={{ color: "var(--ink-muted)" }}>
-                    Schedule Preferences (Optional)
-                  </label>
-                  <textarea
-                    placeholder="e.g. I prefer studying in the morning. Keep Sundays for rest..."
-                    value={userPrompt}
-                    onChange={(e) => setUserPrompt(e.target.value)}
-                    rows={2}
-                    className="w-full px-4 py-3 rounded-[14px] border text-[13px] outline-none transition-all resize-none"
-                    style={{ borderColor: "rgba(91,70,54,0.12)", background: "#F4EEDB", color: "var(--earthy)" }}
-                  />
-                </div>
-                <div className="p-4 rounded-2xl mb-4" style={{ background: "rgba(123,166,91,0.04)", border: "1px solid rgba(123,166,91,0.1)" }}>
-                  <p className="text-[13px] font-semibold mb-1 flex items-center gap-1.5" style={{ color: "var(--moss)" }}>
-                    <Sparkles size={14} /> AI will generate your schedule
-                  </p>
-                  <p className="text-[12px]" style={{ color: "var(--ink-light)" }}>Your personalized study plan appears on your dashboard after you begin.</p>
-                </div>
-                {error && <p className="text-[12px] mb-3 text-center" style={{ color: "#DC2626" }}>{error}</p>}
-                <button onClick={handleSubmit} disabled={isSubmitting || generatingSchedule}
-                  className="btn-mustard w-full text-[15px] py-4 disabled:opacity-50 flex items-center justify-center gap-2">
-                  {generatingSchedule ? (
-                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating AI Schedule...</>
-                  ) : isSubmitting ? (
-                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Finalizing Setup...</>
-                  ) : (
-                    <><Sparkles size={18} /> Begin Your Journey</>
-                  )}
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Footer */}
-        <div className="px-8 py-5 flex justify-between items-center flex-shrink-0"
-          style={{ borderTop: "1px solid var(--border)", background: "#F4EEDB" }}>
-          {step > 1 ? (
-            <button onClick={() => setStep(s => s - 1)} className="text-[14px] font-bold px-5 py-2.5 rounded-xl flex items-center gap-1.5 hover:bg-[rgba(91,70,54,0.05)]"
-              style={{ color: "var(--ink-light)" }}><ArrowLeft size={16} /> Back</button>
-          ) : (
-            <button onClick={onDismiss} className="text-[13px] px-5 py-2.5 rounded-xl hover:bg-[rgba(91,70,54,0.05)]"
-              style={{ color: "var(--ink-muted)" }}>Finish later</button>
-          )}
-          {step < stepsCount ? (
-            <button onClick={() => setStep(s => s + 1)} disabled={nextDisabled}
-              className="btn-moss text-[14px] py-3 px-8 disabled:opacity-40 flex items-center gap-1.5">
-              Next <ArrowRight size={16} />
+              )}
+            </div>
+            <button onClick={handleSubmit} className="btn-mustard w-full text-[16px] py-4 flex items-center justify-center gap-2">
+              Start My Journey <ArrowRight size={18}/>
             </button>
-          ) : (
-            <div />
-          )}
+          </motion.div>}
+          </>)}
+        </AnimatePresence>
+      </div>
+
+      {!submitting && step>0 && (
+        <div className="relative z-10 px-6 pb-4">
+          <button onClick={()=>setStep(s=>s-1)} className="text-[13px] font-bold px-5 py-2.5 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#6B5D52"}}>← Back</button>
         </div>
-      </motion.div>
+      )}
     </div>
   );
 }

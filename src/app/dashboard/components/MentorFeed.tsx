@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 interface Message {
   id?: string;
@@ -27,22 +27,16 @@ export default function MentorFeed({ interactions, isLoading }: Props) {
 
   if (isLoading) {
     return (
-      <section className="py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="card-terrain p-6 text-center">
-            <div className="w-8 h-8 mx-auto mb-3 rounded-full border-2 border-sky border-t-transparent animate-spin" />
-            <p className="text-[13px] font-medium" style={{ color: "var(--ink-muted)" }}>Loading messages...</p>
-          </div>
-        </div>
-      </section>
+      <div className="card-terrain p-5 text-center">
+        <div className="w-7 h-7 mx-auto mb-2 rounded-full border-2 border-sky border-t-transparent animate-spin" />
+        <p className="text-[12px] font-medium" style={{ color: "var(--ink-muted)" }}>Loading...</p>
+      </div>
     );
   }
 
   return (
-    <section className="py-6">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="card-terrain p-5">
-          <div className="flex items-center justify-between mb-4">
+    <div className="card-terrain p-5">
+      <div className="flex items-center justify-between mb-3">
             <h3 className="text-[16px] font-bold" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
               Mentor Messages
             </h3>
@@ -98,8 +92,6 @@ export default function MentorFeed({ interactions, isLoading }: Props) {
               ))}
             </div>
           )}
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

@@ -1,0 +1,63 @@
+"use client";
+
+import { useRef, useEffect, type ReactNode } from "react";
+import gsap from "gsap";
+
+interface MagneticButtonProps {
+  children: ReactNode;
+  href?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
+export default function MagneticButton({ children, href, className, style, onClick }: MagneticButtonProps) {
+  const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+  const boundsRef = useRef<DOMRect | null>(null);
+
+  useEffect(() => {
+    const el = btnRef.current;
+    if (!el) return;
+
+    const onMove = (e: MouseEvent) => {
+      if (!boundsRef.current) boundsRef.current = el.getBoundingClientRect();
+      const bounds = boundsRef.current;
+      const x = e.clientX - bounds.left - bounds.width / 2;
+      const y = e.clientY - bounds.top - bounds.height / 2;
+      const dist = Math.sqrt(x * x + y * y);
+      const maxDist = bounds.width;
+      if (dist < maxDist) {
+        const power = (1 - dist / maxDist) * 1.5;
+        gsap.to(el, { x: x * power * 0.3, y: y * power * 0.3, duration: 0.4, ease: "power2.out" });
+      } else {
+        gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: "power2.out" });
+      }
+    };
+
+    const onLeave = () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.3)" });
+      boundsRef.current = null;
+    };
+
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+
+    return () => {
+      el.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
+  if (href) {
+    return (
+      <a ref={btnRef as any} href={href} className={className} style={{ display: "inline-flex", ...style }}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button ref={btnRef as any} onClick={onClick} className={className} style={{ display: "inline-flex", ...style }}>
+      {children}
+    </button>
+  );
+}

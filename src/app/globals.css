@@ -27,6 +27,14 @@
   --color-ink-light:       #6B5D52;
   --color-ink-muted:       #9B8E84;
 
+  /* ─── Gamification Accent Colors ───────────────────── */
+  --color-xp-green:         #58CC02;
+  --color-duo-gold:         #FFC800;
+  --color-duo-orange:       #FF7A00;
+  --color-duo-red:          #FF4B4B;
+  --color-duo-blue:         #1CB0F6;
+  --color-duo-purple:       #CE82FF;
+
   --font-heading:  var(--font-nunito);
   --font-display:  var(--font-baloo);
   --font-body:     var(--font-dm-sans);
@@ -292,6 +300,151 @@
   pointer-events: none; z-index: 2;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   GAMIFICATION · Duolingo-style dopamine micro-interactions
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes xp-pop {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  15%  { opacity: 1; transform: translateY(-8px) scale(1.2); }
+  30%  { opacity: 1; transform: translateY(-20px) scale(1); }
+  100% { opacity: 0; transform: translateY(-64px) scale(0.8); }
+}
+
+@keyframes streak-flame {
+  0%, 100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+  25%      { transform: scaleY(1.12) scaleX(0.92); opacity: 0.9; }
+  50%      { transform: scaleY(0.92) scaleX(1.08); opacity: 1; }
+  75%      { transform: scaleY(1.06) scaleX(0.94); opacity: 0.95; }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  10%      { transform: scale(1.14); }
+  20%      { transform: scale(1); }
+  30%      { transform: scale(1.1); }
+  40%      { transform: scale(1); }
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes rainbow-shift {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes bounce-in {
+  0%   { transform: scale(0); opacity: 0; }
+  50%  { transform: scale(1.15); opacity: 1; }
+  70%  { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pop-in {
+  0%   { transform: scale(0); opacity: 0; }
+  80%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up-fade {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-4deg); }
+  40%      { transform: rotate(4deg); }
+  60%      { transform: rotate(-2deg); }
+  80%      { transform: rotate(2deg); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ring-fill {
+  from { stroke-dashoffset: var(--ring-circumference, 150); }
+  to   { stroke-dashoffset: var(--ring-offset, 50); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(88,204,2,0.3); }
+  50%      { box-shadow: 0 0 24px rgba(88,204,2,0.6); }
+}
+
+/* ─── Gamification Utilities ───────────────────────────── */
+.anim-xp-pop       { animation: xp-pop 1.2s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-streak-flame { animation: streak-flame 0.6s ease-in-out infinite; transform-origin: bottom center; }
+.anim-heartbeat    { animation: heartbeat 1.2s ease-in-out infinite; }
+.anim-bounce-in    { animation: bounce-in 0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-pop-in       { animation: pop-in 0.35s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-slide-up     { animation: slide-up-fade 0.4s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-wiggle       { animation: wiggle 0.5s ease-in-out; }
+.anim-count-up     { animation: count-up 0.3s ease forwards; }
+.anim-ring-fill    { animation: ring-fill 1.2s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-glow-pulse   { animation: glow-pulse 2s ease-in-out infinite; }
+
+/* ─── XPPopup layers ───────────────────────────────────── */
+.xp-popup-layer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 200;
+}
+
+/* ─── Pomodoro ring ────────────────────────────────────── */
+.pomodoro-ring {
+  transition: stroke-dashoffset 1s linear;
+}
+
+.pomodoro-ring.focus   { stroke: var(--color-xp-green, #58CC02); }
+.pomodoro-ring.break   { stroke: var(--color-sky, #78A6D8); }
+.pomodoro-ring.long-break { stroke: var(--color-mustard, #D9A441); }
+
+/* ─── Confetti particle ────────────────────────────────── */
+.confetti-particle {
+  position: absolute; border-radius: 2px;
+  animation: confetti-fall var(--fall-duration, 2s) linear forwards;
+  animation-delay: var(--fall-delay, 0s);
+}
+
+/* ─── Level badge glow ─────────────────────────────────── */
+.level-badge {
+  position: relative;
+}
+.level-badge::after {
+  content: ""; position: absolute; inset: -3px; border-radius: inherit;
+  background: linear-gradient(135deg, #58CC02, #FFC800, #7BA65B, #58CC02);
+  background-size: 300% 300%;
+  animation: rainbow-shift 4s linear infinite;
+  z-index: -1; opacity: 0.6; filter: blur(6px);
+}
+
+/* ─── Streak shield icon ───────────────────────────────── */
+.streak-shield-active {
+  filter: drop-shadow(0 0 6px rgba(88,204,2,0.5));
+}
+.streak-shield-used {
+  filter: grayscale(0.5); opacity: 0.5;
+}
+
+/* ─── Progress bar fill ────────────────────────────────── */
+.progress-fill {
+  transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
+  background: linear-gradient(90deg, #58CC02 0%, #7BA65B 50%, #FFC800 100%);
+  background-size: 200% 100%;
+  animation: rainbow-shift 6s linear infinite;
+}
+
+/* ─── Recovery mode card ───────────────────────────────── */
+.card-recovery {
+  border: 2px dashed rgba(88,204,2,0.3);
+  background: linear-gradient(135deg, rgba(88,204,2,0.03) 0%, rgba(123,166,91,0.05) 100%);
+}
+
 /* ─── Clerk Overrides ─────────────────────────────────── */
 .cl-card {
   box-shadow: 0 8px 40px rgba(91,70,54,0.1) !important;
@@ -303,3 +456,141 @@
   font-weight: 700 !important;
 }
 .cl-footerActionLink { color: #7BA65B !important; font-weight: 600 !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   MILESTONE CELEBRATIONS · First session · Streaks · Goals
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Milestone backdrop blur-in ───────────────────────── */
+@keyframes milestone-backdrop {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to   { opacity: 1; backdrop-filter: blur(12px); }
+}
+
+/* ─── Milestone card slam-in ───────────────────────────── */
+@keyframes milestone-slam {
+  0%   { opacity: 0; transform: scale(0.6) translateY(40px); }
+  55%  { opacity: 1; transform: scale(1.06) translateY(-6px); }
+  72%  { transform: scale(0.97) translateY(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ─── Milestone card exit ───────────────────────────────── */
+@keyframes milestone-exit {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.85) translateY(20px); }
+}
+
+/* ─── Confetti shower burst ─────────────────────────────── */
+@keyframes confetti-burst {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(var(--confetti-y, -120px)) translateX(var(--confetti-x, 40px)) rotate(var(--confetti-r, 360deg)) scale(0.4); opacity: 0; }
+}
+
+/* ─── Stars twinkling ───────────────────────────────────── */
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.5); }
+}
+
+/* ─── Streak fire crown rise ────────────────────────────── */
+@keyframes fire-crown-rise {
+  0%   { transform: translateY(20px) scale(0); opacity: 0; }
+  60%  { transform: translateY(-4px) scale(1.15); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ─── Fire glow pulse ───────────────────────────────────── */
+@keyframes fire-glow {
+  0%, 100% { text-shadow: 0 0 12px rgba(255,122,0,0.5), 0 0 24px rgba(255,165,0,0.3); }
+  50%       { text-shadow: 0 0 24px rgba(255,122,0,0.9), 0 0 48px rgba(255,165,0,0.6), 0 0 64px rgba(255,200,0,0.3); }
+}
+
+/* ─── Daily goal ring complete ──────────────────────────── */
+@keyframes ring-complete {
+  0%   { stroke-dashoffset: var(--ring-circumference, 283); opacity: 0.4; }
+  70%  { stroke-dashoffset: 0; opacity: 1; }
+  85%  { stroke-dashoffset: -8; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* ─── XP number count-up ────────────────────────────────── */
+@keyframes xp-slam {
+  0%   { transform: scale(0) rotate(-12deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(3deg); opacity: 1; }
+  70%  { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ─── Level-up energy beam ──────────────────────────────── */
+@keyframes energy-beam {
+  0%   { transform: scaleY(0); opacity: 0.8; }
+  50%  { transform: scaleY(1.2); opacity: 1; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+
+/* ─── Shine sweep ───────────────────────────────────────── */
+@keyframes shine-sweep {
+  from { transform: translateX(-150%) skewX(-15deg); }
+  to   { transform: translateX(250%) skewX(-15deg); }
+}
+
+/* ─── Proof verify pulse ────────────────────────────────── */
+@keyframes verify-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(88,204,2,0.6); }
+  60%  { box-shadow: 0 0 0 16px rgba(88,204,2,0); }
+  100% { box-shadow: 0 0 0 0 rgba(88,204,2,0); }
+}
+
+/* ─── Milestone Utility Classes ─────────────────────────── */
+.anim-milestone-backdrop { animation: milestone-backdrop 0.3s ease forwards; }
+.anim-milestone-slam     { animation: milestone-slam 0.55s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-milestone-exit     { animation: milestone-exit 0.3s ease forwards; }
+.anim-confetti-burst     { animation: confetti-burst 1.4s ease-out forwards; }
+.anim-fire-crown-rise    { animation: fire-crown-rise 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-fire-glow          { animation: fire-glow 1.5s ease-in-out infinite; }
+.anim-ring-complete      { animation: ring-complete 1s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-xp-slam            { animation: xp-slam 0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
+.anim-energy-beam        { animation: energy-beam 0.8s ease-in-out forwards; }
+.anim-shine-sweep        { animation: shine-sweep 0.8s ease forwards; }
+.anim-verify-pulse       { animation: verify-pulse 0.8s ease-out; }
+.anim-twinkle            { animation: twinkle var(--twinkle-dur, 1.2s) ease-in-out infinite; }
+
+/* ─── Milestone card glass surfaces ─────────────────────── */
+.milestone-card {
+  background: linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(248,250,245,0.98) 100%);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(88,204,2,0.12);
+  border-radius: 28px;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.14),
+    0 8px 24px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.milestone-card-streak {
+  background: linear-gradient(160deg, #FFF8F0 0%, #FFFDF8 100%);
+  border-color: rgba(255,122,0,0.15);
+  box-shadow:
+    0 32px 80px rgba(255,122,0,0.12),
+    0 8px 24px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.milestone-card-levelup {
+  background: linear-gradient(160deg, #F8FFF0 0%, #FFFFF5 100%);
+  border-color: rgba(88,204,2,0.2);
+  box-shadow:
+    0 32px 80px rgba(88,204,2,0.15),
+    0 8px 24px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* ─── Proof verified badge ──────────────────────────────── */
+.proof-verified-badge {
+  background: linear-gradient(135deg, rgba(88,204,2,0.08) 0%, rgba(123,166,91,0.06) 100%);
+  border: 1.5px solid rgba(88,204,2,0.2);
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+

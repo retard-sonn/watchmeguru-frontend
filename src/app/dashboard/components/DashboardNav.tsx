@@ -25,12 +25,13 @@ export default function DashboardNav({ onSetup, onUnlock, hasSetup, scheduleLock
       <div className="max-w-7xl mx-auto px-6 h-[60px] flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-[18px] font-extrabold tracking-tight" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>
+            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span><span className="text-[11px] font-medium ml-0.5" style={{ color: "var(--ink-muted)" }}>.io</span>
           </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-4">
           <span className="text-[13px] font-semibold" style={{ color: "var(--moss)" }}>Dashboard</span>
+          <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full" style={{ background: "rgba(217,164,65,0.12)", color: "#D9A441" }}>Beta</span>
           {mounted && (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full" style={{ background: hasWhatsapp ? "#25D366" : "#9B8E84" }} title={hasWhatsapp ? "WhatsApp connected" : "WhatsApp not connected"} />
@@ -58,7 +59,7 @@ export default function DashboardNav({ onSetup, onUnlock, hasSetup, scheduleLock
             mounted ? (
               <button onClick={onSetup}
                 className={hasSetup ? "btn-earthy text-[13px] py-2 px-4" : "btn-moss text-[13px] py-2 px-4"}>
-                {hasSetup ? "Edit Setup" : "Setup Profile"}
+                {hasSetup ? "Edit Setup" : "Setup"}
               </button>
             ) : (
               <div className="w-[90px] h-[36px]" />

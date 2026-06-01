@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 interface Props {
   step: 1 | 2 | 3 | 4 | 5 | 6;
