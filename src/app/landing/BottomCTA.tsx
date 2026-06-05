@@ -4,10 +4,12 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import GuruGuardian from "@/components/illustrations/GuruGuardian";
+import { useAuth } from "@clerk/nextjs";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export default function BottomCTA() {
+  const { isLoaded, userId } = useAuth();
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const mascotRef = useRef<HTMLDivElement>(null);
@@ -43,11 +45,21 @@ export default function BottomCTA() {
         <p className="text-[16px] mb-10 max-w-md mx-auto font-medium" style={{ color: "rgba(253,249,240,0.55)" }}>
           Join thousands of students who transformed their consistency. Free to start. No credit card.
         </p>
-        <Link href="/sign-up"
-          className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all hover:scale-105"
-          style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)", boxShadow: "0 8px 36px rgba(88,204,2,0.4)", fontFamily: "var(--font-baloo)" }}>
-          Start Free Now →
-        </Link>
+        {isLoaded && !userId ? (
+          <Link href="/sign-up"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all hover:scale-105"
+            style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)", boxShadow: "0 8px 36px rgba(88,204,2,0.4)", fontFamily: "var(--font-baloo)" }}>
+            Start Free Now →
+          </Link>
+        ) : isLoaded && userId ? (
+          <Link href="/dashboard"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all hover:scale-105"
+            style={{ background: "linear-gradient(135deg, #D9A441 0%, #C08A2E 100%)", boxShadow: "0 8px 36px rgba(217,164,65,0.4)", fontFamily: "var(--font-baloo)" }}>
+            Resume Your Journey →
+          </Link>
+        ) : (
+          <div className="h-[60px]" />
+        )}
       </div>
     </section>
   );

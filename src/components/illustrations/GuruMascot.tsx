@@ -2,7 +2,7 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
-type State = "idle" | "happy" | "celebrate" | "thinking" | "sleepy";
+type State = "idle" | "happy" | "celebrate" | "thinking" | "sleepy" | "sad";
 interface Props { size?: number; state?: State; animated?: boolean; }
 
 export default function GuruMascot({ size = 180, state = "idle", animated = true }: Props) {
@@ -18,12 +18,19 @@ export default function GuruMascot({ size = 180, state = "idle", animated = true
         gsap.to(ref.current, { rotation: -4, duration: 0.2, repeat: 7, yoyo: true, ease: "power1.inOut" });
         gsap.to(".sparkles", { scale: 1.4, opacity: 1, duration: 0.4, repeat: 10, yoyo: true, ease: "power1.inOut" });
       }
+      if (state === "sad") {
+        gsap.to(".teardrop", { y: 8, opacity: 0, duration: 1, stagger: 0.3, repeat: -1, ease: "power1.in" });
+      }
     }, ref);
     return () => ctx.revert();
   }, [animated, state]);
 
   // Mouth shape per state
-  const mouth = state === "happy" ? "M48,74 Q58,82 68,74" : state === "sleepy" ? "M50,76 Q58,72 66,76" : "M50,74 Q58,78 66,74";
+  const mouth = state === "happy" ? "M48,74 Q58,82 68,74" : state === "sleepy" ? "M50,76 Q58,72 66,76" : state === "sad" ? "M52,78 Q58,72 64,78" : "M50,74 Q58,78 66,74";
+
+  // Eyebrow shapes per state
+  const leftEyebrow = state === "sad" ? "M30,38 Q36,41 42,38" : "M30,42 Q36,40 42,42";
+  const rightEyebrow = state === "sad" ? "M58,38 Q64,41 70,38" : "M58,42 Q64,40 70,42";
 
   return (
     <svg ref={ref} width={100 * s} height={110 * s} viewBox="0 0 100 110" fill="none" style={{ overflow: "visible" }}>
@@ -65,8 +72,16 @@ export default function GuruMascot({ size = 180, state = "idle", animated = true
       <circle cx="59" cy="37" r="2.5" fill="white" />
 
       {/* Eyebrows */}
-      <path d="M30,42 Q36,40 42,42" stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <path d="M58,42 Q64,40 70,42" stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d={leftEyebrow} stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d={rightEyebrow} stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+      {/* Teardrops (sad only) */}
+      {state === "sad" && (
+        <g className="teardrop">
+          <circle cx="34" cy="46" r="1.5" fill="#78A6D8" />
+          <circle cx="66" cy="46" r="1.5" fill="#78A6D8" />
+        </g>
+      )}
 
       {/* Beak */}
       <path d="M46,48 L50,54 L54,48 Z" fill="#D9A441" />

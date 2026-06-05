@@ -4,6 +4,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import InteractiveMascot from "@/components/InteractiveMascot";
 import MagneticButton from "@/components/MagneticButton";
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +18,7 @@ const NOTIFICATIONS = [
 ];
 
 export default function Hero() {
+  const { isLoaded, userId } = useAuth();
   const sectionRef = useRef<HTMLDivElement>(null);
   const mascotRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
@@ -134,11 +137,21 @@ export default function Hero() {
             </p>
 
             <div className="hero-cta-wrap mb-8 flex justify-center lg:justify-start">
-              <MagneticButton href="/sign-up"
-                className="px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all"
-                style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)", boxShadow: "0 8px 36px rgba(88,204,2,0.4)", fontFamily: "var(--font-baloo)" }}>
-                Start Free — 2 minutes →
-              </MagneticButton>
+              {isLoaded && !userId ? (
+                <MagneticButton href="/sign-up"
+                  className="px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all"
+                  style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)", boxShadow: "0 8px 36px rgba(88,204,2,0.4)", fontFamily: "var(--font-baloo)" }}>
+                  Start Free — 2 minutes →
+                </MagneticButton>
+              ) : isLoaded && userId ? (
+                <Link href="/dashboard"
+                  className="px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: "linear-gradient(135deg, #D9A441 0%, #C08A2E 100%)", boxShadow: "0 8px 36px rgba(217,164,65,0.4)", fontFamily: "var(--font-baloo)" }}>
+                  Go to your Dashboard →
+                </Link>
+              ) : (
+                <div className="h-[60px]" />
+              )}
             </div>
 
             {/* Live WhatsApp notifications — the "holy shit" moment */}

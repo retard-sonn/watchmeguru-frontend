@@ -1,114 +1,159 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import InteractiveMascot from "@/components/InteractiveMascot";
 
-interface AchievementUnlockProps {
+import React, { useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap";
+import { Sparkles, Trophy, ArrowRight } from "lucide-react";
+import { LevelInfo } from "@/lib/levelSystem";
+import { getSubjectIcon } from "@/components/illustrations/SubjectIcons";
+
+interface Props {
   isOpen: boolean;
   onClose: () => void;
-  achievement: { label: string; Badge?: any; rarity: string; desc: string; color: string; } | null;
+  levelInfo: LevelInfo;
+  previousTitle?: string;
 }
 
-const RARITY = {
-  common: { label: "Common", color: "#9B8E84", glow: "rgba(155,142,132,0.3)" },
-  rare: { label: "Rare", color: "#1CB0F6", glow: "rgba(28,176,246,0.4)" },
-  epic: { label: "Epic", color: "#CE82FF", glow: "rgba(206,130,255,0.4)" },
-  legendary: { label: "Legendary", color: "#D9A441", glow: "rgba(217,164,65,0.5)" },
-};
-
-export default function AchievementUnlock({ isOpen, onClose, achievement }: AchievementUnlockProps) {
-  const backdropRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mascotRef = useRef<HTMLDivElement>(null);
+export default function AchievementUnlock({ isOpen, onClose, levelInfo, previousTitle }: Props) {
+  const modalRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const iconsRef = useRef<HTMLDivElement>(null);
+  const shimmerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isOpen || !achievement) return;
-    setMounted(true);
+    if (!isOpen || !modalRef.current) return;
 
     const ctx = gsap.context(() => {
-      const r = RARITY[achievement.rarity as keyof typeof RARITY] || RARITY.common;
-      const tl = gsap.timeline();
+      // 1. Initial Scale Pop
+      gsap.fromTo(badgeRef.current, 
+        { scale: 0, rotation: -20 }, 
+        { scale: 1, rotation: 0, duration: 1.2, ease: "elastic.out(1, 0.5)", delay: 0.2 }
+      );
 
-      // Stage 1: Backdrop darkens
-      tl.to(backdropRef.current, { opacity: 1, duration: 0.3 });
-
-      // Stage 2: Mascot jumps in from top
-      tl.fromTo(mascotRef.current, { y: -200, scale: 0.5, opacity: 0 }, {
-        y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.7)",
-      }, "+=0.1");
-
-      // Stage 3: Badge scales in with rotation
-      tl.fromTo(badgeRef.current, { scale: 0, rotate: -180, opacity: 0 }, {
-        scale: 1, rotate: 0, opacity: 1, duration: 0.6, ease: "back.out(2)",
-      }, "-=0.3");
-
-      // Stage 4: Title + description
-      tl.fromTo(titleRef.current, { y: 30, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 0.4, ease: "power3.out",
-      }, "-=0.2");
-
-      // Stage 5: Confetti burst
-      for (let i = 0; i < 40; i++) {
-        const dot = document.createElement("div");
-        dot.className = "absolute rounded-full pointer-events-none";
-        dot.style.cssText = `width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;background:${r.color};top:50%;left:50%;box-shadow:0 0 6px ${r.glow};`;
-        backdropRef.current?.appendChild(dot);
-
-        gsap.to(dot, {
-          x: (Math.random() - 0.5) * 400, y: (Math.random() - 0.5) * 400,
-          opacity: 0, scale: 0, duration: 0.8 + Math.random() * 0.6,
-          ease: "power2.out", delay: 1.5 + Math.random() * 0.3,
-          onComplete: () => dot.remove(),
-        });
+      // 2. Shimmer / Glimmer Effect
+      if (shimmerRef.current) {
+        gsap.fromTo(shimmerRef.current,
+          { x: "-150%" },
+          { x: "150%", duration: 1.5, repeat: -1, repeatDelay: 1, ease: "power2.inOut" }
+        );
       }
 
-      // Stage 6: Mascot celebration wiggle
-      tl.to(mascotRef.current, {
-        rotation: -8, duration: 0.1, yoyo: true, repeat: 5, ease: "power1.inOut",
-      }, "+=0.5");
+      // 3. Staggered Icon Burst
+      if (iconsRef.current) {
+        const icons = iconsRef.current.children;
+        gsap.fromTo(icons,
+          { opacity: 0, scale: 0, x: 0, y: 0 },
+          { 
+            opacity: 0.6, 
+            scale: 0.8, 
+            x: (i) => Math.cos(i * 0.8) * 160, 
+            y: (i) => Math.sin(i * 0.8) * 160, 
+            rotation: "random(-45, 45)",
+            duration: 0.8, 
+            stagger: 0.05, 
+            ease: "back.out(1.5)",
+            delay: 0.5 
+          }
+        );
+      }
 
-    }, backdropRef);
+      // 4. Text Reveal
+      gsap.from(".reveal-text", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.8
+      });
+    }, modalRef);
 
     return () => ctx.revert();
-  }, [isOpen, achievement]);
+  }, [isOpen]);
 
-  if (!isOpen || !achievement || !mounted) return null;
-
-  const r = RARITY[achievement.rarity as keyof typeof RARITY] || RARITY.common;
+  const SUBJECTS = ["physics", "maths", "chemistry", "biology", "history", "english", "geography", "economics"];
 
   return (
-    <div ref={backdropRef} className="fixed inset-0 z-[150] flex items-center justify-center p-4" style={{ opacity: 0, background: "rgba(61,46,36,0.7)", backdropFilter: "blur(16px)" }}>
-      <div ref={cardRef} className="text-center relative">
-        {/* Mascot */}
-        <div ref={mascotRef} className="flex justify-center mb-4">
-          <InteractiveMascot size={160} />
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-[#3D2E24]/60 backdrop-blur-md">
+          <motion.div
+            ref={modalRef}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full max-w-md bg-[#FDF9F0] rounded-[2.5rem] p-10 text-center relative overflow-hidden shadow-2xl border-4"
+            style={{ borderColor: levelInfo.color }}
+          >
+            {/* Background Glow */}
+            <div 
+              className="absolute inset-0 opacity-20 pointer-events-none"
+              style={{ background: `radial-gradient(circle at 50% 40%, ${levelInfo.color} 0%, transparent 70%)` }}
+            />
 
-        {/* Badge */}
-        <div ref={badgeRef} className="flex justify-center mb-4">
-          {achievement.Badge && <achievement.Badge size={80} unlocked={true} />}
-        </div>
+            {/* Subject Icon Burst */}
+            <div ref={iconsRef} className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+              {SUBJECTS.map((s, i) => {
+                const Icon = getSubjectIcon(s);
+                return <div key={i} className="absolute w-12 h-12"><Icon /></div>;
+              })}
+            </div>
 
-        {/* Title */}
-        <div ref={titleRef}>
-          <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-3"
-            style={{ background: `${r.color}15`, color: r.color }}>Achievement Unlocked</span>
-          <h2 className="text-[32px] font-extrabold leading-none mb-2" style={{ color: "#FDF9F0", fontFamily: "var(--font-baloo)" }}>
-            {achievement.label}
-          </h2>
-          <p className="text-[13px] font-medium mb-2" style={{ color: r.color }}>{r.label} Tier</p>
-          <p className="text-[14px] font-medium mb-8 opacity-70" style={{ color: "#FDF9F0" }}>{achievement.desc}</p>
+            {/* The Badge */}
+            <div className="relative mb-8 flex justify-center">
+              <div 
+                ref={badgeRef}
+                className="w-32 h-32 rounded-3xl flex items-center justify-center relative overflow-hidden shadow-xl"
+                style={{ background: levelInfo.color }}
+              >
+                <span className="text-[64px] relative z-10">{levelInfo.badge}</span>
+                {/* Glimmer Overlay */}
+                <div 
+                  ref={shimmerRef}
+                  className="absolute inset-0 z-20 pointer-events-none"
+                  style={{ 
+                    background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                    transform: "skewX(-25deg)" 
+                  }}
+                />
+              </div>
+              {/* Crown/Trophy Decoration */}
+              <motion.div 
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -top-4 -right-2 bg-[#FFC800] p-2.5 rounded-2xl shadow-lg border-2 border-white"
+              >
+                <Trophy size={20} color="white" fill="white" />
+              </motion.div>
+            </div>
 
-          <button onClick={onClose}
-            className="px-8 py-3 rounded-xl text-[14px] font-extrabold text-white transition-all hover:scale-105"
-            style={{ background: `linear-gradient(135deg, ${r.color}, ${r.color}CC)`, boxShadow: `0 6px 24px ${r.glow}`, fontFamily: "var(--font-baloo)" }}>
-            Continue Growing →
-          </button>
+            {/* Text Content */}
+            <div className="relative z-30">
+              <span className="reveal-text block text-[12px] font-bold uppercase tracking-[0.2em] text-[#9B8E84] mb-2">New Achievement!</span>
+              <h2 className="reveal-text text-[32px] font-extrabold leading-tight mb-4" style={{ color: "#3D2E24", fontFamily: "var(--font-baloo)" }}>
+                You are now a <span style={{ color: levelInfo.color }}>{levelInfo.title}</span>
+              </h2>
+              
+              <p className="reveal-text text-[15px] font-medium text-[#6B5D52] mb-8 leading-relaxed">
+                {previousTitle ? `Farewell, ${previousTitle}. ` : ""}
+                Your ecosystem has evolved! You've reached Level {levelInfo.level}. Keep planting knowledge!
+              </p>
+
+              <button 
+                onClick={onClose}
+                className="reveal-text w-full py-4 rounded-2xl text-[16px] font-extrabold text-white flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: levelInfo.color, boxShadow: `0 8px 0 ${levelInfo.color}40`, fontFamily: "var(--font-baloo)" }}
+              >
+                Amazing — Keep Going! <ArrowRight size={20} />
+              </button>
+            </div>
+
+            {/* Decorative Sparkles */}
+            <div className="absolute top-10 left-10 opacity-30"><Sparkles size={24} color={levelInfo.color} /></div>
+            <div className="absolute bottom-20 right-8 opacity-30 rotate-45"><Sparkles size={20} color={levelInfo.color} /></div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

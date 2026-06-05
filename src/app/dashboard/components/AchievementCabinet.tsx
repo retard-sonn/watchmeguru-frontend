@@ -67,20 +67,27 @@ export default function AchievementCabinet({ dayStreak, tasksCompleted, studyHou
             <motion.div key={a.id}
               className="flex flex-col items-center gap-1.5 p-3 rounded-2xl relative cursor-pointer transition-all"
               style={{
-                background: a.unlocked ? r.bg : "transparent",
-                border: `1px solid ${a.unlocked ? `${r.color}20` : "rgba(0,0,0,0.03)"}`,
-                opacity: a.unlocked ? 1 : 0.35,
+                background: a.unlocked ? "white" : "transparent",
+                border: `2px solid ${a.unlocked ? `${r.color}20` : "rgba(0,0,0,0.03)"}`,
+                boxShadow: a.unlocked ? `0 4px 0 ${r.color}15, 0 12px 30px rgba(0,0,0,0.02)` : "none",
+                opacity: a.unlocked ? 1 : 0.25,
               }}
-              whileHover={a.unlocked ? { scale:1.08, y:-3, boxShadow:`0 8px 24px ${r.glow}` } : {}}
+              whileHover={a.unlocked ? { scale:1.1, y:-5, boxShadow:`0 15px 35px ${r.glow}` } : {}}
               onClick={() => { if (a.unlocked) setShowUnlock(showUnlock===a.id?null:a.id); }}>
-              {/* Rarity glow */}
-              {a.unlocked && <div className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{ background:`radial-gradient(circle at center, ${r.glow} 0%, transparent 70%)` }}/>}
-              <div className="relative z-10"><a.Badge size={56} unlocked={a.unlocked}/></div>
-              <span className="text-[10px] font-extrabold text-center leading-tight relative z-10"
-                style={{ color:a.unlocked?"#3D2E24":"#9B8E84", fontFamily:"var(--font-baloo)" }}>{a.label}</span>
-              {a.unlocked && <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full relative z-10"
-                style={{ background: `${r.color}15`, color:r.color }}>{r.label}</span>}
+              {/* Sticker Shadow */}
+              {a.unlocked && <div className="absolute -bottom-1 inset-x-0 h-2 bg-black/5 blur-md rounded-full pointer-events-none" />}
+              <div className="relative z-10 scale-110 drop-shadow-md"><a.Badge size={64} unlocked={a.unlocked}/></div>
+              <span className="text-[11px] font-extrabold text-center leading-tight relative z-10 mt-1"
+                style={{ color:a.unlocked?"#3D2E24":"#9B8E84", fontFamily: "var(--font-baloo)" }}>{a.label}</span>
+              {a.unlocked && (
+                <motion.div 
+                  className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-2xl"
+                  animate={{ x: ["-100%", "200%"] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                >
+                  <div className="w-[30%] h-full bg-white/30 skew-x-[-25deg]" />
+                </motion.div>
+              )}
             </motion.div>
           );
         })}

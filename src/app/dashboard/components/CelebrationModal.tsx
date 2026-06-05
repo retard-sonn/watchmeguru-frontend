@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Trophy, Flame, Star, Target, Heart, Zap, CheckCircle } from "lucide-react";
 
-type CelebrationType = "streak" | "mission" | "general" | "level_up" | "daily_goal" | "accuracy" | "comeback";
+type CelebrationType = "streak" | "mission" | "general" | "level_up" | "daily_goal" | "accuracy" | "comeback" | "error" | "cancelled";
 
 interface Props {
   isOpen: boolean;
@@ -14,14 +14,16 @@ interface Props {
   statValue?: string | number;
 }
 
-const TYPE_META: Record<CelebrationType, { icon: typeof Trophy; bg: string; badgeColor: string; glowColor: string; emoji: string }> = {
-  streak:    { icon: Flame,       bg: "linear-gradient(135deg, #D9A441, #C08A2E)", badgeColor: "rgba(217,164,65,0.1)", glowColor: "rgba(217,164,65,0.4)", emoji: "🔥" },
-  mission:   { icon: CheckCircle, bg: "linear-gradient(135deg, #7BA65B, #5F8C3E)", badgeColor: "rgba(123,166,91,0.1)", glowColor: "rgba(123,166,91,0.4)", emoji: "✅" },
-  general:   { icon: Sparkles,    bg: "linear-gradient(135deg, #7BA65B, #5F8C3E)", badgeColor: "rgba(123,166,91,0.1)", glowColor: "rgba(123,166,91,0.4)", emoji: "✨" },
-  level_up:  { icon: Star,        bg: "linear-gradient(135deg, #CE82FF, #A560E8)", badgeColor: "rgba(206,130,255,0.1)", glowColor: "rgba(206,130,255,0.4)", emoji: "⭐" },
-  daily_goal:{ icon: Target,      bg: "linear-gradient(135deg, #1CB0F6, #1890D0)", badgeColor: "rgba(28,176,246,0.1)", glowColor: "rgba(28,176,246,0.4)", emoji: "🎯" },
-  accuracy:  { icon: Zap,         bg: "linear-gradient(135deg, #FFC800, #D9A441)", badgeColor: "rgba(255,200,0,0.1)",  glowColor: "rgba(255,200,0,0.4)", emoji: "⚡" },
-  comeback:  { icon: Heart,       bg: "linear-gradient(135deg, #FF4B4B, #E04040)", badgeColor: "rgba(255,75,75,0.1)",  glowColor: "rgba(255,75,75,0.4)", emoji: "💪" },
+const TYPE_META: Record<CelebrationType, { icon: typeof Trophy; bg: string; badgeColor: string; glowColor: string; emoji: string; buttonText: string; showConfetti: boolean }> = {
+  streak:    { icon: Flame,       bg: "linear-gradient(135deg, #D9A441, #C08A2E)", badgeColor: "rgba(217,164,65,0.1)", glowColor: "rgba(217,164,65,0.4)", emoji: "🔥", buttonText: "Amazing — Keep Going!", showConfetti: true },
+  mission:   { icon: CheckCircle, bg: "linear-gradient(135deg, #7BA65B, #5F8C3E)", badgeColor: "rgba(123,166,91,0.1)", glowColor: "rgba(123,166,91,0.4)", emoji: "✅", buttonText: "Amazing — Keep Going!", showConfetti: true },
+  general:   { icon: Sparkles,    bg: "linear-gradient(135deg, #7BA65B, #5F8C3E)", badgeColor: "rgba(123,166,91,0.1)", glowColor: "rgba(123,166,91,0.4)", emoji: "✨", buttonText: "Awesome!", showConfetti: true },
+  level_up:  { icon: Star,        bg: "linear-gradient(135deg, #CE82FF, #A560E8)", badgeColor: "rgba(206,130,255,0.1)", glowColor: "rgba(206,130,255,0.4)", emoji: "⭐", buttonText: "Keep Growing!", showConfetti: true },
+  daily_goal:{ icon: Target,      bg: "linear-gradient(135deg, #1CB0F6, #1890D0)", badgeColor: "rgba(28,176,246,0.1)", glowColor: "rgba(28,176,246,0.4)", emoji: "🎯", buttonText: "Nailed It!", showConfetti: true },
+  accuracy:  { icon: Zap,         bg: "linear-gradient(135deg, #FFC800, #D9A441)", badgeColor: "rgba(255,200,0,0.1)",  glowColor: "rgba(255,200,0,0.4)", emoji: "⚡", buttonText: "Brilliant!", showConfetti: true },
+  comeback:  { icon: Heart,       bg: "linear-gradient(135deg, #FF4B4B, #E04040)", badgeColor: "rgba(255,75,75,0.1)",  glowColor: "rgba(255,75,75,0.4)", emoji: "💪", buttonText: "I'm Back!", showConfetti: true },
+  error:     { icon: Zap,         bg: "linear-gradient(135deg, #9B8E84, #6B5D52)", badgeColor: "rgba(155,142,132,0.1)", glowColor: "rgba(155,142,132,0.4)", emoji: "⚠️", buttonText: "Got it", showConfetti: false },
+  cancelled: { icon: Zap,         bg: "linear-gradient(135deg, #9B8E84, #6B5D52)", badgeColor: "rgba(155,142,132,0.1)", glowColor: "rgba(155,142,132,0.4)", emoji: "🛑", buttonText: "Understood", showConfetti: false },
 };
 
 const CONFETTI_COLORS = ["#58CC02", "#FFC800", "#1CB0F6", "#CE82FF", "#FF7A00", "#FF4B4B", "#7BA65B", "#D9A441", "#78A6D8", "#94A84D"];
@@ -72,7 +74,7 @@ export default function CelebrationModal({ isOpen, onClose, title, subtitle, des
         <div className="fixed inset-0 z-[115] flex items-center justify-center p-4 sm:p-6"
           style={{ background: "rgba(61,46,36,0.55)", backdropFilter: "blur(16px)" }}>
 
-          <ConfettiRain />
+          {meta.showConfetti && <ConfettiRain />}
 
           <motion.div
             initial={{ opacity: 0, scale: 0.85, y: 40 }}
@@ -98,7 +100,7 @@ export default function CelebrationModal({ isOpen, onClose, title, subtitle, des
             {/* Illustration */}
             <div className="flex justify-center mb-6 relative z-10">
               <motion.div
-                animate={{ scale: [1, 1.08, 1], rotate: [0, 4, -4, 0] }}
+                animate={{ scale: meta.showConfetti ? [1, 1.08, 1] : 1, rotate: meta.showConfetti ? [0, 4, -4, 0] : 0 }}
                 transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse" }}
                 className="w-20 h-20 rounded-2xl flex items-center justify-center relative shadow-lg"
                 style={{ background: meta.bg }}
@@ -106,7 +108,7 @@ export default function CelebrationModal({ isOpen, onClose, title, subtitle, des
                 <span className="text-[36px]">{meta.emoji}</span>
 
                 {/* Orbiting sparkles */}
-                {["✦", "✧", "⋆"].map((star, i) => (
+                {meta.showConfetti && ["✦", "✧", "⋆"].map((star, i) => (
                   <motion.span
                     key={i}
                     className="absolute text-[10px] text-white"
@@ -168,7 +170,7 @@ export default function CelebrationModal({ isOpen, onClose, title, subtitle, des
               }}
               whileTap={{ scale: 0.97 }}
             >
-              <Sparkles size={16} /> Amazing — Keep Going!
+              {meta.showConfetti && <Sparkles size={16} />} {meta.buttonText}
             </motion.button>
           </motion.div>
         </div>

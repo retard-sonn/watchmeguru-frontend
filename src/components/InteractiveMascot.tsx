@@ -7,7 +7,7 @@ import GuruMascot from "@/components/illustrations/GuruMascot";
 interface InteractiveMascotProps {
   size?: number;
   className?: string;
-  initialState?: "idle" | "happy" | "celebrate" | "thinking" | "sleepy";
+  initialState?: "idle" | "happy" | "celebrate" | "thinking" | "sleepy" | "sad";
 }
 
 export default function InteractiveMascot({ size = 200, className = "", initialState = "idle" }: InteractiveMascotProps) {

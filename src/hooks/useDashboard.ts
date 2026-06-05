@@ -76,7 +76,7 @@ export function useCompleteTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (taskId: string) => {
+    mutationFn: async ({ taskId, success, hours }: { taskId: string; success: boolean; hours: number }) => {
       const token = await getToken();
       const res = await fetch(`${API_BASE}/api/v1/students/me/tasks/${taskId}/complete`, {
         method: "POST",
@@ -84,22 +84,25 @@ export function useCompleteTask() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        body: JSON.stringify({ success, hours }),
       });
       if (!res.ok) throw new Error("Failed to complete task");
       return res.json();
     },
-    onMutate: async (taskId) => {
+    onMutate: async ({ taskId, success }) => {
       await queryClient.cancelQueries({ queryKey: ["todayTasks"] });
       const previousTasks = queryClient.getQueryData(["todayTasks"]);
-      queryClient.setQueryData(["todayTasks"], (old: unknown) => {
-        if (!Array.isArray(old)) return old;
-        return old.map((t: { id: string; status: string }) =>
-          t.id === taskId ? { ...t, status: "completed" } : t
-        );
-      });
+      if (success) {
+        queryClient.setQueryData(["todayTasks"], (old: unknown) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((t: { id: string; status: string }) =>
+            t.id === taskId ? { ...t, status: "completed" } : t
+          );
+        });
+      }
       return { previousTasks };
     },
-    onError: (_err, _taskId, context) => {
+    onError: (_err, _variables, context) => {
       queryClient.setQueryData(["todayTasks"], context?.previousTasks);
     },
     onSettled: () => {
@@ -108,4 +111,26 @@ export function useCompleteTask() {
       queryClient.invalidateQueries({ queryKey: ["weekActivity"] });
     },
   });
+}
+
+export function useAuditLog() {
+  const { getToken } = useAuth();
+
+  const logEvent = async (type: string, data: any = {}) => {
+    try {
+      const token = await getToken();
+      await fetch(`${API_BASE}/api/v1/audit/log`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ event_type: type, event_data: data }),
+      });
+    } catch (e) {
+      console.warn("Audit logging failed:", e);
+    }
+  };
+
+  return { logEvent };
 }
