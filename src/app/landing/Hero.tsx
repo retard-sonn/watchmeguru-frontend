@@ -298,8 +298,6 @@ export default function Hero() {
             {hintVisible && (
               <div className="absolute -top-11 -right-6 bg-[#1A3A0A] text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg rotate-12 flex items-center gap-1 pointer-events-none z-50 whitespace-nowrap">
                 Drag me! 👋
-                <div clasgap-1 pointer-events-none z-50 whitespace-nowrap">
-                Drag me! 👋
                 <div className="absolute -bottom-1 left-5 w-2 h-2 bg-[#1A3A0A] rotate-45" />
               </div>
             )}

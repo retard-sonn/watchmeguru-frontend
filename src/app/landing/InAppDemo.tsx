@@ -4,7 +4,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "motion/react";
 import { playSound } from "@/lib/sound";
-import { fireConfetti } from "@/lib/confetti";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -290,5 +289,8 @@ export default function InAppDemo() {
         </div>
       </div>
     </section>
+  );
+}
+ction>
   );
 }
