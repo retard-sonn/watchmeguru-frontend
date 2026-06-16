@@ -215,7 +215,7 @@ export default function Hero() {
       {/* THE CANVAS BOARD */}
       <div 
         ref={boardRef} 
-        className={`relative w-full ${isMobile ? "min-h-[90vh] py-20 px-6" : "h-screen"} shrink-0 flex items-center justify-center select-none`}
+        className={`relative w-full ${isMobile ? "min-h-[90vh] py-20 px-6 flex-col gap-8" : "h-screen"} shrink-0 flex items-center justify-center select-none`}
         style={{ willChange: "transform", minWidth: isMobile ? "auto" : "1100px", minHeight: isMobile ? "auto" : "750px" }}
       >
         
@@ -285,18 +285,20 @@ export default function Hero() {
 
           {/* 3. TODAY'S TARGETS — Top Left (pushed further out to not overlap CTA) */}
         <motion.div 
-          className="absolute z-20 hidden lg:block"
-          style={{ left: "calc(50% - 530px)", top: "calc(50% - 200px)" }}
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+          className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
+          style={isMobile ? {} : { left: "calc(50% - 530px)", top: "calc(50% - 200px)" }}
+          drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
           onDragStart={() => setHintVisible(false)}
         >
-          <div ref={targetRef} className="node-wrapper float-2 cursor-grab active:cursor-grabbing bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047]"
-               style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", transform: "rotate(-4deg)" }}>
+          <div ref={targetRef} className={`node-wrapper ${isMobile ? "" : "float-2 cursor-grab active:cursor-grabbing"} bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047] mx-auto`}
+               style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-4deg)" }}>
             <WashiTape color="rgba(255,255,255,0.65)" />
             
             {hintVisible && (
               <div className="absolute -top-11 -right-6 bg-[#1A3A0A] text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg rotate-12 flex items-center gap-1 pointer-events-none z-50 whitespace-nowrap">
+                Drag me! 👋
+                <div clasgap-1 pointer-events-none z-50 whitespace-nowrap">
                 Drag me! 👋
                 <div className="absolute -bottom-1 left-5 w-2 h-2 bg-[#1A3A0A] rotate-45" />
               </div>
@@ -312,10 +314,7 @@ export default function Hero() {
             </div>
             <div className="space-y-2.5 font-semibold text-[#A16207] text-[14px] bg-white/45 p-3 rounded-xl border border-white/50">
               <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
-                Physics — 30 min
-              </div>
-              <div className="flex items-center gap-2.5">
+                <div className="w-2 h-2 rounded-full bg-ssName="flex items-center gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
                 Maths — 45 min
               </div>
@@ -331,13 +330,13 @@ export default function Hero() {
 
         {/* 4. DAY STREAK — Bottom Left */}
         <motion.div 
-          className="absolute z-20 hidden lg:block"
-          style={{ left: "calc(50% - 500px)", top: "calc(50% + 160px)" }}
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+          className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
+          style={isMobile ? {} : { left: "calc(50% - 500px)", top: "calc(50% + 160px)" }}
+          drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={streakRef} className="node-wrapper float-3 cursor-grab active:cursor-grabbing bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441]"
-               style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", transform: "rotate(-4deg)" }}>
+          <div ref={streakRef} className={`node-wrapper ${isMobile ? "" : "float-3 cursor-grab active:cursor-grabbing"} bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441] mx-auto`}
+               style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", transform: isMobile ? "none" : "rotate(-4deg)" }}>
               {/* Top spiral/calendar binding simulation */}
               <div className="bg-[#D9A441] h-[35px] w-full flex items-center justify-center gap-6 border-b-2 border-[#B8862D] relative shadow-inner">
                  <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "20%" }} />
@@ -372,13 +371,13 @@ export default function Hero() {
 
         {/* 5. LEVEL UP / XP — Bottom Right */}
         <motion.div 
-          className="absolute z-20 hidden lg:block"
-          style={{ left: "calc(50% + 370px)", top: "calc(50% + 190px)" }}
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+          className={`z-20 ${isMobile ? "relative w-full mt-6 mb-12" : "absolute"}`}
+          style={isMobile ? {} : { left: "calc(50% + 370px)", top: "calc(50% + 190px)" }}
+          drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={xpRef} className="node-wrapper float-4 cursor-grab active:cursor-grabbing bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE]"
-               style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", transform: "rotate(-2deg)" }}>
+          <div ref={xpRef} className={`node-wrapper ${isMobile ? "" : "float-4 cursor-grab active:cursor-grabbing"} bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE] mx-auto`}
+               style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-2deg)" }}>
             <WashiTape color="rgba(255,255,255,0.65)" />
 
               <div className="flex items-center gap-2.5 mb-4 mt-2">
@@ -421,4 +420,6 @@ export default function Hero() {
       </div>
     </section>
   );
+}
+ );
 }
