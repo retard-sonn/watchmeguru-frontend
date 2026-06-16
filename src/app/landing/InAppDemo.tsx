@@ -56,7 +56,6 @@ export default function InAppDemo() {
             timeout = setTimeout(() => {
               setAnimState(4); // Verified! Task checked, XP fills
               playSound("pop");
-              fireConfetti();
               timeout = setTimeout(() => {
                 setAnimState(5); // Cursor fades
                 timeout = setTimeout(() => {
