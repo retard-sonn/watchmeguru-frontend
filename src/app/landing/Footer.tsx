@@ -26,7 +26,15 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t" style={{ borderColor: "rgba(240,253,244,0.08)" }}>
           <p className="text-[11px] font-medium" style={{ color: "rgba(240,253,244,0.25)" }}>JEE · NEET · UPSC · NDA · CBSE — every exam warrior welcome.</p>
-          <p className="text-[11px]" style={{ color: "rgba(240,253,244,0.18)" }}>&copy; 2026 WatchMeGuru</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+            <p className="text-[11px]" style={{ color: "rgba(240,253,244,0.18)" }}>
+              Support: <a href="mailto:support@watchmeguru.in" className="hover:text-[#F0FDF4] transition-colors">support@watchmeguru.in</a>
+            </p>
+            <p className="text-[11px]" style={{ color: "rgba(240,253,244,0.18)" }}>
+              Founder: <a href="mailto:abraar@watchmeguru.in" className="hover:text-[#F0FDF4] transition-colors">abraar@watchmeguru.in</a>
+            </p>
+            <p className="text-[11px] ml-0 md:ml-4" style={{ color: "rgba(240,253,244,0.18)" }}>&copy; 2026 WatchMeGuru</p>
+          </div>
         </div>
       </div>
     </footer>
