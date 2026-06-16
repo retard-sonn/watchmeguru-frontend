@@ -413,15 +413,3 @@ export default function Hero() {
     </section>
   );
 }
-x] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
-                ))}
-              </div>
-          </div>
-        </motion.div>
-
-        {/* Subtle cursor glow */}
-        <div className="awwwards-cursor absolute w-8 h-8 rounded-full border-2 border-[#58CC02] pointer-events-none z-[100] hidden lg:block opacity-0" />
-      </div>
-    </section>
-  );
-}
