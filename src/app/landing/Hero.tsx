@@ -114,16 +114,25 @@ export default function Hero() {
   const setBoardX = useRef<any>(null);
   const setBoardY = useRef<any>(null);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!boardRef.current || window.innerWidth < 1024) return;
-    const xPos = (e.clientX / window.innerWidth - 0.5) * -80; 
-    const yPos = (e.clientY / window.innerHeight - 0.5) * -80;
-    if (setBoardX.current) setBoardX.current(xPos);
-    if (setBoardY.current) setBoardY.current(yPos);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!boardRef.current || isMobile) return;
+    const xPos = (e.clientX / window.innerWidth - 0.5) * -60; 
+    const yPos = (e.clientY / window.innerHeight - 0.5) * -60;
+    if (setBoardX.current) setBoardX.current(xPos);
+    if (setBoardY.current) setBoardY.current(yPos);
+  }, [isMobile]);
+
   const updateWires = useCallback(() => {
-    if (!boardRef.current) return;
+    if (!boardRef.current || isMobile) return;
     const boardRect = boardRef.current.getBoundingClientRect();
     const getCenter = (el: HTMLElement | null) => {
       if (!el) return { x: 0, y: 0 };
