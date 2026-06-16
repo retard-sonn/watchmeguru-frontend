@@ -7,7 +7,7 @@ import Ornament from "@/components/illustrations/Ornament";
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center pt-[68px] overflow-hidden texture-bg">
-      {/* ══ Left: Text + CTA ══ */}
+      
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[calc(100vh-68px)] py-20">
           <div>
@@ -50,7 +50,6 @@ export default function Hero() {
                 </Link>
               </div>
 
-              {/* Platform logos */}
               <div className="flex items-center gap-4 mb-4">
                 <span className="text-[13px] font-medium" style={{ color: "var(--ink-muted)" }}>
                   Works on
@@ -77,7 +76,6 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* ══ Right: Isometric World ══ */}
           <motion.div
             className="relative flex justify-center"
             initial={{ opacity: 0, scale: 0.92 }}
@@ -85,7 +83,7 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="relative w-full max-w-[520px] anim-float-slow" style={{ animationDuration: "7s" }}>
-              {/* Warm glow behind */}
+              
               <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
                 style={{
@@ -100,7 +98,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ══ Bottom scroll indicator ══ */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}

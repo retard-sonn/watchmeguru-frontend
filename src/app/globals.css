@@ -594,3 +594,7 @@
   padding: 8px 14px;
 }
 
+
+.wmg-body {
+  font-family: var(--font-dm-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+}

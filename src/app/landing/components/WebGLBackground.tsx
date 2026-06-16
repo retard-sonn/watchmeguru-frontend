@@ -6,7 +6,6 @@ import { Float, Preload, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
 
-// A single glowing 3D node
 function GlowingNode({ position, color, scale = 1, delay = 0 }: { position: [number, number, number], color: string, scale?: number, delay?: number }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshBasicMaterial>(null);
@@ -14,7 +13,7 @@ function GlowingNode({ position, color, scale = 1, delay = 0 }: { position: [num
   useFrame((state) => {
     if (!meshRef.current || !materialRef.current) return;
     const time = state.clock.getElapsedTime();
-    // Pulse animation
+   
     const pulse = Math.sin(time * 2 + delay) * 0.15 + 0.85;
     meshRef.current.scale.setScalar(scale * pulse);
     materialRef.current.opacity = pulse * 0.6;
@@ -30,13 +29,12 @@ function GlowingNode({ position, color, scale = 1, delay = 0 }: { position: [num
   );
 }
 
-// Interconnecting 3D lines
 function DataWires() {
   const lineMaterial = useMemo(() => new THREE.LineBasicMaterial({ color: "#2E7A0A", transparent: true, opacity: 0.15 }), []);
   
   const points = useMemo(() => {
     const pts = [];
-    // Generate a random web of connected points
+   
     for (let i = 0; i < 40; i++) {
       pts.push(
         new THREE.Vector3((Math.random() - 0.5) * 40, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 10 - 15)
@@ -53,12 +51,11 @@ function DataWires() {
   return <lineSegments geometry={geometry} material={lineMaterial} />;
 }
 
-// Mouse Parallax Camera
 function CameraRig() {
   const { camera, pointer } = useThree();
 
   useFrame(() => {
-    // Smoothly interpolate camera position based on mouse (pointer is normalized -1 to 1)
+   
     gsap.to(camera.position, {
       x: pointer.x * 2,
       y: pointer.y * 2,
@@ -78,8 +75,7 @@ export default function WebGLBackground() {
         <CameraRig />
         <fog attach="fog" args={["#F8FAF5", 10, 40]} />
         <ambientLight intensity={0.5} />
-        
-        {/* Abstract 3D Nodes floating in the background void */}
+
         <GlowingNode position={[-8, 4, -10]} color="#58CC02" scale={1.2} delay={0} />
         <GlowingNode position={[10, -5, -15]} color="#F5A623" scale={1.8} delay={1} />
         <GlowingNode position={[-12, -6, -20]} color="#3B82F6" scale={2.5} delay={2} />

@@ -7,10 +7,10 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
           <div>
-            <Link href="/" className="text-[20px] font-extrabold tracking-tight" style={{ color: "#F0FDF4", fontFamily: "var(--font-baloo)" }}>
-              WatchMe<span style={{ color: "#58CC02" }}>Guru</span>
+            <Link href="/" className="inline-block">
+              <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-10 md:h-14 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" />
             </Link>
-            <p className="text-[12px] font-medium mt-1" style={{ color: "rgba(240,253,244,0.35)" }}>Built by students who struggled with consistency too.</p>
+            <p className="text-[12px] font-medium mt-2" style={{ color: "rgba(240,253,244,0.35)" }}>Built by students who struggled with consistency too.</p>
           </div>
           <div className="flex gap-8">
             {["Features","How it works","Dashboard","Smart Mentor"].map(item => (

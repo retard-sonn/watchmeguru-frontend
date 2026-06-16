@@ -45,7 +45,6 @@ export default function DashboardPreview() {
           </p>
         </motion.div>
 
-        {/* Dashboard game board */}
         <motion.div
           className="card-terrain p-8"
           initial={{ opacity: 0, y: 40 }}
@@ -53,9 +52,9 @@ export default function DashboardPreview() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          {/* Top row: Streak + XP + Kickstart */}
+          
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {/* Streak counter */}
+            
             <motion.div
               className="card-earthy p-6 flex flex-col items-center text-center"
               whileInView={{ opacity: 1, scale: 1 }}
@@ -81,7 +80,6 @@ export default function DashboardPreview() {
               </div>
             </motion.div>
 
-            {/* XP Meter */}
             <motion.div
               className="card-earthy p-6 flex flex-col items-center text-center"
               whileInView={{ opacity: 1, scale: 1 }}
@@ -107,7 +105,6 @@ export default function DashboardPreview() {
               </div>
             </motion.div>
 
-            {/* Kickstart button */}
             <motion.div
               className="card-earthy p-6 flex flex-col items-center justify-center text-center"
               whileInView={{ opacity: 1, scale: 1 }}
@@ -143,9 +140,8 @@ export default function DashboardPreview() {
             </motion.div>
           </div>
 
-          {/* Middle: Missions + Calendar */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Mission list */}
+            
             <div className="space-y-3">
               <h4
                 className="text-[14px] font-bold uppercase tracking-widest mb-4"
@@ -158,7 +154,6 @@ export default function DashboardPreview() {
               ))}
             </div>
 
-            {/* Weekly calendar */}
             <div>
               <h4
                 className="text-[14px] font-bold uppercase tracking-widest mb-4"
@@ -205,7 +200,6 @@ export default function DashboardPreview() {
             </div>
           </div>
 
-          {/* Bottom links */}
           <div className="mt-8 pt-6 border-t flex justify-center" style={{ borderColor: "var(--border)" }}>
             <Link href="/sign-up" className="btn-moss">
               Start Your World →

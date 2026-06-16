@@ -37,9 +37,8 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
   const [genStep, setGenStep] = useState(0);
 
   const selectedCountry = COUNTRIES.find(c=>c.code===country) || COUNTRIES[COUNTRIES.length-1];
-  const exams = MISSIONS;  // Use same missions for all countries for now
+  const exams = MISSIONS; 
 
-  // GSAP scene entrance
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(".scene-content", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" });
@@ -71,19 +70,17 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col overflow-hidden" style={{ background: "#F4EEDB" }}>
-      {/* Subtle depth layers */}
+      
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-15%] right-[5%] w-80 h-80 rounded-full blur-3xl opacity-[0.04]" style={{ background: "radial-gradient(circle, #7BA65B 0%, transparent 70%)" }} />
         <div className="absolute bottom-[-10%] left-[10%] w-72 h-72 rounded-full blur-3xl opacity-[0.03]" style={{ background: "radial-gradient(circle, #D9A441 0%, transparent 70%)" }} />
       </div>
 
-      {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-6 py-4">
-        <span className="text-[16px] font-extrabold" style={{ color:"#3D2E24", fontFamily:"var(--font-baloo)" }}>WatchMe<span style={{color:"#7BA65B"}}>Guru</span></span>
+        <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-10 w-auto object-contain" />
         <button onClick={onDismiss} className="text-[13px] font-bold px-4 py-2 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#9B8E84"}}>Skip for now</button>
       </div>
 
-      {/* Progress */}
       <div className="relative z-10 px-6 pb-2">
         <div className="max-w-md mx-auto flex items-center gap-2">
           <span className="text-[10px] font-bold uppercase tracking-widest" style={{color:"#9B8E84"}}>
@@ -95,7 +92,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
         </div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 pb-6">
         <AnimatePresence mode="wait">
           {submitting ? (
@@ -108,7 +104,7 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
             </motion.div>
           ) : (
           <div key={step} className="scene-content w-full max-w-lg">
-          {/* SCENE 1: Country */}
+          
           {step===0&&<div className="flex flex-col items-center text-center">
             <span className="text-[56px] mb-4">🌍</span>
             <h1 className="text-[28px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Where are you from?</h1>
@@ -120,7 +116,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
             <button onClick={()=>goTo(1)} className="btn-moss w-full text-[15px] py-3">Continue <ArrowRight size={16}/></button>
           </div>}
 
-          {/* SCENE 2: Mission */}
           {step===1&&<div className="flex flex-col items-center text-center">
             <h2 className="text-[26px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What are we helping you become?</h2>
             <p className="text-[13px] font-medium mb-5" style={{color:"#6B5D52"}}>Choose your mission — or create your own.</p>
@@ -136,7 +131,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
               onKeyDown={(e)=>{if(e.key==="Enter"&&mission==="custom")goTo(2)}}/>
           </div>}
 
-          {/* SCENE 3: Identity */}
           {step===2&&<div className="flex flex-col items-center text-center">
             <h2 className="text-[26px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>When do you shine?</h2>
             <p className="text-[13px] font-medium mb-5" style={{color:"#6B5D52"}}>This helps time your sessions perfectly.</p>
@@ -149,7 +143,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
             </div>
           </div>}
 
-          {/* SCENE 4: Mentor + WhatsApp */}
           {step===3&&<div className="flex flex-col items-center text-center">
             <span className="text-[64px] mb-4">🦉</span>
             <h2 className="text-[26px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Meet your mentor</h2>
@@ -161,7 +154,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
             <button onClick={()=>goTo(4)} className="btn-moss text-[15px] py-3 px-8">Continue <ArrowRight size={16}/></button>
           </div>}
 
-          {/* SCENE 5: Subjects */}
           {step===4&&<div className="flex flex-col items-center text-center">
             <h2 className="text-[26px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What will grow your tree?</h2>
             <p className="text-[13px] font-medium mb-5" style={{color:"#6B5D52"}}>Each subject becomes part of your ecosystem.</p>
@@ -179,7 +171,6 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
             <button onClick={()=>goTo(5)} disabled={selectedSubs.length===0&&customSubs.length===0} className="btn-moss w-full text-[15px] py-3 disabled:opacity-40">Continue <ArrowRight size={16}/></button>
           </div>}
 
-          {/* SCENE 6: Review + Launch */}
           {step===5&&<div className="flex flex-col items-center text-center">
             <div className="text-[56px] mb-4">{exams.find(m=>m.id===mission)?.emoji||"🎯"}</div>
             <h2 className="text-[26px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Your world is ready</h2>
@@ -197,10 +188,8 @@ export default function CinematicOnboarding({ onComplete, onDismiss, getToken }:
         </AnimatePresence>
       </div>
 
-      {/* Country picker modal */}
       {showPicker&&<CountryPicker selected={country} onSelect={(code, dial)=>{setCountry(code);setDialCode(dial);setShowPicker(false)}} onClose={()=>setShowPicker(false)}/>}
 
-      {/* Back */}
       {!submitting && step>0 && (
         <div className="relative z-10 px-6 pb-4">
           <button onClick={()=>goTo(step-1)} className="text-[13px] font-bold px-5 py-2.5 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#6B5D52"}}>← Back</button>

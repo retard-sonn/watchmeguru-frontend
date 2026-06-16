@@ -7,7 +7,6 @@ import { playSound } from "@/lib/sound";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
-// Custom SVGs reflecting the earthy, unique style
 const CustomMentorIcon = () => (
   <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M16 29C23.1797 29 29 23.1797 29 16C29 8.8203 23.1797 3 16 3C8.8203 3 3 8.8203 3 16C3 23.1797 8.8203 29 16 29Z" fill="#FDF9F0" />
@@ -42,24 +41,23 @@ export default function InAppDemo() {
   const phoneRef = useRef<HTMLDivElement>(null);
   const [animState, setAnimState] = useState(0);
 
-  // Auto-play dashboard animation sequence
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const runSequence = () => {
-      setAnimState(0); // Idle
+      setAnimState(0);
       timeout = setTimeout(() => {
-        setAnimState(1); // Cursor moves and taps Physics
+        setAnimState(1);
         timeout = setTimeout(() => {
-          setAnimState(2); // Modal appears
+          setAnimState(2);
           timeout = setTimeout(() => {
-            setAnimState(3); // Cursor taps Upload
+            setAnimState(3);
             timeout = setTimeout(() => {
-              setAnimState(4); // Verified! Task checked, XP fills
+              setAnimState(4);
               playSound("pop");
               timeout = setTimeout(() => {
-                setAnimState(5); // Cursor fades
+                setAnimState(5);
                 timeout = setTimeout(() => {
-                  runSequence(); // Loop
+                  runSequence();
                 }, 4000);
               }, 1000);
             }, 800);
@@ -68,7 +66,6 @@ export default function InAppDemo() {
       }, 1000);
     };
 
-    // Start sequence when scrolled into view
     const ctx = gsap.context(() => {
       gsap.fromTo(phoneRef.current, { y: 60, opacity: 0, scale: 0.95 }, {
         y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out",
@@ -101,14 +98,12 @@ export default function InAppDemo() {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          {/* Phone mockup - Animated Dashboard */}
+          
           <div ref={phoneRef} className="flex-shrink-0 relative">
             <div className="w-[320px] sm:w-[350px] h-[680px] rounded-[48px] overflow-hidden border-[10px] border-[#1A3A0A] bg-[#FDF9F0] shadow-2xl relative flex flex-col">
-              
-              {/* Fake Hardware Notch */}
+
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[28px] bg-[#1A3A0A] rounded-b-[18px] z-50" />
 
-              {/* Header */}
               <div className="pt-12 px-5 pb-4 flex justify-between items-center z-10">
                 <div className="flex gap-3 items-center">
                    <div className="w-10 h-10 rounded-full bg-[#D9A441] border-[3px] border-white shadow-sm flex items-center justify-center text-white font-bold text-[14px]">ME</div>
@@ -124,9 +119,8 @@ export default function InAppDemo() {
                 </div>
               </div>
 
-              {/* Main Dashboard Area */}
               <div className="flex-1 px-5 relative z-10 flex flex-col">
-                {/* Mascot / Level Area */}
+                
                 <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.03)] flex flex-col items-center relative mt-2">
                   <div className="absolute -top-4 bg-[#58CC02] text-white px-4 py-1.5 rounded-full text-[10px] font-bold tracking-wider shadow-sm uppercase border-2 border-white">Focus Rank</div>
                   
@@ -155,7 +149,6 @@ export default function InAppDemo() {
                   </div>
                 </div>
 
-                {/* Today's Missions */}
                 <div className="mt-8 flex-1">
                    <div className="flex justify-between items-center mb-4">
                      <h3 className="text-[18px] font-extrabold text-[#3D2E24]" style={{ fontFamily: "var(--font-baloo)" }}>Today's Missions</h3>
@@ -163,7 +156,7 @@ export default function InAppDemo() {
                    </div>
 
                    <div className="space-y-3 relative">
-                     {/* Task 1: Physics */}
+                     
                      <motion.div 
                        className="bg-white p-4 rounded-2xl border-2 shadow-sm flex items-center gap-3 relative overflow-hidden transition-colors"
                        animate={{ 
@@ -181,7 +174,6 @@ export default function InAppDemo() {
                         </div>
                      </motion.div>
 
-                     {/* Task 2: Mathematics */}
                      <div className="bg-white p-4 rounded-2xl border-2 border-[rgba(0,0,0,0.04)] shadow-sm flex items-center gap-3">
                         <div className="w-12 h-12 rounded-xl bg-[#FDEEED] text-[#DC2626] flex items-center justify-center text-[22px]">🔢</div>
                         <div className="flex-1">
@@ -190,8 +182,7 @@ export default function InAppDemo() {
                         </div>
                         <div className="w-8 h-8 rounded-full border-2 border-[#E5E7EB] flex items-center justify-center" />
                      </div>
-                     
-                     {/* Overlay Modal for Upload Proof */}
+
                      <AnimatePresence>
                        {(animState === 2 || animState === 3) && (
                          <motion.div 
@@ -210,7 +201,6 @@ export default function InAppDemo() {
                        )}
                      </AnimatePresence>
 
-                     {/* Toast Notification */}
                      <AnimatePresence>
                        {animState === 4 && (
                          <motion.div 
@@ -228,7 +218,6 @@ export default function InAppDemo() {
                 </div>
               </div>
 
-              {/* Bottom Nav */}
               <div className="h-[76px] bg-white border-t border-[rgba(0,0,0,0.06)] flex items-center justify-around px-6 z-10 rounded-b-[38px] pb-3 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
                 <div className="w-12 h-12 rounded-full flex flex-col items-center justify-center text-[#58CC02] relative">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L4 9V21H9V14H15V21H20V9L12 3Z"/></svg>
@@ -242,7 +231,6 @@ export default function InAppDemo() {
                 </div>
               </div>
 
-              {/* Animated Cursor */}
               <AnimatePresence>
                 {animState > 0 && animState < 5 && (
                   <motion.div
@@ -267,7 +255,6 @@ export default function InAppDemo() {
             </div>
           </div>
 
-          {/* Right: Value props */}
           <div className="flex-1 space-y-6">
             {[
               { icon: <CustomMentorIcon />, title: "Direct App Mentorship", desc: "Your smart mentor checks in proactively. Not just an app you mute, but a companion that keeps you accountable." },

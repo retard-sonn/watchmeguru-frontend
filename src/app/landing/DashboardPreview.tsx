@@ -28,13 +28,12 @@ export default function DashboardPreview() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Heading
+     
       gsap.from(headingRef.current, {
         scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
         y: 40, opacity: 0, duration: 0.7, ease: "power3.out",
       });
 
-      // Counter: Streak 0→14
       const streakEl = streakRef.current;
       if (streakEl) {
         const obj = { val: 0 };
@@ -48,7 +47,6 @@ export default function DashboardPreview() {
         gsap.to(obj, { val: 14, duration: 2, scrollTrigger: { trigger: streakEl, start: "top 80%", once: true } });
       }
 
-      // Counter: XP 0→2430
       const xpEl = xpRef.current;
       if (xpEl) {
         const obj = { val: 0 };
@@ -61,13 +59,11 @@ export default function DashboardPreview() {
         });
       }
 
-      // Mission cards stagger
       gsap.from(missionsRef.current?.children || [], {
         scrollTrigger: { trigger: missionsRef.current, start: "top 85%", once: true },
         x: -40, opacity: 0, duration: 0.5, stagger: 0.12, ease: "power3.out",
       });
 
-      // Calendar dots pop sequence
       gsap.from(daysRef.current?.children || [], {
         scrollTrigger: { trigger: daysRef.current, start: "top 85%", once: true },
         scale: 0, opacity: 0, duration: 0.3, stagger: 0.05, ease: "back.out(2)",
@@ -92,7 +88,7 @@ export default function DashboardPreview() {
 
         <div className="card-terrain p-8">
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {/* Streak counter */}
+            
             <div className="card-earthy p-6 flex flex-col items-center text-center">
               <div className="w-16 h-16 mb-3"><StreakFire streak={14} /></div>
               <div className="text-[12px] font-bold uppercase tracking-widest mb-1" style={{ color: "var(--ink-muted)" }}>Streak</div>
@@ -102,7 +98,6 @@ export default function DashboardPreview() {
               <div className="text-[12px] font-medium" style={{ color: "var(--moss)" }}>days</div>
             </div>
 
-            {/* XP Meter */}
             <div className="card-earthy p-6 flex flex-col items-center text-center">
               <div className="w-16 h-16 mb-3"><XPMeter progress={0.65} /></div>
               <div className="text-[12px] font-bold uppercase tracking-widest mb-1" style={{ color: "var(--ink-muted)" }}>XP Earned</div>
@@ -112,7 +107,6 @@ export default function DashboardPreview() {
               <div className="text-[12px] font-medium" style={{ color: "var(--moss)" }}>/ 3,750 to next level</div>
             </div>
 
-            {/* Kickstart button */}
             <div className="card-earthy p-6 flex flex-col items-center justify-center text-center" style={{ background: "linear-gradient(145deg, #F0FDF4 0%, #E8FFE8 100%)" }}>
               <div className="mb-4">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #58CC02, #46A302)", boxShadow: "0 8px 32px rgba(88,204,2,0.35)" }}>

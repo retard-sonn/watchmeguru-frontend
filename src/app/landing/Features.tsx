@@ -27,13 +27,12 @@ export default function Features() {
         scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
       });
 
-      // Gemini suggestion: stagger card reveals
       const cards = gridRef.current?.children;
       if (cards) {
         gsap.fromTo(cards, { y: 60, scale: 0.92, opacity: 0 }, {
           y: 0, scale: 1, opacity: 1,
           duration: 0.7,
-          stagger: 0.12, // Cascade effect
+          stagger: 0.12,
           ease: "back.out(1.4)",
           scrollTrigger: { trigger: gridRef.current, start: "top 85%", once: true },
         });

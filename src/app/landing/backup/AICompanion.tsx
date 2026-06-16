@@ -49,9 +49,8 @@ export default function AICompanion() {
           </p>
         </motion.div>
 
-        {/* Two-column: Character + Traits */}
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Left: Character illustration */}
+          
           <motion.div
             className="flex justify-center"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -73,7 +72,6 @@ export default function AICompanion() {
             </div>
           </motion.div>
 
-          {/* Right: Traits */}
           <div className="space-y-6">
             {TRAITS.map((trait, i) => (
               <motion.div
@@ -107,7 +105,6 @@ export default function AICompanion() {
           </div>
         </div>
 
-        {/* Achievement badges */}
         <motion.div
           className="mt-20 card-terrain p-8"
           initial={{ opacity: 0, y: 28 }}

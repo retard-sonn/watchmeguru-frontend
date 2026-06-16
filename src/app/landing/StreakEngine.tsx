@@ -65,12 +65,11 @@ export default function StreakEngine() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Flame flicker
+     
       gsap.to(flameRef.current, {
         scale: 1.08, duration: 0.6, repeat: -1, yoyo: true, ease: "power1.inOut",
       });
 
-      // Streak counter
       const obj = { val: 0 };
       if (counterRef.current) {
         gsap.to(obj, {
@@ -81,20 +80,17 @@ export default function StreakEngine() {
         });
       }
 
-      // XP bar fill
       gsap.fromTo(barRef.current, { width: "0%" }, {
         width: "65%", duration: 2,
         scrollTrigger: { trigger: barRef.current, start: "top 85%", once: true },
       });
 
-      // Ranks stagger
       const rankEls = document.querySelectorAll(".rank-item");
       gsap.fromTo(rankEls, { y: 20, opacity: 0 }, {
         y: 0, opacity: 1, duration: 0.4, stagger: 0.1, ease: "power3.out",
         scrollTrigger: { trigger: ".rank-row", start: "top 85%", once: true },
       });
 
-      // Calendar dots
       const dots = document.querySelectorAll(".streak-dot");
       gsap.fromTo(dots, { scale: 0 }, {
         scale: 1, duration: 0.3, stagger: 0.06, ease: "back.out(2)",
@@ -117,7 +113,7 @@ export default function StreakEngine() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Left: Streak + Calendar */}
+          
           <div className="space-y-6">
             <div ref={streakBoxRef} onMouseEnter={() => { if(streakBoxRef.current) gsap.to(streakBoxRef.current, {scale:1.03, duration:0.3, ease: "back.out(1.5)"}); playSound("pop"); }} onMouseLeave={() => { if (streakBoxRef.current) gsap.to(streakBoxRef.current, {scale: 1, duration: 0.3, ease: "power2.out"}) }} className="rounded-2xl p-6 text-center cursor-pointer transition-shadow hover:shadow-[0_8px_32px_rgba(88,204,2,0.15)]" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)", boxShadow: "0 2px 12px rgba(0,0,0,0.03)" }}>
               <div ref={flameRef} className="inline-block mb-3">
@@ -134,7 +130,6 @@ export default function StreakEngine() {
               </p>
             </div>
 
-            {/* Streak calendar */}
             <div className="streak-calendar rounded-2xl p-5" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)" }}>
               <div className="flex justify-between">
                 {STREAK_DAYS.map((day, i) => (
@@ -150,9 +145,8 @@ export default function StreakEngine() {
             </div>
           </div>
 
-          {/* Right: XP + Ranks */}
           <div className="space-y-6">
-            {/* XP bar */}
+            
             <div className="rounded-2xl p-6" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)" }}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[12px] font-bold uppercase tracking-widest" style={{ color: "#6B8F5E" }}>XP Progress</span>
@@ -170,7 +164,6 @@ export default function StreakEngine() {
               </p>
             </div>
 
-            {/* Ranks */}
             <div className="rounded-2xl p-5" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.04)" }}>
               <h3 className="text-[13px] font-bold uppercase tracking-widest mb-4" style={{ color: "#6B8F5E" }}>Your Journey</h3>
               <div className="rank-row space-y-2">

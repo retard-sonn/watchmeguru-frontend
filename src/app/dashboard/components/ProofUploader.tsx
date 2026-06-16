@@ -65,7 +65,6 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
       return;
     }
 
-    // Read as data URL for both preview + sending to Vision API
     const dataUrl = await new Promise<string>((resolve) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result as string);
@@ -78,7 +77,7 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
     setVerifyResult(null);
 
     try {
-      // Step 1: Upload to Supabase Storage (best effort — fallback to data URL)
+     
       let fileUrl = dataUrl;
       try {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://dvrdvdnxvnattcjqosdw.supabase.co";
@@ -93,13 +92,12 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
           fileUrl = `${supabaseUrl}/storage/v1/object/public/proofs/${fileName}`;
         }
       } catch {
-        // No-op — use dataUrl fallback
+       
       }
 
       setUploading(false);
       setVerifying(true);
 
-      // Step 2: Gemini Vision verify
       const token = await getToken();
       const verifyRes = await fetch(`${API_BASE}/api/v1/ai/verify-proof`, {
         method: "POST",
@@ -125,7 +123,7 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
       setUploaded(true);
       onUploaded(fileUrl, result);
     } catch {
-      // If Vision API fails, still count as uploaded (fallback)
+     
       setUploaded(true);
       onUploaded(dataUrl, undefined);
       setError("Uploaded, but AI verification failed. Proof recorded without bonus XP.");
@@ -144,7 +142,6 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
 
   const reset = () => { setPreview(null); setUploaded(false); setError(""); setVerifyResult(null); };
 
-  // ── Compact mode ──
   if (compact && uploaded && verifyResult) {
     const meta = VERDICT_META[verifyResult.verdict];
     const Icon = meta.icon;
@@ -202,7 +199,6 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
     );
   }
 
-  // ── Full mode ──
   return (
     <div>
       <div
@@ -230,7 +226,7 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
                 <Sparkles size={36} className="anim-heartbeat" style={{ color: "#58CC02" }} />
               </div>
               <p className="text-[14px] font-semibold" style={{ color: "var(--earthy)" }}>AI is verifying your work...</p>
-              <p className="text-[12px] font-medium" style={{ color: "var(--ink-muted)" }}>Gemini Vision is checking for genuine study evidence</p>
+              <p className="text-[12px] font-medium" style={{ color: "var(--ink-muted)" }}>AI Vision is checking for genuine study evidence</p>
             </motion.div>
           ) : uploaded && verifyResult ? (
             <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center gap-4">
@@ -276,7 +272,7 @@ export default function ProofUploader({ onUploaded, taskTitle, subject, compact 
                   {dragOver ? "Drop your proof here" : taskTitle ? `Upload proof for "${taskTitle}"` : "Upload study proof"}
                 </p>
                 <p className="text-[12px] font-medium mt-1" style={{ color: "var(--ink-muted)" }}>
-                  Gemini Vision will verify your study evidence • Max 10MB
+                  AI Vision will verify your study evidence • Max 10MB
                 </p>
               </div>
               <div className="flex items-center gap-3 mt-1">

@@ -8,8 +8,7 @@ export default function SoundToggle() {
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
-    
-  
+
   }, []);
 
   const handleToggle = () => {

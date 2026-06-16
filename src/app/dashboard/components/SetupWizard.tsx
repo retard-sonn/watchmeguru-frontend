@@ -48,7 +48,7 @@ type Block = { label: string; hours: number; color: string; startTime: string; s
 type DaySchedule = { day: string; fullDay: string; isRest: boolean; totalHours: number; blocks: Block[]; };
 
 export default function SetupWizard({ onComplete, onDismiss, getToken, initialProfile }: Props) {
-  // Step 0: Country, Step 1: Mission, Step 2: Mentor, Step 3: Identity, Step 4: Subjects, Step 5: Schedule, Step 6: Review
+ 
   const [step, setStep] = useState(0);
   const [country, setCountry] = useState("IN");
   const [countryOpen, setCountryOpen] = useState(false);
@@ -66,7 +66,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
   const [submitting, setSubmitting] = useState(false);
   const [genStep, setGenStep] = useState(0);
 
-  // Schedule states
   const [schedule, setSchedule] = useState<DaySchedule[] | null>(null);
   const [scheduleType, setScheduleType] = useState<"ai" | "manual" | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -77,7 +76,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
   const exams = selectedCountry.exams;
   const filteredCountries = searchCountries(countrySearch);
 
-  // Load saved data
   useEffect(() => {
     let saved: any = null;
     if (initialProfile && initialProfile.setup_complete) {
@@ -109,7 +107,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
       setWhatsapp(phone);
       
       if (saved.weak_subjects && Array.isArray(saved.weak_subjects)) {
-        // Just populate selected/custom based on matches
+       
         const std = saved.weak_subjects.filter((s: string) => PRESET_SUBJECTS.some(p => p.id === s));
         const cst = saved.weak_subjects.filter((s: string) => !PRESET_SUBJECTS.some(p => p.id === s));
         setSelectedSubjects(std);
@@ -120,7 +118,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
         const schedData = Array.isArray(saved.daily_schedule) ? saved.daily_schedule : saved.daily_schedule.schedule;
         if (schedData && schedData.length > 0) {
           setSchedule(schedData);
-          setScheduleType(saved.schedule_type || "manual"); // fallback 
+          setScheduleType(saved.schedule_type || "manual");
         }
       }
     }
@@ -142,7 +140,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
           setSchedule(d.schedule);
           logEvent("SCHEDULE_GENERATED_SUCCESS", { days: d.schedule.length });
         } else {
-          // Fallback to manual if AI fails
+         
           initManualSchedule();
           logEvent("SCHEDULE_GENERATED_FALLBACK");
         }
@@ -177,8 +175,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
     const subjects = [...selectedSubjects, ...customSubjects];
     const label = subjects.length > 0 ? subjects[0] : "Study";
     const color = PRESET_SUBJECTS.find(s=>s.id===label)?.color || "#58CC02";
-    
-    // Estimate next start time
+
     let nextStart = "9:00 AM";
     if (day.blocks.length > 0) {
       const last = day.blocks[day.blocks.length-1];
@@ -236,7 +233,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
     setSubmitting(true); setGenStep(1);
     const token = await getToken();
     setGenStep(2);
-    // Combine dial code with subscriber number for backend
+   
     const fullNumber = dialCode + whatsapp;
     const profile = {
       country, 
@@ -271,23 +268,21 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col overflow-hidden" style={{ background: "#F4EEDB" }}>
-      {/* Ambient bg */}
+      
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[10%] w-96 h-96 rounded-full blur-3xl opacity-[0.06]" style={{ background: "radial-gradient(circle, #7BA65B 0%, transparent 70%)" }} />
         <div className="absolute bottom-[-10%] right-[5%] w-80 h-80 rounded-full blur-3xl opacity-[0.05]" style={{ background: "radial-gradient(circle, #D9A441 0%, transparent 70%)" }} />
         <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
       </div>
 
-      {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-6 py-4">
-        <span className="text-[16px] font-extrabold" style={{ color:"#3D2E24", fontFamily:"var(--font-baloo)" }}>WatchMe<span style={{color:"#7BA65B"}}>Guru</span></span>
+        <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-10 w-auto object-contain" />
         <div className="flex items-center gap-4">
           <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-[rgba(0,0,0,0.03)]" style={{color:"#9B8E84"}}>{submitting ? "Building" : `Step ${step+1}/7`}</span>
           <button onClick={onDismiss} className="text-[13px] font-bold px-4 py-2 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#9B8E84"}}>Skip for now</button>
         </div>
       </div>
 
-      {/* Content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 pb-6 overflow-hidden">
         <AnimatePresence mode="wait">
           {submitting ? (
@@ -300,7 +295,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             </motion.div>
           ) : (
           <>
-          {/* STEP 0: Country */}
+          
           {step===0&&<motion.div key="s0" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-md">
             <h1 className="text-[28px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Where are you from?</h1>
             <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>This helps us show relevant exams and set up your experience.</p>
@@ -324,7 +319,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             <button onClick={()=>setStep(1)} className="btn-moss w-full mt-6 text-[15px] py-3">Continue <ArrowRight size={16}/></button>
           </motion.div>}
 
-          {/* STEP 1: Mission */}
           {step===1&&<motion.div key="s1" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-3xl">
             <h2 className="text-[26px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What are we helping you become?</h2>
             <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>Choose your mission — or create your own.</p>
@@ -349,7 +343,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             </div>
           </motion.div>}
 
-          {/* STEP 2: Mentor */}
           {step===2&&<motion.div key="s2" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="flex flex-col items-center max-w-md w-full">
             <div className="mb-4">
               <GuruMascot size={64} />
@@ -375,7 +368,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             <button onClick={()=>setStep(3)} disabled={!whatsapp} className="btn-moss mt-6 text-[15px] py-3 px-8 disabled:opacity-40">Continue <ArrowRight size={16}/></button>
           </motion.div>}
 
-          {/* STEP 3: Identity */}
           {step===3&&<motion.div key="s3" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-lg">
             <h2 className="text-[24px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>When do you shine?</h2>
             <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>This helps time your sessions perfectly.</p>
@@ -388,7 +380,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             </div>
           </motion.div>}
 
-          {/* STEP 4: Subjects */}
           {step===4&&<motion.div key="s4" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-lg">
             <h2 className="text-[24px] font-extrabold mb-2 text-center" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>What will grow your tree?</h2>
             <p className="text-[14px] font-medium mb-4 text-center" style={{color:"#6B5D52"}}>Each subject becomes part of your ecosystem.</p>
@@ -412,7 +403,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
               className="btn-moss w-full text-[15px] py-3 disabled:opacity-40">Continue <ArrowRight size={16}/></button>
           </motion.div>}
 
-          {/* STEP 5: Schedule Crafting */}
           {step===5&&<motion.div key="s5" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="w-full max-w-4xl flex flex-col h-full max-h-[80vh]">
             {!schedule ? (
               <div className="flex flex-col items-center justify-center h-full">
@@ -522,7 +512,6 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
             )}
           </motion.div>}
 
-          {/* STEP 6: Final Review */}
           {step===6&&<motion.div key="s6" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="flex flex-col items-center max-w-sm w-full">
             <div className="text-[56px] mb-4">{exams.find(m=>m.id===mission)?.emoji||"🎯"}</div>
             <h2 className="text-[24px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Your world is ready</h2>

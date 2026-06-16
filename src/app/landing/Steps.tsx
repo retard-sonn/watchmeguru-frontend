@@ -19,13 +19,12 @@ export default function Steps() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Heading
+     
       gsap.fromTo(headingRef.current, { y: 30, opacity: 0 }, {
         y: 0, opacity: 1, duration: 0.6, ease: "power3.out",
         scrollTrigger: { trigger: headingRef.current, start: "top 80%", once: true },
       });
 
-      // Cards stagger in from below with scale
       const cards = cardsRef.current?.children;
       if (cards) {
         gsap.fromTo(cards, { y: 60, scale: 0.9, opacity: 0 }, {

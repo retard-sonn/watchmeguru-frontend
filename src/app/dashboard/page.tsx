@@ -64,8 +64,7 @@ export default function DashboardPage() {
   const tasksCompleted = profile?.tasks_completed || 0;
   const studyHours = profile?.study_hours || 0;
   const quizAccuracy = profile?.quiz_accuracy || 0;
-  
-  // New Granular Level System
+
   const rawXp = Math.round(studyHours * 50) + dayStreak * 10;
   const levelInfo = getLevelFromXP(rawXp);
   const level = levelInfo.level;
@@ -80,7 +79,6 @@ export default function DashboardPage() {
   const computeDaysToExam = (): number|null => { if (!mounted) return null; const raw = profile?.exam_date||(savedProfile?.exam_date as string); if (!raw) return null; const d = new Date(raw); if (isNaN(d.getTime())) return null; return Math.max(0, Math.ceil((d.getTime()-Date.now())/86400000)); };
   const daysToExam = computeDaysToExam();
 
-  // Level Up Detection
   useEffect(() => {
     if (mounted && level > prevLevelRef.current) {
       setShowLevelUnlock(true);
@@ -97,7 +95,7 @@ export default function DashboardPage() {
     } else if (event.type === "all_done") {
       setCelebration({isOpen:true,title:"Perfect Day! 🌟",subtitle:`+${event.xp||100} XP Bonus`,description:"You completed every mission today. Your ecosystem is thriving. Now rest and recover — champions sleep too.",type:"daily_goal",statValue:event.xp});
     } else if (event.type === "proof_verified") {
-      setCelebration({isOpen:true,title:"Proof Verified! ✓",subtitle:`+${event.xp||50} XP — Gemini confirms your work`,description:event.feedback||"Your study evidence has been authenticated by AI vision.",type:"general",statValue:event.xp});
+      setCelebration({isOpen:true,title:"Proof Verified! ✓",subtitle:`+${event.xp||50} XP — AI confirms your work`,description:event.feedback||"Your study evidence has been authenticated by AI vision.",type:"general",statValue:event.xp});
     } else if (event.type === "proof_partial") {
       setCelebration({isOpen:true,title:"Partial Credit",subtitle:`+${event.xp||20} XP`,description:event.feedback||"Some study evidence detected. Upload clearer proof next time for full XP.",type:"general",statValue:event.xp});
     }
@@ -177,8 +175,7 @@ export default function DashboardPage() {
     const { index, subject } = topicPopup;
     setTopicPopup(null);
     logEvent("SUBJECT_SELECTED", { index, subject, topic, subtopic });
-    
-    // Optimistic UI update: instantly show timer
+
     const blockHours = schedule[index]?.hours || 1;
     const startTimeStr = schedule[index]?.startTime || schedule[index]?.start;
     
@@ -229,7 +226,7 @@ export default function DashboardPage() {
         <DashboardNav onSetup={()=>setShowWizard(true)} onUnlock={()=>setShowUnlock(true)} onOpenLeaderboard={()=>setShowLeaderboard(true)} hasSetup={!!hasSetup} scheduleLocked={false} hasWhatsapp={!!profile?.whatsapp_number} hasDiscord={!!profile?.discord_user_id} hasTelegram={!!profile?.telegram_chat_id}/>
 
         <div className="max-w-[1200px] mx-auto px-4 lg:px-6 pt-[80px] pb-24 flex flex-col lg:flex-row gap-6">
-          {/* LEFT — Identity Panel */}
+          
           <div className="lg:w-[340px] flex-shrink-0 space-y-4">
             <motion.div className="rounded-3xl p-6 text-center" initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}}
               style={{background:"linear-gradient(170deg, #FDFDFC 0%, #F8FAF5 100%)",border:"1.5px solid rgba(123,166,91,0.1)",boxShadow:"0 2px 20px rgba(0,0,0,0.03)"}}>
@@ -255,7 +252,6 @@ export default function DashboardPage() {
               <ProgressionPath currentLevel={level} xp={rawXp}/>
             </div>
 
-            {/* RIGHT — Missions + Achievements */}
             <div className="flex-1 space-y-4" id="missions">
               {activeSession ? (
                 <ActiveSessionTimer 
@@ -295,7 +291,6 @@ export default function DashboardPage() {
 
         <TopicPopup isOpen={topicPopup?.isOpen||false} subject={topicPopup?.subject||""} onConfirm={handleTopicConfirm} onCancel={handleTopicCancel}/>
 
-        {/* Modals */}
         <AchievementUnlock 
           isOpen={showLevelUnlock} 
           onClose={() => setShowLevelUnlock(false)} 

@@ -48,7 +48,6 @@ export default function Gamification() {
           </p>
         </motion.div>
 
-        {/* XP Growth levels */}
         <motion.div
           className="card-terrain p-8 mb-12"
           initial={{ opacity: 0, y: 28 }}
@@ -88,7 +87,6 @@ export default function Gamification() {
                   {level.desc}
                 </div>
 
-                {/* Connecting line */}
                 {i < LEVELS.length - 1 && (
                   <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-[2px]" style={{ background: "rgba(123,166,91,0.2)" }} />
                 )}
@@ -97,7 +95,6 @@ export default function Gamification() {
           </div>
         </motion.div>
 
-        {/* Streak milestones */}
         <div className="grid md:grid-cols-3 gap-6">
           {STREAK_MILESTONES.map((milestone, i) => (
             <motion.div

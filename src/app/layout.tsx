@@ -102,7 +102,7 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/dashboard"
     >
       <html lang="en" className={`${nunito.variable} ${baloo.variable} ${dmSans.variable} ${manrope.variable} h-full`}>
-        <body className="min-h-full overflow-x-hidden" style={{ fontFamily: "var(--font-dm-sans), -apple-system, BlinkMacSystemFont, sans-serif" }}>
+        <body className="min-h-full overflow-x-hidden wmg-body">
           <Providers>
             <LenisProvider>
               {children}

@@ -35,12 +35,9 @@ export default function DashboardNav({ onSetup, onUnlock, onOpenLeaderboard, has
           <div className="w-8 h-8 flex items-center justify-center group-hover:scale-110 transition-transform">
              <GuruMascot size={32} />
           </div>
-          <span className="text-[18px] font-extrabold tracking-tight" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>
-          </span>
+          <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-10 w-auto object-contain" />
         </Link>
 
-        {/* Gamified Nav Links */}
         <div className="hidden md:flex items-center gap-1 p-1.5 rounded-2xl bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.02)]">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

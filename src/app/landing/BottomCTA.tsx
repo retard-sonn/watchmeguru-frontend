@@ -32,7 +32,7 @@ export default function BottomCTA() {
   return (
     <section ref={sectionRef} className="py-24 px-6 relative overflow-hidden"
       style={{ background: "linear-gradient(165deg, #0D3319 0%, #1A5C2A 50%, #081F0E 100%)" }}>
-      {/* Glow */}
+      
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
         style={{ width: 400, height: 400, background: "radial-gradient(circle, rgba(88,204,2,0.20) 0%, transparent 70%)" }} />
 

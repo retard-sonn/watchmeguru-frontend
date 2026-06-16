@@ -77,7 +77,7 @@ export default function HowItWorks() {
         </motion.div>
 
         <div className="relative">
-          {/* Organic vine spine — left side */}
+          
           <div className="absolute left-8 md:left-[68px] top-4 bottom-4 w-[3px] rounded-full"
             style={{ background: "rgba(123,166,91,0.1)" }}
           >
@@ -99,7 +99,7 @@ export default function HowItWorks() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.6 }}
             >
-              {/* Step number dot on vine */}
+              
               <div className="hidden md:flex justify-center relative z-10">
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-[18px]"
@@ -114,7 +114,6 @@ export default function HowItWorks() {
                 </div>
               </div>
 
-              {/* Text content */}
               <div>
                 <div className="md:hidden flex items-center gap-4 mb-4">
                   <div
@@ -139,7 +138,6 @@ export default function HowItWorks() {
                 </p>
               </div>
 
-              {/* Right: biome illustration */}
               <motion.div
                 className="flex justify-center"
                 initial={{ opacity: 0, scale: 0.85 }}
@@ -152,7 +150,6 @@ export default function HowItWorks() {
                 </div>
               </motion.div>
 
-              {/* Organic leaf on vine */}
               <div className="hidden md:block absolute left-[56px] top-1/2 -translate-y-1/2">
                 <motion.div
                   initial={{ scale: 0, rotate: -20 }}

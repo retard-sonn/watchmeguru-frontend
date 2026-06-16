@@ -9,10 +9,10 @@ export default function SmoothScroller({ children }: { children: React.ReactNode
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis
+   
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth ease out
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
@@ -22,7 +22,6 @@ export default function SmoothScroller({ children }: { children: React.ReactNode
     });
     lenisRef.current = lenis;
 
-    // Sync Lenis with GSAP ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
     
     lenis.on("scroll", ScrollTrigger.update);

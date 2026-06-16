@@ -24,20 +24,20 @@ export default function SignUpPage() {
   if (isSignedIn) return null;
   return (
     <div className="min-h-screen flex">
-      {/* ── Left Panel — Earthy gradient ── */}
+      
       <div
         className="hidden lg:flex flex-col w-[42%] relative overflow-hidden"
         style={{ background: "linear-gradient(165deg, #3D2E24 0%, #5B4636 40%, #7BA65B 85%, #94A84D 100%)" }}
       >
-        {/* Warm glows */}
+        
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div style={{ position: "absolute", width: 400, height: 400, top: "0%", left: "55%", background: "radial-gradient(circle, rgba(217,164,65,0.16) 0%, transparent 70%)", borderRadius: "50%" }} />
           <div style={{ position: "absolute", width: 300, height: 300, top: "55%", left: "10%", background: "radial-gradient(circle, rgba(123,166,91,0.15) 0%, transparent 70%)", borderRadius: "50%" }} />
         </div>
 
         <div className="relative z-10 flex flex-col h-full p-14">
-          <Link href="/" className="text-[20px] font-extrabold tracking-tight" style={{ color: "#FDF9F0", fontFamily: "var(--font-baloo)" }}>
-            WatchMe<span style={{ color: "var(--mustard)" }}>Guru</span>
+          <Link href="/" className="inline-block">
+            <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 w-auto object-contain" />
           </Link>
 
           <div className="flex-1 flex flex-col justify-center max-w-xs">
@@ -59,11 +59,10 @@ export default function SignUpPage() {
         </div>
       </div>
 
-      {/* ── Right Panel — Parchment ── */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-16 overflow-y-auto texture-bg" style={{ background: "#FDF9F0" }}>
         <div className="w-full max-w-[440px] py-8">
-          <Link href="/" className="text-[20px] font-extrabold tracking-tight mb-10 block lg:hidden" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>
+          <Link href="/" className="mb-10 block lg:hidden">
+            <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 w-auto object-contain" />
           </Link>
 
           <div className="mb-8">

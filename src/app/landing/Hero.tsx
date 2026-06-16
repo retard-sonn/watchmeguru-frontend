@@ -55,14 +55,13 @@ const WashiTape = ({ color = "rgba(255,255,255,0.45)" }: { color?: string }) => 
        style={{ backgroundColor: color, clipPath: 'polygon(2% 4%, 98% 0%, 100% 96%, 0% 100%)', backdropFilter: "blur(4px)" }} />
 );
 
-// Custom premium SVG icons
 const FireStreakIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Outer flame */}
+    
     <path d="M14 26C8.477 26 4 21.523 4 16C4 9.5 10 3.5 13 1C13.4 3.8 14.2 5.6 16.5 7C18.8 8.4 22 11.2 22 16C22 21.523 19.523 26 14 26Z" fill="white" opacity="0.95"/>
-    {/* Inner hot core */}
+    
     <path d="M14 21.5C11.515 21.5 9.5 19.485 9.5 17C9.5 14.8 11.5 12.8 13 11.5C13.5 13 14.2 14.2 15 15C15.8 15.8 16.5 16.2 16.5 17C16.5 19.485 15.485 21.5 14 21.5Z" fill="#EF4444" opacity="0.7"/>
-    {/* Sparkle top */}
+    
     <circle cx="18.5" cy="5.5" r="1.5" fill="white" opacity="0.6"/>
     <path d="M18.5 3L18.5 4M21.5 5.5H20.5M20.3 3.2L19.6 3.9" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.6"/>
   </svg>
@@ -70,24 +69,24 @@ const FireStreakIcon = () => (
 
 const LevelUpIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Star burst / trophy base */}
+    
     <path d="M12 2L14.4 8.26L21 9.27L16.5 13.64L17.76 20.2L12 17L6.24 20.2L7.5 13.64L3 9.27L9.6 8.26L12 2Z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"/>
-    {/* Inner star glow */}
+    
     <path d="M12 5.5L13.5 9.5L17.8 10.15L14.9 12.98L15.65 17.25L12 15.3L8.35 17.25L9.1 12.98L6.2 10.15L10.5 9.5L12 5.5Z" fill="#3B82F6" opacity="0.4"/>
-    {/* Up arrow overlay */}
+    
     <path d="M12 7L12 13M9.5 9.5L12 7L14.5 9.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.8"/>
   </svg>
 );
 
 const TargetIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Outer ring */}
+    
     <circle cx="10" cy="10" r="8.5" stroke="white" strokeWidth="2" opacity="0.9"/>
-    {/* Middle ring */}
+    
     <circle cx="10" cy="10" r="5.5" stroke="white" strokeWidth="2" opacity="0.7"/>
-    {/* Bullseye */}
+    
     <circle cx="10" cy="10" r="2.5" fill="white"/>
-    {/* Crosshair lines */}
+    
     <path d="M10 1V3.5M10 16.5V19M1 10H3.5M16.5 10H19" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
   </svg>
 );
@@ -160,7 +159,6 @@ export default function Hero() {
     setBoardY.current = gsap.quickTo(boardRef.current, "y", { duration: 0.9, ease: "power2.out" });
     gsap.ticker.add(updateWires);
 
-    // Initial load animation
     gsap.fromTo(".node-wrapper",
       { scale: 0.5, opacity: 0, y: 50 },
       { scale: 1, opacity: 1, y: 0, duration: 1.1, stagger: 0.12, ease: "elastic.out(1, 0.6)", delay: 0.2 }
@@ -170,25 +168,22 @@ export default function Hero() {
       { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut", delay: 0.9 }
     );
 
-    // Continuous idle floating
     gsap.to(".float-1", { y: "-=14", rotation: 1.5, duration: 3.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.1 });
     gsap.to(".float-2", { y: "+=16", rotation: -1.8, duration: 4.2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.4 });
     gsap.to(".float-3", { y: "-=11", rotation: -1.2, duration: 3.9, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.7 });
     gsap.to(".float-4", { y: "+=13", rotation: 1.6, duration: 3.3, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.0 });
 
-    // --- NEW: Parallax & Scroll-Linked Animation ---
-    // This creates the 3D depth effect mentioned by the user
     gsap.utils.toArray(".parallax-layer").forEach((layer: any, i) => {
       const speed = layer.dataset.speed || (i + 1) * 0.15;
       gsap.to(layer, {
         y: () => (ScrollTrigger.maxScroll(window) * speed) + "px",
-        rotation: () => i % 2 === 0 ? 15 : -15, // Scroll-linked rotation
+        rotation: () => i % 2 === 0 ? 15 : -15,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom top",
-          scrub: 1.2, // Smooth scroll-linked animation
+          scrub: 1.2,
           invalidateOnRefresh: true
         }
       });
@@ -206,23 +201,20 @@ export default function Hero() {
     >
       <style>{eliteStyles}</style>
 
-      {/* Dot grid */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: "radial-gradient(#A8C89A 1.5px, transparent 1.5px)", backgroundSize: "38px 38px", opacity: 0.45 }} 
       />
-      {/* Radial vignette */}
+      
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(212,237,202,0.6) 100%)" }} />
       <div className="absolute inset-0 pointer-events-none noise-overlay" />
 
-      {/* THE CANVAS BOARD */}
       <div 
         ref={boardRef} 
         className={`relative w-full ${isMobile ? "min-h-[90vh] py-20 px-6 flex-col gap-8" : "h-screen"} shrink-0 flex items-center justify-center select-none`}
         style={{ willChange: "transform", minWidth: isMobile ? "auto" : "1100px", minHeight: isMobile ? "auto" : "750px" }}
       >
-        
-        {/* SVG Wires (Desktop only) */}
+
         {!isMobile && (
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
           <defs>
@@ -238,7 +230,6 @@ export default function Hero() {
         </svg>
         )}
 
-        {/* 1. CENTER — Glass CTA Node */}
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full" : "absolute"}`}
           style={isMobile ? {} : { left: "50%", top: "50%", x: "-50%", y: "-50%" }}
@@ -247,7 +238,7 @@ export default function Hero() {
         >
           <div ref={centerRef} className={`node-wrapper ${isMobile ? "bg-white/90 border border-white/50 shadow-xl" : "glass-board"} rounded-[2rem] p-8 lg:p-14 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"}`}
                style={{ maxWidth: "580px", width: "100%", margin: "0 auto" }}>
-            {/* Port dots */}
+            
             <div className="absolute -left-3 top-[38%] w-6 h-6 bg-[#F59E0B] rounded-full border-4 border-white shadow-lg hidden lg:block" />
             <div className="absolute -right-3 top-[30%] w-6 h-6 bg-[#58CC02] rounded-full border-4 border-white shadow-lg hidden lg:block" />
             <div className="absolute -left-3 bottom-[30%] w-6 h-6 bg-[#EF4444] rounded-full border-4 border-white shadow-lg hidden lg:block" />
@@ -286,15 +277,14 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* 2. THE MASCOT — Top Right */}
         <motion.div
           className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
           style={isMobile ? {} : { left: "calc(50% + 350px)", top: "calc(50% - 220px)" }}
           drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={mascotRef} className={`node-wrapper ${isMobile ? "" : "float-1 cursor-grab active:cursor-grabbing"} bg-white/80 p-4 rounded-3xl border border-white/60 mx-auto backdrop-blur-sm`}
-               style={{ width: "200px", boxShadow: "0 16px 40px -6px rgba(0,0,0,0.1), inset 0 2px 5px rgba(255,255,255,0.8)", transform: isMobile ? "none" : "rotate(3deg)" }}>
+          <div ref={mascotRef} className={`node-wrapper float-1 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"} bg-white/80 p-4 rounded-3xl border border-white/60 mx-auto backdrop-blur-sm`}
+               style={{ width: "200px", boxShadow: "0 16px 40px -6px rgba(0,0,0,0.1), inset 0 2px 5px rgba(255,255,255,0.8)", transform: isMobile ? "none" : "rotate(3deg)", willChange: "transform" }}>
             <WashiTape color="rgba(255,255,255,0.8)" />
             <MascotPenguin className="w-32 h-32" />
             <div className="text-center mt-2">
@@ -304,7 +294,6 @@ export default function Hero() {
           </div>
         </motion.div>
 
-          {/* 3. TODAY'S TARGETS — Top Left (pushed further out to not overlap CTA) */}
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
           style={isMobile ? {} : { left: "calc(50% - 530px)", top: "calc(50% - 200px)" }}
@@ -312,8 +301,8 @@ export default function Hero() {
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
           onDragStart={() => setHintVisible(false)}
         >
-          <div ref={targetRef} className={`node-wrapper ${isMobile ? "" : "float-2 cursor-grab active:cursor-grabbing"} bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047] mx-auto`}
-               style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-4deg)" }}>
+          <div ref={targetRef} className={`node-wrapper float-2 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"} bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047] mx-auto`}
+               style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-4deg)", willChange: "transform" }}>
             <WashiTape color="rgba(255,255,255,0.65)" />
             
             {hintVisible && (
@@ -349,17 +338,15 @@ export default function Hero() {
           </div>
         </motion.div>
 
-
-        {/* 4. DAY STREAK — Bottom Left */}
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
           style={isMobile ? {} : { left: "calc(50% - 500px)", top: "calc(50% + 160px)" }}
           drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={streakRef} className={`node-wrapper ${isMobile ? "" : "float-3 cursor-grab active:cursor-grabbing"} bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441] mx-auto`}
-               style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", transform: isMobile ? "none" : "rotate(-4deg)" }}>
-              {/* Top spiral/calendar binding simulation */}
+          <div ref={streakRef} className={`node-wrapper float-3 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"} bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441] mx-auto`}
+               style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", transform: isMobile ? "none" : "rotate(-4deg)", willChange: "transform" }}>
+              
               <div className="bg-[#D9A441] h-[35px] w-full flex items-center justify-center gap-6 border-b-2 border-[#B8862D] relative shadow-inner">
                  <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "20%" }} />
                  <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "46%" }} />
@@ -390,20 +377,18 @@ export default function Hero() {
           </div>
         </motion.div>
 
-
-        {/* 5. LEVEL UP / XP — Bottom Right */}
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full mt-6 mb-12" : "absolute"}`}
           style={isMobile ? {} : { left: "calc(50% + 370px)", top: "calc(50% + 190px)" }}
           drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={xpRef} className={`node-wrapper ${isMobile ? "" : "float-4 cursor-grab active:cursor-grabbing"} bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE] mx-auto`}
-               style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-2deg)" }}>
+          <div ref={xpRef} className={`node-wrapper float-4 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"} bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE] mx-auto`}
+               style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", transform: isMobile ? "none" : "rotate(-2deg)", willChange: "transform" }}>
             <WashiTape color="rgba(255,255,255,0.65)" />
 
               <div className="flex items-center gap-2.5 mb-4 mt-2">
-                {/* Premium star/level icon */}
+                
                 <div className="p-2 bg-gradient-to-br from-[#60A5FA] to-[#2563EB] rounded-xl shadow-md"
                      style={{ boxShadow: "0 4px 14px rgba(37,99,235,0.35)" }}>
                   <LevelUpIcon />
@@ -414,7 +399,6 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* XP Bar with percentage */}
               <div className="relative mb-2">
                 <div className="w-full h-3.5 bg-white/70 rounded-full overflow-hidden border border-white shadow-inner">
                   <div className="h-full rounded-full relative overflow-hidden" style={{ width: "75%", background: "linear-gradient(90deg, #60A5FA, #3B82F6, #2563EB)" }}>
@@ -428,7 +412,6 @@ export default function Hero() {
               <span className="font-extrabold text-[#1E3A8A]">750 / 1000 XP</span>
             </div>
 
-              {/* Mini achievement badges */}
               <div className="mt-3 flex gap-1.5 flex-wrap">
                 {["⚡ Focus", "🎯 Sharp", "🔥 Hot"].map(badge => (
                   <span key={badge} className="text-[10px] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
@@ -437,7 +420,6 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Subtle cursor glow */}
         <div className="awwwards-cursor absolute w-8 h-8 rounded-full border-2 border-[#58CC02] pointer-events-none z-[100] hidden lg:block opacity-0" />
       </div>
     </section>

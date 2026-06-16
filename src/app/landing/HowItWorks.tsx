@@ -24,13 +24,12 @@ export default function HowItWorks() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Heading reveal
+     
       gsap.from(headingRef.current, {
         scrollTrigger: { trigger: headingRef.current, start: "top 80%", once: true },
         y: 40, opacity: 0, duration: 0.7, ease: "power3.out",
       });
 
-      // Vine grow animation — scales from top
       const vineInner = vineRef.current?.querySelector("div");
       if (vineInner) {
         gsap.fromTo(vineInner, { scaleY: 0 }, {
@@ -41,7 +40,6 @@ export default function HowItWorks() {
         });
       }
 
-      // Stagger step reveals
       gsap.from(stepsRef.current?.children || [], {
         scrollTrigger: { trigger: stepsRef.current, start: "top 80%", once: true },
         y: 40, opacity: 0, duration: 0.6, stagger: 0.12, ease: "power3.out",
