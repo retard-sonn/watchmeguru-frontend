@@ -350,7 +350,9 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
 
           {/* STEP 2: Mentor */}
           {step===2&&<motion.div key="s2" initial={{y:30,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-30,opacity:0}} className="flex flex-col items-center max-w-md w-full">
-            <span className="text-[64px] mb-4">🦉</span>
+            <div className="mb-4">
+              <GuruMascot size={64} />
+            </div>
             <h2 className="text-[24px] font-extrabold mb-2" style={{color:"#3D2E24",fontFamily:"var(--font-baloo)"}}>Meet your mentor</h2>
             <p className="text-[14px] font-medium mb-6 text-center" style={{color:"#6B5D52"}}>I'll check in on WhatsApp every day.</p>
             <div className="w-full flex gap-2">

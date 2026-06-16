@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useUser, UserButton } from "@clerk/nextjs";
+import GuruMascot from "@/components/illustrations/GuruMascot";
 import { Lock, Phone, Trophy, LayoutDashboard } from "lucide-react";
 import gsap from "gsap";
 
@@ -31,8 +32,8 @@ export default function DashboardNav({ onSetup, onUnlock, onOpenLeaderboard, has
     <nav className="fixed top-0 left-0 right-0 z-[100] bg-[#FDF9F0]/80 backdrop-blur-xl border-b border-[rgba(91,70,54,0.06)]">
       <div className="max-w-7xl mx-auto px-6 h-[64px] flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-xl bg-moss/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-             <span className="text-[20px]">🦉</span>
+          <div className="w-8 h-8 flex items-center justify-center group-hover:scale-110 transition-transform">
+             <GuruMascot size={32} />
           </div>
           <span className="text-[18px] font-extrabold tracking-tight" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
             WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>

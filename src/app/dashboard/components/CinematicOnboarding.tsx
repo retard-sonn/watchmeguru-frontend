@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import gsap from "gsap";
 import ReactCountryFlag from "react-country-flag";
 import CountryPicker from "@/components/CountryPicker";
+import GuruMascot from "@/components/illustrations/GuruMascot";
 import { ArrowRight, Check, Moon, Sun, Zap, Flame, Plus, X, Sparkles } from "lucide-react";
 import { COUNTRIES } from "@/lib/countries";
 
