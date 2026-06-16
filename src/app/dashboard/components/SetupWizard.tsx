@@ -7,6 +7,7 @@ import { ArrowRight, Check, Moon, Sun, Zap, Flame, Search, Plus, X, Sparkles, Tr
 import { COUNTRIES, searchCountries } from "@/lib/countries";
 import { useAuditLog } from "@/hooks/useDashboard";
 import { getSubjectIcon } from "@/components/illustrations/SubjectIcons";
+import GuruMascot from "@/components/illustrations/GuruMascot";
 import ReactCountryFlag from "react-country-flag";
 
 interface Props { 
