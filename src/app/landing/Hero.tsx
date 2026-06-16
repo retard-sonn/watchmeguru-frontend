@@ -140,9 +140,11 @@ export default function Hero() {
       return { x: rect.left - boardRect.left + rect.width / 2, y: rect.top - boardRect.top + rect.height / 2 };
     };
     const c = getCenter(centerRef.current);
+    const m = getCenter(mascotRef.current);
     const t = getCenter(targetRef.current);
     const s = getCenter(streakRef.current);
     const x = getCenter(xpRef.current);
+    wireMascotRef.current?.setAttribute("d", `M ${c.x} ${c.y} C ${c.x + 120} ${c.y - 80}, ${m.x - 100} ${m.y}, ${m.x} ${m.y}`);
     wireTargetRef.current?.setAttribute("d", `M ${c.x} ${c.y} C ${c.x - 140} ${c.y}, ${t.x + 120} ${t.y}, ${t.x} ${t.y}`);
     wireStreakRef.current?.setAttribute("d", `M ${c.x} ${c.y} C ${c.x - 100} ${c.y + 80}, ${s.x + 120} ${s.y}, ${s.x} ${s.y}`);
     wireXpRef.current?.setAttribute("d", `M ${c.x} ${c.y} C ${c.x + 100} ${c.y + 80}, ${x.x - 120} ${x.y}, ${x.x} ${x.y}`);
@@ -169,6 +171,7 @@ export default function Hero() {
     );
 
     // Continuous idle floating
+    gsap.to(".float-1", { y: "-=14", rotation: 1.5, duration: 3.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.1 });
     gsap.to(".float-2", { y: "+=16", rotation: -1.8, duration: 4.2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.4 });
     gsap.to(".float-3", { y: "-=11", rotation: -1.2, duration: 3.9, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.7 });
     gsap.to(".float-4", { y: "+=13", rotation: 1.6, duration: 3.3, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.0 });
@@ -228,6 +231,7 @@ export default function Hero() {
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
+          <path ref={wireMascotRef} className="board-wire wire-flow" fill="none" stroke="#58CC02" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
           <path ref={wireTargetRef} className="board-wire wire-flow" fill="none" stroke="#F59E0B" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
           <path ref={wireStreakRef} className="board-wire wire-flow" fill="none" stroke="#EF4444" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
           <path ref={wireXpRef} className="board-wire wire-flow" fill="none" stroke="#3B82F6" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
@@ -259,29 +263,46 @@ export default function Hero() {
             <p className="text-center text-[16px] lg:text-[18px] font-medium mb-9 leading-relaxed" style={{ color: "#3D6B2E" }}>
               The intelligent study accountability system built by students who failed consistency. Now we help thousands stay on track.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full">
               {isLoaded && !userId ? (
                 <MagneticButton href="/sign-up"
-                  className="px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white"
+                  className="w-full sm:w-auto px-6 sm:px-10 py-4 rounded-2xl text-[16px] sm:text-[18px] font-extrabold text-white flex justify-center items-center"
                   style={{ background: "linear-gradient(135deg, #58CC02 0%, #2E7A0A 100%)", boxShadow: "0 8px 28px rgba(88,204,2,0.35)", fontFamily: "var(--font-baloo)" }}>
                   Start Free — 2 minutes →
                 </MagneticButton>
               ) : isLoaded && userId ? (
                 <Link href="/dashboard"
-                  className="px-10 py-4 rounded-2xl text-[18px] font-extrabold text-white hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                  className="w-full sm:w-auto px-6 sm:px-10 py-4 rounded-2xl text-[16px] sm:text-[18px] font-extrabold text-white hover:scale-[1.02] active:scale-[0.98] transition-transform text-center"
                   style={{ background: "linear-gradient(135deg, #58CC02 0%, #2E7A0A 100%)", boxShadow: "0 8px 28px rgba(88,204,2,0.35)", fontFamily: "var(--font-baloo)" }}>
                   Go to Dashboard →
                 </Link>
               ) : (
                 <div className="h-[60px]" />
               )}
-              <a href="#features" className="text-[15px] font-semibold underline-offset-2 hover:underline" style={{ color: "#3D6B2E" }}>
+              <a href="#features" className="text-[15px] font-semibold underline-offset-2 hover:underline shrink-0" style={{ color: "#3D6B2E" }}>
                 See how it works
               </a>
             </div>
           </div>
         </motion.div>
 
+        {/* 2. THE MASCOT — Top Right */}
+        <motion.div
+          className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
+          style={isMobile ? {} : { left: "calc(50% + 350px)", top: "calc(50% - 220px)" }}
+          drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+          whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
+        >
+          <div ref={mascotRef} className={`node-wrapper ${isMobile ? "" : "float-1 cursor-grab active:cursor-grabbing"} bg-white/80 p-4 rounded-3xl border border-white/60 mx-auto backdrop-blur-sm`}
+               style={{ width: "200px", boxShadow: "0 16px 40px -6px rgba(0,0,0,0.1), inset 0 2px 5px rgba(255,255,255,0.8)", transform: isMobile ? "none" : "rotate(3deg)" }}>
+            <WashiTape color="rgba(255,255,255,0.8)" />
+            <MascotPenguin className="w-32 h-32" />
+            <div className="text-center mt-2">
+              <p className="font-bold text-[#1A3A0A] text-[14px]">Your Mentor</p>
+              <p className="text-[11px] text-[#3D6B2E] font-medium leading-tight">Always watching.</p>
+            </div>
+          </div>
+        </motion.div>
 
           {/* 3. TODAY'S TARGETS — Top Left (pushed further out to not overlap CTA) */}
         <motion.div 

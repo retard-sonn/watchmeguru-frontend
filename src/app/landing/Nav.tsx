@@ -44,21 +44,21 @@ export default function Nav() {
         <div className="flex items-center gap-3">
           {isLoaded && !userId ? (
             <>
-              <Link href="/sign-in" className="hidden sm:inline-flex btn-earthy text-[14px] py-2.5 px-5 hover:-translate-y-0.5 transition-transform">Log in</Link>
-              <MagneticButton href="/sign-up" className="hidden sm:inline-flex text-[14px] py-2.5 px-5 font-bold rounded-xl text-white shadow-md hover:-translate-y-0.5 transition-transform" style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)" }}>Start free</MagneticButton>
+              <Link href="/sign-in" className="hidden md:inline-flex btn-earthy text-[14px] py-2.5 px-5 hover:-translate-y-0.5 transition-transform">Log in</Link>
+              <MagneticButton href="/sign-up" className="hidden md:inline-flex text-[14px] py-2.5 px-5 font-bold rounded-xl text-white shadow-md hover:-translate-y-0.5 transition-transform" style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)" }}>Start free</MagneticButton>
             </>
           ) : isLoaded && userId ? (
             <>
 
-              <Link href="/dashboard" className="hidden sm:inline-flex btn-moss text-[14px] py-2.5 px-5">Dashboard</Link>
-              <div className="hidden sm:block ml-2"><UserButton /></div>
+              <Link href="/dashboard" className="hidden md:inline-flex btn-moss text-[14px] py-2.5 px-5">Dashboard</Link>
+              <div className="hidden md:block ml-2"><UserButton /></div>
             </>
           ) : (
-            <div className="hidden sm:block w-[140px] h-[36px]" />
+            <div className="hidden md:block w-[140px] h-[36px]" />
           )}
           
           {/* Mobile hamburger */}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="sm:hidden flex flex-col gap-1.5 p-2">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden flex flex-col gap-1.5 p-2">
             <div className="w-5 h-0.5 rounded-full" style={{ background: "var(--earthy)" }} />
             <div className="w-5 h-0.5 rounded-full" style={{ background: "var(--earthy)" }} />
             <div className="w-5 h-0.5 rounded-full" style={{ background: "var(--earthy)" }} />
@@ -68,7 +68,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="sm:hidden px-6 pb-6 space-y-3 bg-parchment/95 backdrop-blur-xl">
+        <div className="md:hidden px-6 pb-6 space-y-3 bg-parchment/95 backdrop-blur-xl">
           {["Features","How it works","Dashboard","Smart Mentor"].map(item => (
             <a key={item} href={`#${item.toLowerCase().replace(/ /g,"-")}`} onClick={() => setMenuOpen(false)}
               className="block text-[15px] font-semibold py-2" style={{ color: "var(--earthy)" }}>{item}</a>
@@ -76,7 +76,7 @@ export default function Nav() {
           {isLoaded && !userId ? (
             <>
               <Link href="/sign-in" onClick={() => setMenuOpen(false)} className="btn-earthy text-[14px] py-2.5 px-5 w-full text-center block">Log in</Link>
-              <Link href="/sign-up" onClick={() => setMenuOpen(false)} className="btn-mustard text-[14px] py-2.5 px-5 w-full text-center block">Start free</Link>
+              <Link href="/sign-up" onClick={() => setMenuOpen(false)} className="text-[14px] py-2.5 px-5 font-bold rounded-xl text-white shadow-md w-full text-center block" style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)" }}>Start free</Link>
             </>
           ) : isLoaded && userId ? (
             <>
