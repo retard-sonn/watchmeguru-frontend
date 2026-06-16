@@ -360,7 +360,7 @@ export default function Hero() {
 
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
-          style={isMobile ? {} : { left: "calc(50% - 530px)", top: "calc(50% - 200px)" }}
+          style={isMobile ? {} : { left: "calc(50% - 530px)", top: "calc(50% - 260px)" }}
           drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
           onDragStart={() => setHintVisible(false)}
@@ -404,7 +404,7 @@ export default function Hero() {
 
         <motion.div 
           className={`z-20 ${isMobile ? "relative w-full mt-6" : "absolute"}`}
-          style={isMobile ? {} : { left: "calc(50% - 500px)", top: "calc(50% + 160px)" }}
+          style={isMobile ? {} : { left: "calc(50% - 500px)", top: "calc(50% + 100px)" }}
           drag={!isMobile} dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
           whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
         >
