@@ -4,11 +4,11 @@ import Ornament from "@/components/illustrations/Ornament";
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#2B1F18" }}>
+    <footer style={{ background: "#081F0E" }}>
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-[20px] font-extrabold tracking-tight" style={{ color: "#FDF9F0", fontFamily: "var(--font-baloo)" }}>
+            <span className="text-[20px] font-extrabold tracking-tight" style={{ color: "#F0FDF4", fontFamily: "var(--font-baloo)" }}>
               WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>
             </span>
           </Link>
@@ -18,7 +18,7 @@ export default function Footer() {
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(/ /g, "-")}`}
-                className="text-[13px] font-medium transition-colors hover:text-[#FDF9F0]"
+                className="text-[13px] font-medium transition-colors hover:text-[#F0FDF4]"
                 style={{ color: "rgba(253,249,240,0.4)" }}
               >
                 {item}
@@ -43,7 +43,7 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <Ornament variant="dots" />
             <p className="text-[12px]" style={{ color: "rgba(253,249,240,0.2)" }}>
-              &copy; 2026 WatchMeGuru.io
+              &copy; 2026 WatchMeGuru
             </p>
           </div>
         </div>

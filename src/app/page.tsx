@@ -1,23 +1,30 @@
 import Nav from "./landing/Nav";
 import Hero from "./landing/Hero";
-import WhatsAppDemo from "./landing/WhatsAppDemo";
+import InAppDemo from "./landing/InAppDemo";
 import LearningTree from "./landing/LearningTree";
 import StreakEngine from "./landing/StreakEngine";
 import Transformation from "./landing/Transformation";
 import BottomCTA from "./landing/BottomCTA";
 import Footer from "./landing/Footer";
+import SoundToggle from "./landing/components/SoundToggle";
+import SmoothScroller from "./landing/components/SmoothScroller";
+import GlobalMascot from "./landing/GlobalMascot";
 
 export default function LandingPage() {
   return (
-    <main className="relative" style={{ background: "#F4EEDB" }}>
-      <Nav />
-      <Hero />
-      <WhatsAppDemo />
-      <LearningTree />
-      <StreakEngine />
-      <Transformation />
-      <BottomCTA />
-      <Footer />
-    </main>
+    <SmoothScroller>
+      <main className="relative overflow-hidden" style={{ background: "#E8F5E0" }}>
+        <GlobalMascot />
+        <SoundToggle />
+        <Nav />
+        <Hero />
+        <InAppDemo />
+        <LearningTree />
+        <StreakEngine />
+        <Transformation />
+        <BottomCTA />
+        <Footer />
+      </main>
+    </SmoothScroller>
   );
 }

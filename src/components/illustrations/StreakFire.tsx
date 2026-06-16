@@ -18,7 +18,7 @@ export default function StreakFire({ streak = 1 }: Props) {
       {/* Outer flame */}
       <motion.path
         d="M25,56 C25,56 12,40 12,28 C12,16 18,6 25,2 C32,6 38,16 38,28 C38,40 25,56 25,56Z"
-        fill="#D9A441" opacity={0.2 + intensity * 0.15}
+        fill="#58CC02" opacity={0.2 + intensity * 0.15}
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -26,7 +26,7 @@ export default function StreakFire({ streak = 1 }: Props) {
       {/* Mid flame */}
       <path
         d="M25,52 C25,52 16,38 16,28 C16,19 20,9 25,6 C30,9 34,19 34,28 C34,38 25,52 25,52Z"
-        fill="#D9A441" opacity={0.35 + intensity * 0.25}
+        fill="#58CC02" opacity={0.35 + intensity * 0.25}
       />
 
       {/* Inner flame */}

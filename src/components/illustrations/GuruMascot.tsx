@@ -3,101 +3,160 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
 type State = "idle" | "happy" | "celebrate" | "thinking" | "sleepy" | "sad";
-interface Props { size?: number; state?: State; animated?: boolean; }
+interface Props { size?: number; state?: State; animated?: boolean; lx?: number; ly?: number; rx?: number; ry?: number; }
 
-export default function GuruMascot({ size = 180, state = "idle", animated = true }: Props) {
+export default function GuruMascot({ size = 180, state = "idle", animated = true, lx = 0, ly = 0, rx = 0, ry = 0 }: Props) {
   const ref = useRef<SVGSVGElement>(null);
-  const s = size / 100;
+  const bodyWrapRef = useRef<SVGGElement>(null);
+  const leftPupilRef = useRef<SVGGElement>(null);
+  const rightPupilRef = useRef<SVGGElement>(null);
+  const leftFlipperRef = useRef<SVGPathElement>(null);
+  const rightFlipperRef = useRef<SVGPathElement>(null);
+  const s = size / 200; // Native SVG viewBox is 200x200
 
   useEffect(() => {
     if (!animated || !ref.current) return;
     const ctx = gsap.context(() => {
-      gsap.to(ref.current, { y: -4, duration: 2.5, repeat: -1, yoyo: true, ease: "power1.inOut" });
-      gsap.to(".cap-tassel", { rotation: 10, transformOrigin: "50px 22px", duration: 1.5, repeat: -1, yoyo: true, ease: "power1.inOut" });
+      // Cross-browser safe SVG origins
+      gsap.set(leftFlipperRef.current, { svgOrigin: "30 105" });
+      gsap.set(rightFlipperRef.current, { svgOrigin: "170 105" });
+      gsap.set(bodyWrapRef.current, { svgOrigin: "100 195" });
+
+      // Gentle float
+      gsap.to(ref.current, { y: -5, duration: 2.8, repeat: -1, yoyo: true, ease: "power1.inOut" });
+
       if (state === "celebrate") {
-        gsap.to(ref.current, { rotation: -4, duration: 0.2, repeat: 7, yoyo: true, ease: "power1.inOut" });
-        gsap.to(".sparkles", { scale: 1.4, opacity: 1, duration: 0.4, repeat: 10, yoyo: true, ease: "power1.inOut" });
+        gsap.to(leftFlipperRef.current, { rotation: 35, duration: 0.2, yoyo: true, repeat: 7 });
+        gsap.to(rightFlipperRef.current, { rotation: -35, duration: 0.2, yoyo: true, repeat: 7 });
+        gsap.to(".guru-sparkles", { scale: 1.5, opacity: 1, duration: 0.35, repeat: 10, yoyo: true, ease: "power1.inOut" });
       }
       if (state === "sad") {
-        gsap.to(".teardrop", { y: 8, opacity: 0, duration: 1, stagger: 0.3, repeat: -1, ease: "power1.in" });
+        gsap.to(".guru-teardrop", { y: 10, opacity: 0, duration: 1.2, stagger: 0.4, repeat: -1, ease: "power1.in" });
+      }
+      if (state === "thinking") {
+        gsap.to(".guru-think-dot", { opacity: 0, duration: 0.5, stagger: 0.2, repeat: -1, yoyo: true });
+        gsap.to(rightFlipperRef.current, { rotation: -60, duration: 0.5 }); // Hand to chin
+      }
+      if (state === "happy") {
+        gsap.to(leftFlipperRef.current, { rotation: 20, duration: 0.5, yoyo: true, repeat: -1 });
+        gsap.to(rightFlipperRef.current, { rotation: -20, duration: 0.5, yoyo: true, repeat: -1 });
       }
     }, ref);
     return () => ctx.revert();
   }, [animated, state]);
 
-  // Mouth shape per state
-  const mouth = state === "happy" ? "M48,74 Q58,82 68,74" : state === "sleepy" ? "M50,76 Q58,72 66,76" : state === "sad" ? "M52,78 Q58,72 64,78" : "M50,74 Q58,78 66,74";
-
-  // Eyebrow shapes per state
-  const leftEyebrow = state === "sad" ? "M30,38 Q36,41 42,38" : "M30,42 Q36,40 42,42";
-  const rightEyebrow = state === "sad" ? "M58,38 Q64,41 70,38" : "M58,42 Q64,40 70,42";
+  // Eye tracking update
+  useEffect(() => {
+    if (leftPupilRef.current && rightPupilRef.current && state !== "sleepy") {
+      gsap.to(leftPupilRef.current, { x: lx * 1.5, y: ly * 1.5, duration: 0.1, ease: "power2.out" });
+      gsap.to(rightPupilRef.current, { x: rx * 1.5, y: ry * 1.5, duration: 0.1, ease: "power2.out" });
+    }
+  }, [lx, ly, rx, ry, state]);
 
   return (
-    <svg ref={ref} width={100 * s} height={110 * s} viewBox="0 0 100 110" fill="none" style={{ overflow: "visible" }}>
-      <ellipse cx="50" cy="106" rx="22" ry="3.5" fill="rgba(61,46,36,0.06)" />
+    <svg
+      ref={ref}
+      width={200 * s}
+      height={200 * s}
+      viewBox="0 0 200 200"
+      fill="none"
+      style={{ overflow: "visible" }}
+    >
+      {/* Shadow */}
+      <ellipse cx="100" cy="195" rx="60" ry="10" fill="rgba(0,0,0,0.15)" />
 
-      {/* Body — rounded pear shape */}
-      <path d="M28,45 Q15,60 18,82 Q20,98 50,102 Q80,98 82,82 Q85,60 72,45 Z" fill="#F5E6D3" />
-      <path d="M35,60 Q30,75 33,88 Q35,96 50,98 Q65,96 67,88 Q70,75 65,60 Z" fill="#E8D5BC" opacity="0.5" />
+      <g ref={bodyWrapRef}>
+        {/* Symmetrical Feet */}
+        <ellipse cx="65" cy="190" rx="18" ry="10" fill="#f5a623" stroke="#000" strokeWidth="3.5" />
+        <ellipse cx="135" cy="190" rx="18" ry="10" fill="#f5a623" stroke="#000" strokeWidth="3.5" />
 
-      {/* Feet */}
-      <ellipse cx="38" cy="101" rx="10" ry="5" fill="#D9A441" />
-      <ellipse cx="62" cy="101" rx="10" ry="5" fill="#D9A441" />
+        {/* Symmetrical Left Wing */}
+        <path ref={leftFlipperRef} d="M 30 105 C 5 130 5 165 20 175 C 35 185 40 140 35 110 Z" fill="#2b2b2b" stroke="#000" strokeWidth="3.5" strokeLinejoin="round" />
 
-      {/* Wings */}
-      <ellipse cx="16" cy="68" rx="10" ry="16" fill="#E8D5BC" transform="rotate(-20,16,68)" />
-      <ellipse cx="84" cy="68" rx="10" ry="16" fill="#E8D5BC" transform="rotate(20,84,68)" />
+        {/* Symmetrical Right Wing */}
+        <path ref={rightFlipperRef} d="M 170 105 C 195 130 195 165 180 175 C 165 185 160 140 165 110 Z" fill="#2b2b2b" stroke="#000" strokeWidth="3.5" strokeLinejoin="round" />
 
-      {/* Head */}
-      <circle cx="50" cy="40" r="26" fill="#F5E6D3" />
+        {/* Tuft */}
+        <path d="M 90 22 L 85 2 L 98 12 L 100 -2 L 102 12 L 115 2 L 110 22 Z" fill="#2b2b2b" stroke="#000" strokeWidth="3.5" strokeLinejoin="round" />
 
-      {/* Ears */}
-      <path d="M30,28 L34,14 L40,26" fill="#E8D5BC" />
-      <path d="M70,28 L66,14 L60,26" fill="#E8D5BC" />
+        {/* Main Body - Perfectly symmetric stout squircle/egg shape */}
+        <path d="M 100 20 C 155 20 185 60 185 125 C 185 185 150 195 100 195 C 50 195 15 185 15 125 C 15 60 45 20 100 20 Z" fill="#2b2b2b" stroke="#000" strokeWidth="4" strokeLinejoin="round" />
+        
+        {/* White Belly */}
+        <path d="M 100 50 C 135 50 155 80 155 130 C 155 170 130 185 100 185 C 70 185 45 170 45 130 C 45 80 65 50 100 50 Z" fill="#ffffff" stroke="#000" strokeWidth="3.5" strokeLinejoin="round" />
 
-      {/* Cap */}
-      <rect x="32" y="6" width="36" height="6" rx="2" fill="#3D2E24" />
-      <polygon points="36,0 64,0 50,8" fill="#3D2E24" />
-      <line className="cap-tassel" x1="50" y1="6" x2="60" y2="16" stroke="#D9A441" strokeWidth="1.5" />
-      <circle cx="61" cy="17" r="2" fill="#D9A441" />
+        {/* Sleepy state - closed eyes */}
+        {state === "sleepy" && (
+          <>
+            <path d="M 55 75 Q 72 85 89 75" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M 111 75 Q 128 85 145 75" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+          </>
+        )}
 
-      {/* Eyes — always open, clean, expressive */}
-      <ellipse cx="38" cy="40" rx="10" ry="10.5" fill="white" />
-      <ellipse cx="62" cy="40" rx="10" ry="10.5" fill="white" />
-      <ellipse cx="38" cy="40" rx="6.5" ry="7.5" fill="#7BA65B" />
-      <ellipse cx="62" cy="40" rx="6.5" ry="7.5" fill="#7BA65B" />
-      <ellipse cx="38" cy="40" rx="4" ry="5" fill="#3D2E24" />
-      <ellipse cx="62" cy="40" rx="4" ry="5" fill="#3D2E24" />
-      <circle cx="35" cy="37" r="2.5" fill="white" />
-      <circle cx="59" cy="37" r="2.5" fill="white" />
+        {/* Normal Eyes */}
+        {state !== "sleepy" && (
+          <>
+            <circle cx="72" cy="75" r="22" fill="#ffffff" stroke="#000" strokeWidth="3.5" />
+            <circle cx="128" cy="75" r="22" fill="#ffffff" stroke="#000" strokeWidth="3.5" />
 
-      {/* Eyebrows */}
-      <path d={leftEyebrow} stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <path d={rightEyebrow} stroke="#3D2E24" strokeWidth="2" strokeLinecap="round" fill="none" />
+            {/* Left Iris & Pupil */}
+            <g ref={leftPupilRef}>
+              <circle cx="74" cy="75" r="9" fill="#4da6ff" stroke="#000" strokeWidth="2" />
+              <circle cx="76" cy="75" r="4.5" fill="#000" />
+              <circle cx="73" cy="72" r="2.5" fill="#fff" />
+            </g>
 
-      {/* Teardrops (sad only) */}
-      {state === "sad" && (
-        <g className="teardrop">
-          <circle cx="34" cy="46" r="1.5" fill="#78A6D8" />
-          <circle cx="66" cy="46" r="1.5" fill="#78A6D8" />
-        </g>
-      )}
+            {/* Right Iris & Pupil */}
+            <g ref={rightPupilRef}>
+              <circle cx="126" cy="75" r="9" fill="#4da6ff" stroke="#000" strokeWidth="2" />
+              <circle cx="124" cy="75" r="4.5" fill="#000" />
+              <circle cx="127" cy="72" r="2.5" fill="#fff" />
+            </g>
+          </>
+        )}
 
-      {/* Beak */}
-      <path d="M46,48 L50,54 L54,48 Z" fill="#D9A441" />
+        {/* Symmetrical Eyebrows */}
+        <path d="M 52 45 Q 72 35 85 45" fill="none" stroke="#000" strokeWidth="5" strokeLinecap="round" />
+        <path d="M 148 45 Q 128 35 115 45" fill="none" stroke="#000" strokeWidth="5" strokeLinecap="round" />
 
-      {/* Mouth */}
-      <path d={mouth} stroke="#3D2E24" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        {/* Beak - Perfectly centered, closed, smiling */}
+        <path d="M 85 92 Q 100 85 115 92 L 100 105 Z" fill="#f5a623" stroke="#000" strokeWidth="3.5" strokeLinejoin="round" />
+        <path d="M 85 92 Q 100 100 115 92" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" />
 
-      {/* Cheeks */}
-      <circle cx="30" cy="52" r="4.5" fill="#F0C8C0" opacity="0.5" />
-      <circle cx="70" cy="52" r="4.5" fill="#F0C8C0" opacity="0.5" />
+        {/* Professor Glasses */}
+        <circle cx="72" cy="75" r="26" fill="rgba(255,255,255,0.1)" stroke="#111" strokeWidth="3" />
+        <circle cx="128" cy="75" r="26" fill="rgba(255,255,255,0.1)" stroke="#111" strokeWidth="3" />
+        <line x1="98" y1="75" x2="102" y2="75" stroke="#111" strokeWidth="3" strokeLinecap="round" />
+        <path d="M 46 75 L 30 70" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round" />
+        <path d="M 154 75 L 170 70" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round" />
 
-      {/* Sparkles (celebrate only) */}
-      {state === "celebrate" && <g className="sparkles" opacity="0.7">
-        <path d="M80,20 l1.5,-4.5 4.5,-1.5 -4.5,-1.5 -1.5,-4.5 -1.5,4.5 -4.5,1.5 4.5,1.5 z" fill="#D9A441" />
-        <path d="M18,15 l1,-3 3,-1 -3,-1 -1,-3 -1,3 -3,1 3,1 z" fill="#58CC02" />
-      </g>}
+        {/* ── TEARDROPS (sad) ── */}
+        {state === "sad" && (
+          <g className="guru-teardrop">
+            <circle cx="72" cy="105" r="3" fill="#78C8F0" />
+            <circle cx="128" cy="105" r="3" fill="#78C8F0" />
+          </g>
+        )}
+
+        {/* ── THINKING DOTS ── */}
+        {state === "thinking" && (
+          <g className="guru-think-dots">
+            <circle className="guru-think-dot" cx="130" cy="30" r="2.5" fill="#FFC107" />
+            <circle className="guru-think-dot" cx="145" cy="20" r="3.5" fill="#FFC107" />
+            <circle className="guru-think-dot" cx="165" cy="12" r="5" fill="#FFC107" />
+          </g>
+        )}
+
+        {/* ── SPARKLES (celebrate) ── */}
+        {state === "celebrate" && (
+          <g className="guru-sparkles" opacity="0.8">
+            <path d="M160,30 l2,-6 2,6 6,2 -6,2 -2,6 -2,-6 -6,-2 z" fill="#FFC107" />
+            <path d="M30,50 l1.5,-4 1.5,4 4,1.5 -4,1.5 -1.5,4 -1.5,-4 -4,-1.5 z" fill="#4da6ff" />
+            <circle cx="170" cy="50" r="2" fill="#4da6ff" opacity="0.7" />
+            <circle cx="20" cy="40" r="1.5" fill="#FFC107" opacity="0.7" />
+          </g>
+        )}
+      </g>
     </svg>
   );
 }

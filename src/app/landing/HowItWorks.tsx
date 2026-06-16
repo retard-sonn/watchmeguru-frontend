@@ -65,7 +65,7 @@ export default function HowItWorks() {
 
         <div className="relative">
           <div ref={vineRef} className="absolute left-8 md:left-[68px] top-4 bottom-4 w-[3px] rounded-full" style={{ background: "rgba(123,166,91,0.1)" }}>
-            <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to bottom, #7BA65B, #94A84D)", transformOrigin: "top" }} />
+            <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to bottom, #FF9E1B, #94A84D)", transformOrigin: "top" }} />
           </div>
 
           <div ref={stepsRef}>
@@ -73,14 +73,14 @@ export default function HowItWorks() {
               <div key={step.n} className="grid md:grid-cols-[60px_1fr_160px] gap-6 md:gap-10 items-center py-12 relative">
                 <div className="hidden md:flex justify-center relative z-10">
                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-[18px]"
-                    style={{ background: "linear-gradient(135deg, #7BA65B, #5F8C3E)", color: "#FDF9F0", fontFamily: "var(--font-baloo)", boxShadow: "0 6px 20px rgba(123,166,91,0.3)" }}>
+                    style={{ background: "linear-gradient(135deg, #FF9E1B, #5F8C3E)", color: "#F0FDF4", fontFamily: "var(--font-baloo)", boxShadow: "0 6px 20px rgba(123,166,91,0.3)" }}>
                     {step.n}
                   </div>
                 </div>
                 <div>
                   <div className="md:hidden flex items-center gap-4 mb-4">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-[16px] flex-shrink-0"
-                      style={{ background: "linear-gradient(135deg, #7BA65B, #5F8C3E)", color: "#FDF9F0", fontFamily: "var(--font-baloo)" }}>
+                      style={{ background: "linear-gradient(135deg, #FF9E1B, #5F8C3E)", color: "#F0FDF4", fontFamily: "var(--font-baloo)" }}>
                       {step.n}
                     </div>
                   </div>

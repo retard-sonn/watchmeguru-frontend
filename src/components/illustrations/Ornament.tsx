@@ -11,9 +11,9 @@ export default function Ornament({ variant = "dots" }: Props) {
     ),
     dots: (
       <>
-        <circle cx="6" cy="6" r="2.5" fill="#D9A441" opacity="0.4" />
-        <circle cx="18" cy="6" r="3" fill="#7BA65B" opacity="0.35" />
-        <circle cx="30" cy="6" r="2" fill="#D9A441" opacity="0.45" />
+        <circle cx="6" cy="6" r="2.5" fill="#58CC02" opacity="0.4" />
+        <circle cx="18" cy="6" r="3" fill="#FF9E1B" opacity="0.35" />
+        <circle cx="30" cy="6" r="2" fill="#58CC02" opacity="0.45" />
         <circle cx="42" cy="6" r="2.5" fill="#94A84D" opacity="0.3" />
       </>
     ),

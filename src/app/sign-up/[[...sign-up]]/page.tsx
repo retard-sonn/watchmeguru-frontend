@@ -71,7 +71,7 @@ export default function SignUpPage() {
               Plant your seed.
             </h1>
             <p className="text-[15px] font-medium" style={{ color: "var(--ink-light)" }}>
-              Your AI companion starts tomorrow.
+              Your intelligent companion starts tomorrow.
             </p>
           </div>
 

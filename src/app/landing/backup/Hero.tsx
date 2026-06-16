@@ -91,7 +91,7 @@ export default function Hero() {
                 style={{
                   width: 420,
                   height: 420,
-                  background: "radial-gradient(circle, rgba(217,164,65,0.12) 0%, transparent 70%)",
+                  background: "radial-gradient(circle, rgba(88,204,2,0.12) 0%, transparent 70%)",
                 }}
               />
               <HeroWorld />
@@ -115,7 +115,7 @@ export default function Hero() {
           transition={{ duration: 2, repeat: Infinity }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="#9B8E84" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4 6L8 10L12 6" stroke="#6B8F5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </motion.div>
       </motion.div>

@@ -23,7 +23,7 @@ export default function GrowthPlant({ stage = 1 }: Props) {
       {/* Stem */}
       <motion.path
         d={`M30,112 Q28,${112 - height} 30,${112 - height - 10}`}
-        stroke="#7BA65B" strokeWidth="3"
+        stroke="#FF9E1B" strokeWidth="3"
         strokeLinecap="round" fill="none"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
@@ -40,7 +40,7 @@ export default function GrowthPlant({ stage = 1 }: Props) {
         />
       )}
       {stage >= 2 && (
-        <motion.ellipse cx="22" cy="72" rx="10" ry="6" fill="#7BA65B"
+        <motion.ellipse cx="22" cy="72" rx="10" ry="6" fill="#FF9E1B"
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ delay: 0.6, duration: 0.4 }}
           className="anim-leaf"
@@ -59,15 +59,15 @@ export default function GrowthPlant({ stage = 1 }: Props) {
       {/* Flower/bloom */}
       {stage >= 4 && (
         <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1, type: "spring" }}>
-          <circle cx="30" cy="48" r="8" fill="#D9A441" opacity="0.3" />
-          <circle cx="30" cy="48" r="5" fill="#D9A441" />
+          <circle cx="30" cy="48" r="8" fill="#58CC02" opacity="0.3" />
+          <circle cx="30" cy="48" r="5" fill="#58CC02" />
           <circle cx="30" cy="48" r="2.5" fill="#FDF9F0" />
         </motion.g>
       )}
       {stage >= 5 && (
         <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.2, type: "spring" }}>
-          <circle cx="22" cy="45" r="6" fill="#D9A441" opacity="0.25" />
-          <circle cx="38" cy="43" r="5" fill="#D9A441" opacity="0.2" />
+          <circle cx="22" cy="45" r="6" fill="#58CC02" opacity="0.25" />
+          <circle cx="38" cy="43" r="5" fill="#58CC02" opacity="0.2" />
         </motion.g>
       )}
 

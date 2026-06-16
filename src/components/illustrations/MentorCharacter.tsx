@@ -19,7 +19,7 @@ export default function MentorCharacter() {
 
       {/* Belly pattern — leaf motif */}
       <ellipse cx="80" cy="130" rx="20" ry="16" fill="#FDF9F0" opacity="0.8" />
-      <path d="M72,130 Q80,118 88,130 Q80,142 72,130" fill="#7BA65B" opacity="0.5" />
+      <path d="M72,130 Q80,118 88,130 Q80,142 72,130" fill="#FF9E1B" opacity="0.5" />
 
       {/* Eyes */}
       <circle cx="62" cy="105" r="14" fill="#FDF9F0" />
@@ -58,11 +58,11 @@ export default function MentorCharacter() {
 
       {/* Holding a tiny flag */}
       <line x1="38" y1="145" x2="38" y2="100" stroke="#5B4636" strokeWidth="2" />
-      <polygon points="38,100 56,106 38,112" fill="#D9A441" />
+      <polygon points="38,100 56,106 38,112" fill="#58CC02" />
 
       {/* Feet */}
-      <ellipse cx="68" cy="176" rx="12" ry="6" fill="#D9A441" />
-      <ellipse cx="92" cy="176" rx="12" ry="6" fill="#D9A441" />
+      <ellipse cx="68" cy="176" rx="12" ry="6" fill="#58CC02" />
+      <ellipse cx="92" cy="176" rx="12" ry="6" fill="#58CC02" />
 
       {/* Motivation sparkles */}
       {[[30, 80], [130, 75], [150, 100], [15, 110]].map(([x, y], i) => (
@@ -70,7 +70,7 @@ export default function MentorCharacter() {
           key={i}
           x={x} y={y}
           fontSize="10"
-          fill="#D9A441"
+          fill="#58CC02"
           opacity={0.6}
           animate={{ opacity: [0.6, 0, 0.6], y: [y, y - 8, y] }}
           transition={{ duration: 2 + i, repeat: Infinity, delay: i * 0.4 }}

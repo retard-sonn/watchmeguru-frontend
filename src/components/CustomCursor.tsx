@@ -87,7 +87,7 @@ export default function CustomCursor() {
       <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" style={{ display: "block" }}>
         <path
           fill="#FDF9F0"
-          stroke={hoveringRef.current ? "#58CC02" : "#3D2E24"}
+          stroke="#58CC02"
           strokeWidth="1.8"
           d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.35Z"
         />

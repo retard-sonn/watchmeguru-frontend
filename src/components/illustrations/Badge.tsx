@@ -21,8 +21,8 @@ export default function Badge({ icon, label, earned, delayed = 0 }: Props) {
         {/* Badge shape */}
         <polygon
           points="25,2 34,16 50,20 40,32 42,49 25,42 8,49 10,32 0,20 16,16"
-          fill={earned ? "#D9A441" : "#EBE3C8"}
-          stroke={earned ? "#C08A2E" : "rgba(91,70,54,0.15)"}
+          fill={earned ? "#58CC02" : "#EBE3C8"}
+          stroke={earned ? "#46A302" : "rgba(91,70,54,0.15)"}
           strokeWidth="1.5"
         />
         {earned && (
@@ -37,7 +37,7 @@ export default function Badge({ icon, label, earned, delayed = 0 }: Props) {
           {icon}
         </text>
         {/* Ribbon */}
-        <path d="M16,50 Q20,56 25,50 Q30,56 34,50" fill={earned ? "#7BA65B" : "none"} stroke={earned ? "#5F8C3E" : "none"} strokeWidth="1" />
+        <path d="M16,50 Q20,56 25,50 Q30,56 34,50" fill={earned ? "#FF9E1B" : "none"} stroke={earned ? "#5F8C3E" : "none"} strokeWidth="1" />
       </svg>
       <span className="text-[11px] font-semibold text-center" style={{ color: earned ? "var(--earthy)" : "var(--ink-muted)" }}>
         {label}

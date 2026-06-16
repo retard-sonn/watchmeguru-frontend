@@ -14,7 +14,7 @@ export default function Nav() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       scrolled
-        ? "bg-parchment/90 backdrop-blur-xl shadow-[0_1px_0_rgba(91,70,54,0.08)]"
+        ? "bg-parchment/90 backdrop-blur-xl shadow-[0_1px_0_rgba(26,58,10,0.08)]"
         : ""
     }`}>
       <div className="max-w-7xl mx-auto px-6 h-[68px] flex items-center justify-between">

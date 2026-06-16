@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import MagneticButton from "@/components/MagneticButton";
 import Ornament from "@/components/illustrations/Ornament";
 import { useAuth, UserButton } from "@clerk/nextjs";
 
@@ -17,13 +18,13 @@ export default function Nav() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       scrolled
-        ? "bg-parchment/90 backdrop-blur-xl shadow-[0_1px_0_rgba(91,70,54,0.08)]"
+        ? "bg-parchment/90 backdrop-blur-xl shadow-[0_1px_0_rgba(26,58,10,0.08)]"
         : ""
     }`}>
       <div className="max-w-7xl mx-auto px-6 h-[68px] flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-[22px] font-extrabold tracking-tight" style={{ color: "var(--earthy)", fontFamily: "var(--font-baloo)" }}>
-            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span><span className="text-[12px] font-medium ml-0.5" style={{ color: "var(--ink-muted)" }}>.io</span>
+            WatchMe<span style={{ color: "var(--moss)" }}>Guru</span>
           </span>
         </Link>
 
@@ -43,11 +44,12 @@ export default function Nav() {
         <div className="flex items-center gap-3">
           {isLoaded && !userId ? (
             <>
-              <Link href="/sign-in" className="hidden sm:inline-flex btn-earthy text-[14px] py-2.5 px-5">Log in</Link>
-              <Link href="/sign-up" className="hidden sm:inline-flex btn-mustard text-[14px] py-2.5 px-5">Start free</Link>
+              <Link href="/sign-in" className="hidden sm:inline-flex btn-earthy text-[14px] py-2.5 px-5 hover:-translate-y-0.5 transition-transform">Log in</Link>
+              <MagneticButton href="/sign-up" className="hidden sm:inline-flex text-[14px] py-2.5 px-5 font-bold rounded-xl text-white shadow-md hover:-translate-y-0.5 transition-transform" style={{ background: "linear-gradient(135deg, #58CC02 0%, #46A302 100%)" }}>Start free</MagneticButton>
             </>
           ) : isLoaded && userId ? (
             <>
+
               <Link href="/dashboard" className="hidden sm:inline-flex btn-moss text-[14px] py-2.5 px-5">Dashboard</Link>
               <div className="hidden sm:block ml-2"><UserButton /></div>
             </>

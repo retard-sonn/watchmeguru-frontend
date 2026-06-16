@@ -10,13 +10,13 @@ const MARKERS = [
   { lat: 20, lng: 78, color: "#58CC02", label: "India", code: "IN" },
   { lat: 38, lng: -97, color: "#1CB0F6", label: "US", code: "US" },
   { lat: 54, lng: -2, color: "#CE82FF", label: "UK", code: "GB" },
-  { lat: -25, lng: 135, color: "#D9A441", label: "AU", code: "AU" },
+  { lat: -25, lng: 135, color: "#58CC02", label: "AU", code: "AU" },
   { lat: 56, lng: -106, color: "#FF7A00", label: "CA", code: "CA" },
   { lat: 51, lng: 10, color: "#FF4B4B", label: "DE", code: "DE" },
   { lat: 36, lng: 138, color: "#78A6D8", label: "JP", code: "JP" },
   { lat: -15, lng: -50, color: "#94A84D", label: "BR", code: "BR" },
   { lat: 30, lng: 70, color: "#58CC02", label: "PK", code: "PK" },
-  { lat: 9, lng: 8, color: "#D9A441", label: "NG", code: "NG" },
+  { lat: 9, lng: 8, color: "#58CC02", label: "NG", code: "NG" },
 ];
 
 function latLngToVec3(lat: number, lng: number, radius: number): [number, number, number] {
@@ -51,7 +51,7 @@ function Globe({ onSelectCountry }: { onSelectCountry: (code: string) => void })
     <group ref={groupRef}>
       {/* Earth sphere */}
       <Sphere args={[1, 48, 48]}>
-        <meshStandardMaterial color="#7BA65B" roughness={0.7} metalness={0.05} />
+        <meshStandardMaterial color="#FF9E1B" roughness={0.7} metalness={0.05} />
       </Sphere>
       {/* Atmosphere glow */}
       <Sphere args={[1.06, 48, 48]}>

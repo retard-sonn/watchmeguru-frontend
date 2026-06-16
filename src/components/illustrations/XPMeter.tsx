@@ -27,7 +27,7 @@ export default function XPMeter({ progress = 0.4 }: Props) {
       <motion.circle
         cx="30" cy="28" r="18"
         fill="none"
-        stroke="#7BA65B"
+        stroke="#FF9E1B"
         strokeWidth="3"
         strokeLinecap="round"
         strokeDasharray={`${2 * Math.PI * 18}`}
@@ -39,7 +39,7 @@ export default function XPMeter({ progress = 0.4 }: Props) {
       {/* Canopy — tree top */}
       <motion.ellipse
         cx="30" cy="22" rx="14" ry="12"
-        fill="#7BA65B"
+        fill="#FF9E1B"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 1, duration: 0.5, type: "spring" }}
@@ -78,7 +78,7 @@ function Star({ x, y, size, delay }: { x: number; y: number; size: number; delay
     <motion.text
       x={x} y={y}
       fontSize={size * 3}
-      fill="#D9A441"
+      fill="#58CC02"
       textAnchor="middle"
       initial={{ scale: 0, rotate: -30 }}
       animate={{ scale: 1, rotate: 0 }}

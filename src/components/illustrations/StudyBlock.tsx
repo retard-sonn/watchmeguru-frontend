@@ -38,7 +38,7 @@ export default function StudyBlock({ steps = 3, activeStep = 1, delay = 0 }: Pro
           <rect
             x={i * (blockW + gap)} y={6}
             width={blockW} height={blockH} rx="4"
-            fill={i < activeStep ? "#7BA65B" : "#EBE3C8"}
+            fill={i < activeStep ? "#FF9E1B" : "#EBE3C8"}
             stroke={i < activeStep ? "#5F8C3E" : "rgba(91,70,54,0.1)"}
             strokeWidth="1.5"
           />
@@ -71,7 +71,7 @@ export default function StudyBlock({ steps = 3, activeStep = 1, delay = 0 }: Pro
         <motion.line
           x1={blockW / 2} y1={blockH + 2}
           x2={(activeStep - 1) * (blockW + gap) + blockW / 2} y2={blockH + 2}
-          stroke="#7BA65B" strokeWidth="2" strokeLinecap="round"
+          stroke="#FF9E1B" strokeWidth="2" strokeLinecap="round"
           initial={{ pathLength: 0 }}
           whileInView={{ pathLength: 1 }}
           viewport={{ once: true }}

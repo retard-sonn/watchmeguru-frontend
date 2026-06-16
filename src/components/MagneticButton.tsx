@@ -2,6 +2,8 @@
 
 import { useRef, useEffect, type ReactNode } from "react";
 import gsap from "gsap";
+import { fireConfetti } from "@/lib/confetti";
+import { useRouter } from "next/navigation";
 
 interface MagneticButtonProps {
   children: ReactNode;
@@ -11,9 +13,10 @@ interface MagneticButtonProps {
   onClick?: () => void;
 }
 
-export default function MagneticButton({ children, href, className, style, onClick }: MagneticButtonProps) {
+export default function MagneticButton({ children, href, className, style, onClick }: MagneticButtonProps) {    
   const btnRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
   const boundsRef = useRef<DOMRect | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const el = btnRef.current;
@@ -48,15 +51,26 @@ export default function MagneticButton({ children, href, className, style, onCli
     };
   }, []);
 
-  if (href) {
-    return (
-      <a ref={btnRef as any} href={href} className={className} style={{ display: "inline-flex", ...style }}>
-        {children}
-      </a>
-    );
-  }
+  const handleClick = (e: React.MouseEvent) => {
+    fireConfetti();
+
+    // Add a tiny springy 3D push effect
+    if (btnRef.current) {
+      gsap.fromTo(btnRef.current, { scale: 0.95 }, { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.3)" });
+    }
+
+    if (onClick) {
+      onClick();
+    } else if (href) {
+      e.preventDefault();
+      setTimeout(() => {
+        router.push(href);
+      }, 150); // slight delay so we can see the confetti pop
+    }
+  };
+
   return (
-    <button ref={btnRef as any} onClick={onClick} className={className} style={{ display: "inline-flex", ...style }}>
+    <button ref={btnRef as any} onClick={handleClick} className={className} style={{ display: "inline-flex", cursor: "pointer", ...style }}>
       {children}
     </button>
   );

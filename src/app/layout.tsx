@@ -32,8 +32,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "WatchMeGuru.io — Stay accountable. Build discipline. Level up daily.",
-  description: "An AI accountability companion that checks in daily, builds your study ecosystem, and alerts guardians when you go silent.",
+  title: "WatchMeGuru — Stay accountable. Build discipline. Level up daily.",
+  description: "An intelligent accountability companion that checks in daily, builds your study ecosystem, and alerts guardians when you go silent.",
 };
 
 const clerkAppearance = {

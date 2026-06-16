@@ -116,12 +116,12 @@ export function BiologyIcon() {
   }, []);
   
   return (
-    <StickerBg color="#7BA65B">
+    <StickerBg color="#FF9E1B">
       <g ref={ref}>
         {/* Cute potted plant */}
-        <path d="M18 30H30V34C30 35.1 29.1 36 28 36H20C18.9 36 18 35.1 18 34V30Z" fill="#FFF" stroke="#7BA65B" strokeWidth={STROKE} strokeLinejoin="round" />
-        <line x1="24" y1="30" x2="24" y2="20" stroke="#7BA65B" strokeWidth={STROKE} strokeLinecap="round" />
-        <path ref={leafRef} d="M24 24C24 24 16 22 16 16C22 16 24 24 24 24Z" fill="#7BA65B" />
+        <path d="M18 30H30V34C30 35.1 29.1 36 28 36H20C18.9 36 18 35.1 18 34V30Z" fill="#FFF" stroke="#FF9E1B" strokeWidth={STROKE} strokeLinejoin="round" />
+        <line x1="24" y1="30" x2="24" y2="20" stroke="#FF9E1B" strokeWidth={STROKE} strokeLinecap="round" />
+        <path ref={leafRef} d="M24 24C24 24 16 22 16 16C22 16 24 24 24 24Z" fill="#FF9E1B" />
         <path d="M24 20C24 20 32 18 32 12C26 12 24 20 24 20Z" fill="#58CC02" />
       </g>
     </StickerBg>
@@ -137,13 +137,13 @@ export function EconomicsIcon() {
   }, []);
 
   return (
-    <StickerBg color="#D9A441">
+    <StickerBg color="#58CC02">
       <g ref={ref}>
         {/* Rising chart */}
-        <path d="M14 34L14 26 L22 18 L28 24 L34 16" fill="none" stroke="#D9A441" strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="12" y1="36" x2="36" y2="36" stroke="#D9A441" strokeWidth={STROKE} strokeLinecap="round" />
+        <path d="M14 34L14 26 L22 18 L28 24 L34 16" fill="none" stroke="#58CC02" strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="12" y1="36" x2="36" y2="36" stroke="#58CC02" strokeWidth={STROKE} strokeLinecap="round" />
         {/* Bouncing Coin */}
-        <circle ref={coinRef} cx="34" cy="14" r="4" fill="#FFC800" stroke="#D9A441" strokeWidth="1.5" />
+        <circle ref={coinRef} cx="34" cy="14" r="4" fill="#FFC800" stroke="#58CC02" strokeWidth="1.5" />
       </g>
     </StickerBg>
   );
@@ -175,15 +175,15 @@ export function GeographyIcon() {
 export function HistoryIcon() {
   const ref = useBouncyFloat();
   return (
-    <StickerBg color="#D9A441">
+    <StickerBg color="#58CC02">
       <g ref={ref}>
         {/* Ancient scroll / pillar */}
-        <rect x="16" y="14" width="16" height="20" fill="#FFF" stroke="#D9A441" strokeWidth={STROKE} strokeLinejoin="round" />
-        <line x1="12" y1="14" x2="36" y2="14" stroke="#D9A441" strokeWidth={STROKE} strokeLinecap="round" />
-        <line x1="12" y1="34" x2="36" y2="34" stroke="#D9A441" strokeWidth={STROKE} strokeLinecap="round" />
-        <line x1="20" y1="18" x2="28" y2="18" stroke="#D9A441" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="20" y1="24" x2="28" y2="24" stroke="#D9A441" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="20" y1="30" x2="25" y2="30" stroke="#D9A441" strokeWidth="1.5" strokeLinecap="round" />
+        <rect x="16" y="14" width="16" height="20" fill="#FFF" stroke="#58CC02" strokeWidth={STROKE} strokeLinejoin="round" />
+        <line x1="12" y1="14" x2="36" y2="14" stroke="#58CC02" strokeWidth={STROKE} strokeLinecap="round" />
+        <line x1="12" y1="34" x2="36" y2="34" stroke="#58CC02" strokeWidth={STROKE} strokeLinecap="round" />
+        <line x1="20" y1="18" x2="28" y2="18" stroke="#58CC02" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="20" y1="24" x2="28" y2="24" stroke="#58CC02" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="20" y1="30" x2="25" y2="30" stroke="#58CC02" strokeWidth="1.5" strokeLinecap="round" />
       </g>
     </StickerBg>
   );

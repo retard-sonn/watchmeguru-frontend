@@ -18,7 +18,7 @@ export default function HeroWorld() {
       {/* Isometric terrain platform */}
       <motion.polygon
         points="300,360 500,390 300,420 100,390"
-        fill="#7BA65B"
+        fill="#FF9E1B"
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.8 }}
@@ -28,11 +28,11 @@ export default function HeroWorld() {
 
       {/* Moss patches */}
       <ellipse cx="240" cy="405" rx="40" ry="8" fill="#94A84D" opacity="0.5" />
-      <ellipse cx="380" cy="412" rx="30" ry="6" fill="#7BA65B" opacity="0.4" />
+      <ellipse cx="380" cy="412" rx="30" ry="6" fill="#FF9E1B" opacity="0.4" />
 
       {/* Study block buildings */}
       <Building x={150} y={340} w={50} h={45} color="#5B4636" />
-      <Building x={220} y={325} w={45} h={60} color="#7BA65B" />
+      <Building x={220} y={325} w={45} h={60} color="#FF9E1B" />
       <Building x={280} y={310} w={55} h={75} color="#94A84D" />
       <Building x={350} y={330} w={50} h={55} color="#5B4636" />
       <Building x={410} y={345} w={40} h={40} color="#7A6554" />
@@ -42,15 +42,15 @@ export default function HeroWorld() {
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <ellipse cx="307" cy="295" rx="10" ry="14" fill="#D9A441" opacity="0.8" />
+        <ellipse cx="307" cy="295" rx="10" ry="14" fill="#58CC02" opacity="0.8" />
         <ellipse cx="307" cy="290" rx="6" ry="10" fill="#E8C65A" opacity="0.9" />
         <ellipse cx="307" cy="287" rx="4" ry="6" fill="#FDF9F0" opacity="0.7" />
       </motion.g>
 
       {/* XP meter — tree rings on left building */}
-      <circle cx="175" cy="315" r="12" fill="none" stroke="#D9A441" strokeWidth="2" opacity="0.7" />
-      <circle cx="175" cy="315" r="8" fill="none" stroke="#D9A441" strokeWidth="1.5" opacity="0.5" />
-      <circle cx="175" cy="315" r="4" fill="#D9A441" opacity="0.3" />
+      <circle cx="175" cy="315" r="12" fill="none" stroke="#58CC02" strokeWidth="2" opacity="0.7" />
+      <circle cx="175" cy="315" r="8" fill="none" stroke="#58CC02" strokeWidth="1.5" opacity="0.5" />
+      <circle cx="175" cy="315" r="4" fill="#58CC02" opacity="0.3" />
 
       {/* Floating trees */}
       <Tree x={120} y={370} />
@@ -79,7 +79,7 @@ export default function HeroWorld() {
       {/* Sun — warm */}
       <motion.circle
         cx="80" cy="80" r="35"
-        fill="#D9A441"
+        fill="#58CC02"
         opacity="0.3"
         animate={{ opacity: [0.2, 0.35, 0.2] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -96,7 +96,7 @@ export default function HeroWorld() {
         <motion.circle
           key={i}
           cx={x} cy={y} r="3"
-          fill="#D9A441"
+          fill="#58CC02"
           opacity="0.6"
           animate={{ y: [y, y - 20, y], opacity: [0.6, 0, 0.6] }}
           transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
@@ -120,7 +120,7 @@ function Tree({ x, y }: { x: number; y: number }) {
   return (
     <g>
       <rect x={x - 2} y={y - 12} width="4" height="12" rx="1" fill="#5B4636" />
-      <ellipse cx={x} cy={y - 16} rx="10" ry="14" fill="#7BA65B" />
+      <ellipse cx={x} cy={y - 16} rx="10" ry="14" fill="#FF9E1B" />
       <ellipse cx={x} cy={y - 20} rx="7" ry="10" fill="#94A84D" />
     </g>
   );

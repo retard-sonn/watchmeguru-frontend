@@ -19,7 +19,7 @@ export default function ProgressVine({ from, to, grown, delay = 0 }: Props) {
   return (
     <motion.path
       d={`M${from.x},${from.y} C${cx1},${cy1} ${cx2},${cy2} ${to.x},${to.y}`}
-      stroke="#7BA65B"
+      stroke="#FF9E1B"
       strokeWidth="2"
       strokeLinecap="round"
       fill="none"

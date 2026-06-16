@@ -74,11 +74,11 @@ export function EarlyBirdBadge({ size = 48, unlocked = true }: { size?: number; 
   const ref = useBadgeAnim();
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 48 48" fill="none" style={{ opacity: unlocked ? 1 : 0.3, filter: unlocked ? "none" : "grayscale(1)" }}>
-      <circle cx="24" cy="24" r="20" fill="#FFF8E0" opacity="0.15" stroke={unlocked ? "#D9A441" : "#9B8E84"} strokeWidth="1.5"/>
-      <circle cx="24" cy="22" r="8" fill={unlocked ? "#D9A441" : "#9B8E84"} opacity={unlocked ? 0.5 : 0.3}/>
+      <circle cx="24" cy="24" r="20" fill="#FFF8E0" opacity="0.15" stroke={unlocked ? "#58CC02" : "#9B8E84"} strokeWidth="1.5"/>
+      <circle cx="24" cy="22" r="8" fill={unlocked ? "#58CC02" : "#9B8E84"} opacity={unlocked ? 0.5 : 0.3}/>
       <path d="M24 14 L25.5 18 L30 18 L26.5 21 L28 25 L24 22.5 L20 25 L21.5 21 L18 18 L22.5 18Z" fill={unlocked ? "#FFC800" : "#9B8E84"} opacity={unlocked ? 0.7 : 0.4}/>
-      <path d="M24 28 L24 38" stroke={unlocked ? "#D9A441" : "#9B8E84"} strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M20 36 L28 36" stroke={unlocked ? "#D9A441" : "#9B8E84"} strokeWidth="1" strokeLinecap="round"/>
+      <path d="M24 28 L24 38" stroke={unlocked ? "#58CC02" : "#9B8E84"} strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M20 36 L28 36" stroke={unlocked ? "#58CC02" : "#9B8E84"} strokeWidth="1" strokeLinecap="round"/>
     </svg>
   );
 }

@@ -279,7 +279,7 @@ export default function SetupWizard({ onComplete, onDismiss, getToken, initialPr
 
       {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-6 py-4">
-        <span className="text-[16px] font-extrabold" style={{ color:"#3D2E24", fontFamily:"var(--font-baloo)" }}>WatchMe<span style={{color:"#7BA65B"}}>Guru</span><span className="text-[11px] font-medium ml-0.5" style={{color:"#9B8E84"}}>.io</span></span>
+        <span className="text-[16px] font-extrabold" style={{ color:"#3D2E24", fontFamily:"var(--font-baloo)" }}>WatchMe<span style={{color:"#7BA65B"}}>Guru</span></span>
         <div className="flex items-center gap-4">
           <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-[rgba(0,0,0,0.03)]" style={{color:"#9B8E84"}}>{submitting ? "Building" : `Step ${step+1}/7`}</span>
           <button onClick={onDismiss} className="text-[13px] font-bold px-4 py-2 rounded-xl hover:bg-[rgba(0,0,0,0.04)]" style={{color:"#9B8E84"}}>Skip for now</button>

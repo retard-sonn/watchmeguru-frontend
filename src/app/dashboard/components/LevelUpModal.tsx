@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Sparkles, Trophy, Zap } from "lucide-react";
 
 interface LevelUpModalProps {
   isOpen: boolean;
@@ -193,7 +192,11 @@ export default function LevelUpModal({ isOpen, onClose, newLevel, levelTitle, pr
                 transition={{ delay: 0.5 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Trophy size={18} />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4H20V8C20 12.418 16.418 16 12 16C7.582 16 4 12.418 4 8V4Z" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M12 16V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M8 22H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
                 Continue Growing
               </motion.button>
             </div>

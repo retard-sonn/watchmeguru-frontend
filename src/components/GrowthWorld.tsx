@@ -21,7 +21,7 @@ interface GrowthWorldProps {
 const TOON_COLORS = {
   trunk: "#5B4636",
   leafPrimary: "#58CC02",
-  leafSecondary: "#7BA65B",
+  leafSecondary: "#FF9E1B",
   leafTertiary: "#94A84D",
   pot: "#FDFDFC",
   glow: "#FFC800"
@@ -38,12 +38,12 @@ function KnowledgeLeaves({ count, stage }: { count: number; stage: number }) {
     for (let i = 0; i < baseCount; i++) {
       const angle = (i / baseCount) * Math.PI * 2;
       const radius = 0.3 + stage * 0.12;
-      const y = 0.4 + stage * 0.2 + (Math.random() * 0.2);
+      const y = 0.4 + stage * 0.2 + (0.5 * 0.2);
       arr.push({
         position: [Math.cos(angle) * radius, y, Math.sin(angle) * radius] as [number, number, number],
-        scale: 0.1 + Math.random() * 0.15,
+        scale: 0.1 + 0.5 * 0.15,
         color: i % 3 === 0 ? TOON_COLORS.leafPrimary : i % 3 === 1 ? TOON_COLORS.leafSecondary : TOON_COLORS.leafTertiary,
-        speed: 1 + Math.random()
+        speed: 1 + 0.5
       });
     }
     return arr;
@@ -165,9 +165,9 @@ function FloatingParticles() {
   const points = useMemo(() => {
     const p = new Float32Array(100 * 3);
     for (let i = 0; i < 100; i++) {
-      p[i * 3] = (Math.random() - 0.5) * 4;
-      p[i * 3 + 1] = Math.random() * 3;
-      p[i * 3 + 2] = (Math.random() - 0.5) * 4;
+      p[i * 3] = (0.5 - 0.5) * 4;
+      p[i * 3 + 1] = 0.5 * 3;
+      p[i * 3 + 2] = (0.5 - 0.5) * 4;
     }
     return p;
   }, []);
@@ -246,7 +246,7 @@ export default function GrowthWorld({ level, streak, tasksCompleted, className =
 
       <div className="absolute bottom-6 right-6">
         <div className="px-4 py-2 rounded-2xl bg-white/80 backdrop-blur-md border-2 border-[rgba(0,0,0,0.04)] shadow-sm flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#D9A441" }} />
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#58CC02" }} />
           <span className="text-[12px] font-bold text-[#6B5D52]">
             {tasksCompleted} {tasksCompleted === 1 ? 'Seed' : 'Seeds'} Planted
           </span>

@@ -112,7 +112,7 @@ export default function DashboardPreview() {
               className="card-earthy p-6 flex flex-col items-center justify-center text-center"
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              style={{ background: "linear-gradient(145deg, #FDF9F0 0%, #FFF8E0 100%)" }}
+              style={{ background: "linear-gradient(145deg, #F0FDF4 0%, #E8FFE8 100%)" }}
             >
               <motion.div
                 className="mb-4"
@@ -122,12 +122,12 @@ export default function DashboardPreview() {
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center"
                   style={{
-                    background: "linear-gradient(135deg, #D9A441, #C08A2E)",
-                    boxShadow: "0 8px 32px rgba(217,164,65,0.35)",
+                    background: "linear-gradient(135deg, #58CC02, #46A302)",
+                    boxShadow: "0 8px 32px rgba(88,204,2,0.35)",
                   }}
                 >
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 4L18 12L6 20V4Z" fill="#FDF9F0" />
+                    <path d="M6 4L18 12L6 20V4Z" fill="#F0FDF4" />
                   </svg>
                 </div>
               </motion.div>
@@ -177,8 +177,8 @@ export default function DashboardPreview() {
                         className={`w-8 h-8 rounded-lg flex items-center justify-center`}
                         style={{
                           background: COMPLETED[i]
-                            ? "linear-gradient(135deg, #7BA65B, #5F8C3E)"
-                            : "rgba(91,70,54,0.05)",
+                            ? "linear-gradient(135deg, #FF9E1B, #5F8C3E)"
+                            : "rgba(26,58,10,0.05)",
                         }}
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
@@ -187,10 +187,10 @@ export default function DashboardPreview() {
                       >
                         {COMPLETED[i] ? (
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M3 7L5.5 9.5L11 4" stroke="#FDF9F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M3 7L5.5 9.5L11 4" stroke="#F0FDF4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ) : (
-                          <div className="w-2 h-2 rounded-full" style={{ background: "rgba(91,70,54,0.2)" }} />
+                          <div className="w-2 h-2 rounded-full" style={{ background: "rgba(26,58,10,0.2)" }} />
                         )}
                       </motion.div>
                     </div>

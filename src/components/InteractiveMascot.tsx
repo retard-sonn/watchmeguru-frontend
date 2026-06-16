@@ -58,17 +58,12 @@ export default function InteractiveMascot({ size = 200, className = "", initialS
       onComplete: () => setIsJiggling(false),
     });
 
-    tl.to(el, { scale: 1.08, duration: 0.1, ease: "power2.out" })
-      .to(el, { scale: 0.95, duration: 0.1, ease: "power2.in" })
-      .to(el, { scale: 1.05, duration: 0.1, ease: "power2.out" })
-      .to(el, { scale: 0.97, duration: 0.08, ease: "power2.in" })
-      .to(el, { scale: 1.02, duration: 0.08, ease: "power2.out" })
-      .to(el, { scale: 1, duration: 0.15, ease: "elastic.out(1, 0.3)" })
-      .to(el, { rotateZ: -5, duration: 0.1 })
-      .to(el, { rotateZ: 5, duration: 0.1 })
-      .to(el, { rotateZ: -3, duration: 0.08 })
-      .to(el, { rotateZ: 3, duration: 0.08 })
-      .to(el, { rotateZ: 0, duration: 0.2, ease: "elastic.out(1, 0.3)" });
+    tl.to(el, { y: "-=20", duration: 0.15, ease: "power2.out" })
+      .to(el, { y: "+=20", duration: 0.15, ease: "power2.in" })
+      .to(el, { rotateZ: -4, duration: 0.1 })
+      .to(el, { rotateZ: 4, duration: 0.1 })
+      .to(el, { rotateZ: -2, duration: 0.08 })
+      .to(el, { rotateZ: 0, duration: 0.15, ease: "elastic.out(1, 0.4)" });
   }, [isJiggling]);
 
   // Float animation
@@ -99,12 +94,12 @@ export default function InteractiveMascot({ size = 200, className = "", initialS
           style={{
             width: size * 1.3,
             height: size * 1.3,
-            background: "radial-gradient(circle, rgba(123,166,91,0.15) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)",
           }} />
 
         {/* Mascot */}
         <div className="mascot-eyes relative">
-          <GuruMascot size={size} state={isJiggling ? "celebrate" : "idle"} />
+          <GuruMascot size={size} state={isJiggling ? "celebrate" : "idle"} lx={eyes.lx} ly={eyes.ly} rx={eyes.rx} ry={eyes.ry} />
         </div>
 
       </div>

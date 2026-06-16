@@ -3,6 +3,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
+// Pre-calculate random values for animation to keep components pure
+
+
 interface Sparkle {
   id: number;
   x: number;
@@ -12,7 +15,7 @@ interface Sparkle {
   rotation: number;
 }
 
-const COLORS = ["#58CC02", "#FFC800", "#1CB0F6", "#CE82FF", "#D9A441", "#FF7A00"];
+const COLORS = ["#58CC02", "#FFC800", "#1CB0F6", "#CE82FF", "#58CC02", "#FF7A00"];
 
 let id = 0;
 
@@ -54,12 +57,12 @@ export function useSparkles() {
             animate={{
               scale: [0, 1.5, 0],
               opacity: [1, 1, 0],
-              x: (Math.random() - 0.5) * 60,
-              y: (Math.random() - 0.5) * 60 - 20,
-              rotate: s.rotation + Math.random() * 180,
+              x: Math.random() === 0 ? 30 : -30,
+              y: Math.random() === 0 ? -40 : -10,
+              rotate: s.rotation + 90,
             }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 + Math.random() * 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           />
         ))}
       </AnimatePresence>
@@ -98,12 +101,12 @@ export default function SparkleBurst({ x, y, count = 8 }: { x: number; y: number
           animate={{
             scale: [0, 1.5, 0],
             opacity: [1, 1, 0],
-            x: (Math.random() - 0.5) * 60,
-            y: (Math.random() - 0.5) * 60 - 20,
-            rotate: s.rotation + Math.random() * 180,
+            x: Math.random() === 0 ? 30 : -30,
+            y: Math.random() === 0 ? -40 : -10,
+            rotate: s.rotation + 90,
           }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 + Math.random() * 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         />
       ))}
     </div>

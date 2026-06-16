@@ -18,10 +18,10 @@ export default function MissionCard({ label, time, delayed = 0 }: Props) {
     >
       <svg viewBox="0 0 40 40" className="w-10 h-10 flex-shrink-0" fill="none">
         <rect x="4" y="4" width="32" height="32" rx="8" fill="#F4EEDB" stroke="rgba(91,70,54,0.15)" strokeWidth="1.5" />
-        <circle cx="20" cy="20" r="6" fill="none" stroke="#7BA65B" strokeWidth="2" />
+        <circle cx="20" cy="20" r="6" fill="none" stroke="#FF9E1B" strokeWidth="2" />
         <motion.path
           d="M17,20 L19,22 L23,18"
-          stroke="#7BA65B"
+          stroke="#FF9E1B"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

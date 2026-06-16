@@ -234,7 +234,7 @@ export default function DashboardPage() {
             <motion.div className="rounded-3xl p-6 text-center" initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}}
               style={{background:"linear-gradient(170deg, #FDFDFC 0%, #F8FAF5 100%)",border:"1.5px solid rgba(123,166,91,0.1)",boxShadow:"0 2px 20px rgba(0,0,0,0.03)"}}>
               <div className="flex justify-center mb-3 group cursor-pointer">
-                <motion.div whileTap={{scale:0.9}} whileHover={{scale:1.05}}><InteractiveMascot size={180}/></motion.div>
+                <InteractiveMascot size={200}/>
               </div>
               <h2 className="text-[18px] font-extrabold mb-1" style={{fontFamily:"var(--font-baloo)",color:"#3D2E24"}}>{studentName}</h2>
               <div className="flex items-center justify-center gap-2 mb-3">

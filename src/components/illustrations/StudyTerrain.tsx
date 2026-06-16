@@ -11,7 +11,7 @@ interface Props {
 export default function StudyTerrain({ hours, maxHours = 8, label, day }: Props) {
   const heightPct = Math.min(hours / maxHours, 1);
   const barHeight = 10 + heightPct * 55;
-  const color = hours >= 6 ? "#7BA65B" : hours >= 3 ? "#94A84D" : hours > 0 ? "#D9A441" : "#EBE3C8";
+  const color = hours >= 6 ? "#FF9E1B" : hours >= 3 ? "#94A84D" : hours > 0 ? "#58CC02" : "#EBE3C8";
 
   return (
     <motion.div
@@ -42,7 +42,7 @@ export default function StudyTerrain({ hours, maxHours = 8, label, day }: Props)
           {hours > 0 && (
             <div className="absolute -top-1 left-0 right-0 flex justify-center gap-[2px]">
               {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="w-[3px] h-[4px] rounded-t-full" style={{ background: "#7BA65B", opacity: 0.5 }} />
+                <div key={i} className="w-[3px] h-[4px] rounded-t-full" style={{ background: "#FF9E1B", opacity: 0.5 }} />
               ))}
             </div>
           )}

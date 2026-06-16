@@ -83,7 +83,7 @@ export default function HowItWorks() {
           >
             <motion.div
               className="absolute inset-0 rounded-full"
-              style={{ background: "linear-gradient(to bottom, #7BA65B, #94A84D)", transformOrigin: "top" }}
+              style={{ background: "linear-gradient(to bottom, #FF9E1B, #94A84D)", transformOrigin: "top" }}
               initial={{ scaleY: 0 }}
               animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
               transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
@@ -104,8 +104,8 @@ export default function HowItWorks() {
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold text-[18px]"
                   style={{
-                    background: "linear-gradient(135deg, #7BA65B, #5F8C3E)",
-                    color: "#FDF9F0",
+                    background: "linear-gradient(135deg, #FF9E1B, #5F8C3E)",
+                    color: "#F0FDF4",
                     fontFamily: "var(--font-baloo)",
                     boxShadow: "0 6px 20px rgba(123,166,91,0.3)",
                   }}
@@ -120,8 +120,8 @@ export default function HowItWorks() {
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-[16px] flex-shrink-0"
                     style={{
-                      background: "linear-gradient(135deg, #7BA65B, #5F8C3E)",
-                      color: "#FDF9F0",
+                      background: "linear-gradient(135deg, #FF9E1B, #5F8C3E)",
+                      color: "#F0FDF4",
                       fontFamily: "var(--font-baloo)",
                     }}
                   >

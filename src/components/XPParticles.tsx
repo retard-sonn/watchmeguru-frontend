@@ -20,7 +20,7 @@ export default function XPParticles() {
         width: ${size}px;
         height: ${size}px;
         border-radius: 50%;
-        background: ${isGreen ? "rgba(123,166,91,0.3)" : "rgba(217,164,65,0.2)"};
+        background: ${isGreen ? "rgba(123,166,91,0.3)" : "rgba(88,204,2,0.2)"};
         box-shadow: 0 0 ${size * 3}px ${isGreen ? "rgba(88,204,2,0.3)" : "rgba(255,200,0,0.2)"};
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
