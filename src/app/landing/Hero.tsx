@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -140,6 +140,11 @@ export default function Hero() {
   }, []);
 
   useGSAP(() => {
+    if (isMobile) {
+      gsap.to(".node-wrapper", { scale: 1, opacity: 1, y: 0, duration: 0.5 });
+      return;
+    }
+    
     setBoardX.current = gsap.quickTo(boardRef.current, "x", { duration: 0.9, ease: "power2.out" });
     setBoardY.current = gsap.quickTo(boardRef.current, "y", { duration: 0.9, ease: "power2.out" });
     gsap.ticker.add(updateWires);
@@ -178,7 +183,7 @@ export default function Hero() {
     });
 
     return () => gsap.ticker.remove(updateWires);
-  }, { scope: sectionRef });
+  }, { scope: sectionRef, dependencies: [isMobile] });
 
   return (
     <section 
@@ -201,11 +206,12 @@ export default function Hero() {
       {/* THE CANVAS BOARD */}
       <div 
         ref={boardRef} 
-        className="relative w-full h-screen shrink-0 flex items-center justify-center select-none"
-        style={{ willChange: "transform", minWidth: "1100px", minHeight: "750px" }}
+        className={`relative w-full ${isMobile ? "min-h-[90vh] py-20 px-6" : "h-screen"} shrink-0 flex items-center justify-center select-none`}
+        style={{ willChange: "transform", minWidth: isMobile ? "auto" : "1100px", minHeight: isMobile ? "auto" : "750px" }}
       >
         
-        {/* SVG Wires */}
+        {/* SVG Wires (Desktop only) */}
+        {!isMobile && (
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
           <defs>
             <filter id="wire-glow">
@@ -216,17 +222,18 @@ export default function Hero() {
           <path ref={wireTargetRef} className="board-wire wire-flow" fill="none" stroke="#F59E0B" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
           <path ref={wireStreakRef} className="board-wire wire-flow" fill="none" stroke="#EF4444" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
           <path ref={wireXpRef} className="board-wire wire-flow" fill="none" stroke="#3B82F6" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="7 11" opacity="0.75" filter="url(#wire-glow)"/>
-          </svg>
+        </svg>
+        )}
 
         {/* 1. CENTER — Glass CTA Node */}
         <motion.div 
-          className="absolute z-20"
-          style={{ left: "50%", top: "50%", x: "-50%", y: "-50%" }}
-          drag dragConstraints={boardRef} dragElastic={0.08} dragMomentum={false}
+          className={`z-20 ${isMobile ? "relative w-full" : "absolute"}`}
+          style={isMobile ? {} : { left: "50%", top: "50%", x: "-50%", y: "-50%" }}
+          drag={!isMobile} dragConstraints={boardRef} dragElastic={0.08} dragMomentum={false}
           whileDrag={{ scale: 1.015, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={centerRef} className="node-wrapper glass-board rounded-[2rem] p-10 lg:p-14 cursor-grab active:cursor-grabbing"
-               style={{ maxWidth: "580px", width: "min(90vw, 580px)" }}>
+          <div ref={centerRef} className={`node-wrapper ${isMobile ? "bg-white/90 border border-white/50 shadow-xl" : "glass-board"} rounded-[2rem] p-8 lg:p-14 ${isMobile ? "" : "cursor-grab active:cursor-grabbing"}`}
+               style={{ maxWidth: "580px", width: "100%", margin: "0 auto" }}>
             {/* Port dots */}
             <div className="absolute -left-3 top-[38%] w-6 h-6 bg-[#F59E0B] rounded-full border-4 border-white shadow-lg hidden lg:block" />
             <div className="absolute -right-3 top-[30%] w-6 h-6 bg-[#58CC02] rounded-full border-4 border-white shadow-lg hidden lg:block" />
@@ -395,6 +402,18 @@ export default function Hero() {
               <div className="mt-3 flex gap-1.5 flex-wrap">
                 {["⚡ Focus", "🎯 Sharp", "🔥 Hot"].map(badge => (
                   <span key={badge} className="text-[10px] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
+                ))}
+              </div>
+          </div>
+        </motion.div>
+
+        {/* Subtle cursor glow */}
+        <div className="awwwards-cursor absolute w-8 h-8 rounded-full border-2 border-[#58CC02] pointer-events-none z-[100] hidden lg:block opacity-0" />
+      </div>
+    </section>
+  );
+}
+x] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
                 ))}
               </div>
           </div>

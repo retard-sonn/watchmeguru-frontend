@@ -102,7 +102,7 @@ export default function ActiveSessionTimer({ subject, topic, durationSeconds, st
     >
       {/* Background radial glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
-        <div className="w-[500px] h-[500px] rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, #58CC02 0%, transparent 70%)" }} />
+        <div className="w-full max-w-[500px] aspect-square rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, #58CC02 0%, transparent 70%)" }} />
       </div>
 
       <div className="relative z-10 flex flex-col items-center w-full">
