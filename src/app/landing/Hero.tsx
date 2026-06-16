@@ -50,26 +50,41 @@ const eliteStyles = `
   }
 
   @media (max-width: 1023px) {
-    .pos-center-wrap { left: 50%; top: 50%; margin-left: -175px; margin-top: -240px; width: 350px; }
-    .pos-mascot-wrap { left: 50%; top: 50%; margin-left: -10px; margin-top: -360px; }
-    .pos-mascot-scale { transform: scale(0.65); transform-origin: bottom left; }
-    .pos-target-wrap { left: 50%; top: 50%; margin-left: -190px; margin-top: -350px; }
-    .pos-target-scale { transform: scale(0.65); transform-origin: bottom right; }
-    .pos-streak-wrap { left: 50%; top: 50%; margin-left: -150px; margin-top: 140px; }
-    .pos-streak-scale { transform: scale(0.7); transform-origin: top right; }
-    .pos-xp-wrap     { left: 50%; top: 50%; margin-left: -10px; margin-top: 170px; }
-    .pos-xp-scale    { transform: scale(0.7); transform-origin: top left; }
-    .hero-board      { min-height: 850px; overflow: hidden; }
+    .pos-center-wrap, .pos-mascot-wrap, .pos-target-wrap, .pos-streak-wrap, .pos-xp-wrap {
+       position: relative !important;
+       left: auto !important;
+       top: auto !important;
+       margin: 0 !important;
+       transform: none !important;
+       width: 100% !important;
+    }
+    .pos-mascot-scale, .pos-target-scale, .pos-streak-scale, .pos-xp-scale {
+       transform: none !important;
+    }
+    .hero-board {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       padding-top: 100px;
+       padding-bottom: 60px;
+       gap: 32px;
+       min-height: auto;
+    }
+    /* Mobile-specific tilting for visual interest */
+    .mobile-tilt-1 { transform: rotate(2deg) translateY(10px); }
+    .mobile-tilt-2 { transform: rotate(-3deg) translateY(-10px); }
+    .mobile-tilt-3 { transform: rotate(1deg) translateY(5px); }
+    .mobile-tilt-4 { transform: rotate(-2deg) translateY(-5px); }
   }
   @media (min-width: 1024px) {
-    .pos-center-wrap { left: 50%; top: 50%; margin-left: -290px; margin-top: -200px; width: 580px; }
-    .pos-mascot-wrap { left: 50%; top: 50%; margin-left: 350px; margin-top: -220px; }
+    .pos-center-wrap { position: absolute; left: 50%; top: 50%; margin-left: -290px; margin-top: -200px; width: 580px; }
+    .pos-mascot-wrap { position: absolute; left: 50%; top: 50%; margin-left: 350px; margin-top: -220px; }
     .pos-mascot-scale { transform: scale(1); }
-    .pos-target-wrap { left: 50%; top: 50%; margin-left: -530px; margin-top: -200px; }
+    .pos-target-wrap { position: absolute; left: 50%; top: 50%; margin-left: -530px; margin-top: -200px; }
     .pos-target-scale { transform: scale(1); }
-    .pos-streak-wrap { left: 50%; top: 50%; margin-left: -500px; margin-top: 160px; }
+    .pos-streak-wrap { position: absolute; left: 50%; top: 50%; margin-left: -500px; margin-top: 160px; }
     .pos-streak-scale { transform: scale(1); }
-    .pos-xp-wrap     { left: 50%; top: 50%; margin-left: 370px; margin-top: 190px; }
+    .pos-xp-wrap     { position: absolute; left: 50%; top: 50%; margin-left: 370px; margin-top: 190px; }
     .pos-xp-scale    { transform: scale(1); }
     .hero-board      { min-height: 750px; }
   }
@@ -257,7 +272,7 @@ export default function Hero() {
         style={{ willChange: "transform" }}
       >
 
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block">
           <defs>
             <filter id="wire-glow">
               <feGaussianBlur stdDeviation="2" result="blur"/>
@@ -271,11 +286,11 @@ export default function Hero() {
         </svg>
 
         <motion.div 
-          className="absolute z-20 pos-center-wrap"
+          className="z-20 pos-center-wrap w-full px-4 lg:px-0"
           drag dragConstraints={boardRef} dragElastic={0.08} dragMomentum={false}
           whileDrag={{ scale: 1.015, zIndex: 50, cursor: "grabbing" }}
         >
-          <div ref={centerRef} className="node-wrapper glass-board rounded-[2rem] p-8 lg:p-14 cursor-grab active:cursor-grabbing w-full">
+          <div ref={centerRef} className="node-wrapper glass-board rounded-[2rem] p-6 sm:p-8 lg:p-14 cursor-grab active:cursor-grabbing w-full max-w-full lg:max-w-auto mx-auto relative z-30">
             <div className="absolute -left-3 top-[38%] w-6 h-6 bg-[#F59E0B] rounded-full border-4 border-white shadow-lg hidden lg:block" />
             <div className="absolute -right-3 top-[30%] w-6 h-6 bg-[#58CC02] rounded-full border-4 border-white shadow-lg hidden lg:block" />
             <div className="absolute -left-3 bottom-[30%] w-6 h-6 bg-[#EF4444] rounded-full border-4 border-white shadow-lg hidden lg:block" />
@@ -335,152 +350,155 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <motion.div
-          className="absolute z-20 pos-mascot-wrap"
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
-          whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
-        >
-          <div className="pos-mascot-scale">
-            <div ref={mascotRef} className="node-wrapper float-1 cursor-grab active:cursor-grabbing bg-white/80 p-4 rounded-3xl border border-white/60 mx-auto backdrop-blur-sm"
-                 style={{ width: "200px", boxShadow: "0 16px 40px -6px rgba(0,0,0,0.1), inset 0 2px 5px rgba(255,255,255,0.8)", willChange: "transform" }}>
-              <WashiTape color="rgba(255,255,255,0.8)" />
-              <MascotPenguin className="w-32 h-32" />
-              <div className="text-center mt-2">
-                <p className="font-bold text-[#1A3A0A] text-[14px]">Your Mentor</p>
-                <p className="text-[11px] text-[#3D6B2E] font-medium leading-tight">Always watching.</p>
+        {/* Mobile gamification grid container */}
+        <div className="w-full lg:contents flex flex-row flex-wrap justify-center gap-6 px-4">
+          <motion.div
+            className="z-20 pos-mascot-wrap w-auto lg:w-full"
+            drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+            whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
+          >
+            <div className="pos-mascot-scale">
+              <div ref={mascotRef} className="node-wrapper float-1 mobile-tilt-1 cursor-grab active:cursor-grabbing bg-white/80 p-4 rounded-3xl border border-white/60 mx-auto backdrop-blur-sm"
+                   style={{ width: "200px", boxShadow: "0 16px 40px -6px rgba(0,0,0,0.1), inset 0 2px 5px rgba(255,255,255,0.8)", willChange: "transform" }}>
+                <WashiTape color="rgba(255,255,255,0.8)" />
+                <MascotPenguin className="w-32 h-32" />
+                <div className="text-center mt-2">
+                  <p className="font-bold text-[#1A3A0A] text-[14px]">Your Mentor</p>
+                  <p className="text-[11px] text-[#3D6B2E] font-medium leading-tight">Always watching.</p>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div
-          className="absolute z-20 pos-target-wrap"
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
-          whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
-          onDragStart={() => setHintVisible(false)}
-        >
-          <div className="pos-target-scale">
-            <div ref={targetRef} className="node-wrapper float-2 cursor-grab active:cursor-grabbing bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047] mx-auto"
-                 style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", willChange: "transform" }}>
-              <WashiTape color="rgba(255,255,255,0.65)" />
+          <motion.div
+            className="z-20 pos-target-wrap w-auto lg:w-full"
+            drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+            whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
+            onDragStart={() => setHintVisible(false)}
+          >
+            <div className="pos-target-scale">
+              <div ref={targetRef} className="node-wrapper float-2 mobile-tilt-2 cursor-grab active:cursor-grabbing bg-[#FEF08A] p-6 rounded-2xl border border-[#FDE047] mx-auto"
+                   style={{ width: "248px", boxShadow: "0 16px 40px -6px rgba(202,138,4,0.25), inset 0 2px 5px rgba(255,255,255,0.55)", willChange: "transform" }}>
+                <WashiTape color="rgba(255,255,255,0.65)" />
 
-              {hintVisible && (
-                <div className="absolute -top-11 -right-6 bg-[#1A3A0A] text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg rotate-12 flex items-center gap-1 pointer-events-none z-50 whitespace-nowrap">
-                  Drag me! 👋
-                  <div className="absolute -bottom-1 left-5 w-2 h-2 bg-[#1A3A0A] rotate-45" />
+                {hintVisible && (
+                  <div className="absolute -top-11 -right-6 bg-[#1A3A0A] text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg rotate-12 flex items-center gap-1 pointer-events-none z-50 whitespace-nowrap">
+                    Drag me! 👋
+                    <div className="absolute -bottom-1 left-5 w-2 h-2 bg-[#1A3A0A] rotate-45" />
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 mb-4 mt-2">
+                  <div className="p-1.5 bg-[#EAB308] rounded-lg shadow-sm">
+                    <TargetIcon />
+                  </div>
+                  <p className="font-extrabold text-[#854D0E] text-[17px]" style={{ fontFamily: "var(--font-baloo)" }}>
+                    Today's Targets
+                  </p>
                 </div>
-              )}
-
-              <div className="flex items-center gap-2 mb-4 mt-2">
-                <div className="p-1.5 bg-[#EAB308] rounded-lg shadow-sm">
-                  <TargetIcon />
+                <div className="space-y-2.5 font-semibold text-[#A16207] text-[14px] bg-white/45 p-3 rounded-xl border border-white/50">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
+                    Physics — 30 min
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
+                    Maths — 45 min
+                  </div>
+                  <div className="flex items-center gap-2.5 opacity-60">
+                    <div className="w-2 h-2 rounded-full bg-[#D97706] flex-shrink-0" />
+                    Chemistry — 1h
+                  </div>
                 </div>
-                <p className="font-extrabold text-[#854D0E] text-[17px]" style={{ fontFamily: "var(--font-baloo)" }}>
-                  Today's Targets
-                </p>
+                <p className="text-[11px] font-bold text-[#A16207]/60 mt-2.5 text-right">Tap to mark done ✓</p>   
               </div>
-              <div className="space-y-2.5 font-semibold text-[#A16207] text-[14px] bg-white/45 p-3 rounded-xl border border-white/50">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
-                  Physics — 30 min
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-[#EAB308] flex-shrink-0" />
-                  Maths — 45 min
-                </div>
-                <div className="flex items-center gap-2.5 opacity-60">
-                  <div className="w-2 h-2 rounded-full bg-[#D97706] flex-shrink-0" />
-                  Chemistry — 1h
-                </div>
-              </div>
-              <p className="text-[11px] font-bold text-[#A16207]/60 mt-2.5 text-right">Tap to mark done ✓</p>   
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div
-          className="absolute z-20 pos-streak-wrap"
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
-          whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
-        >
-          <div className="pos-streak-scale">
-            <div ref={streakRef} className="node-wrapper float-3 cursor-grab active:cursor-grabbing bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441] mx-auto"
-                 style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", willChange: "transform" }}>
+          <motion.div
+            className="z-20 pos-streak-wrap w-auto lg:w-full"
+            drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+            whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
+          >
+            <div className="pos-streak-scale">
+              <div ref={streakRef} className="node-wrapper float-3 mobile-tilt-3 cursor-grab active:cursor-grabbing bg-[#FDF9F0] p-0 rounded-xl overflow-hidden border-2 border-[#D9A441] mx-auto"
+                   style={{ width: "210px", boxShadow: "4px 8px 0px rgba(217,164,65,0.2)", willChange: "transform" }}>
 
-                <div className="bg-[#D9A441] h-[35px] w-full flex items-center justify-center gap-6 border-b-2 border-[#B8862D] relative shadow-inner">
-                   <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "20%" }} />
-                   <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "46%" }} />
-                   <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "72%" }} />
-                </div>
+                  <div className="bg-[#D9A441] h-[35px] w-full flex items-center justify-center gap-6 border-b-2 border-[#B8862D] relative shadow-inner">
+                     <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "20%" }} />
+                     <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "46%" }} />
+                     <div className="w-3 h-5 bg-white rounded-full border-2 border-[#B8862D] absolute top-[-10px] shadow-sm" style={{ left: "72%" }} />
+                  </div>
 
-                <div className="p-5 text-center flex flex-col items-center bg-[url('/noise.png')]">
-                   <p className="text-[12px] font-extrabold uppercase tracking-widest text-[#B8862D] mb-1">Day Streak</p>
-                   <div className="relative">
-                     <h3 className="text-[54px] font-extrabold text-[#3D2E24] leading-none mb-3" style={{ fontFamily: "var(--font-baloo)", filter: "drop-shadow(0 4px 4px rgba(0,0,0,0.05))" }}>
-                       14
-                     </h3>
-                     <div className="absolute -top-1 -right-4 text-[24px]">🔥</div>
-                   </div>
+                  <div className="p-5 text-center flex flex-col items-center bg-[url('/noise.png')]">
+                     <p className="text-[12px] font-extrabold uppercase tracking-widest text-[#B8862D] mb-1">Day Streak</p>
+                     <div className="relative">
+                       <h3 className="text-[54px] font-extrabold text-[#3D2E24] leading-none mb-3" style={{ fontFamily: "var(--font-baloo)", filter: "drop-shadow(0 4px 4px rgba(0,0,0,0.05))" }}>
+                         14
+                       </h3>
+                       <div className="absolute -top-1 -right-4 text-[24px]">🔥</div>
+                     </div>
 
-                   <div className="flex gap-2 mt-2 bg-white/50 p-2 rounded-xl border border-[rgba(0,0,0,0.04)]">  
-                     {['M','T','W','T','F'].map((day, i) => (
-                       <div key={i} className="flex flex-col items-center gap-1.5">
-                         <span className="text-[9px] font-bold text-[#9B8E84]">{day}</span>
-                         <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
-                              style={{ background: i === 4 ? "#FF7A00" : "#58CC02", color: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
-                           {i === 4 ? "🔥" : "✓"}
+                     <div className="flex gap-2 mt-2 bg-white/50 p-2 rounded-xl border border-[rgba(0,0,0,0.04)]">  
+                       {['M','T','W','T','F'].map((day, i) => (
+                         <div key={i} className="flex flex-col items-center gap-1.5">
+                           <span className="text-[9px] font-bold text-[#9B8E84]">{day}</span>
+                           <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                                style={{ background: i === 4 ? "#FF7A00" : "#58CC02", color: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+                             {i === 4 ? "🔥" : "✓"}
+                           </div>
                          </div>
-                       </div>
-                     ))}
-                   </div>
-                </div>
+                       ))}
+                     </div>
+                  </div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div 
-          className="absolute z-20 pos-xp-wrap"
-          drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
-          whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
-        >
-          <div className="pos-xp-scale">
-            <div ref={xpRef} className="node-wrapper float-4 cursor-grab active:cursor-grabbing bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE] mx-auto"
-                 style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", willChange: "transform" }}>
-              <WashiTape color="rgba(255,255,255,0.65)" />
+          <motion.div 
+            className="z-20 pos-xp-wrap w-auto lg:w-full"
+            drag dragConstraints={boardRef} dragElastic={0.1} dragMomentum={false}
+            whileDrag={{ scale: 1.05, zIndex: 50, cursor: "grabbing" }}
+          >
+            <div className="pos-xp-scale">
+              <div ref={xpRef} className="node-wrapper float-4 mobile-tilt-4 cursor-grab active:cursor-grabbing bg-[#DBEAFE] p-6 rounded-2xl border border-[#BFDBFE] mx-auto"
+                   style={{ width: "252px", boxShadow: "0 16px 40px -6px rgba(37,99,235,0.22), inset 0 2px 5px rgba(255,255,255,0.55)", willChange: "transform" }}>
+                <WashiTape color="rgba(255,255,255,0.65)" />
 
-                <div className="flex items-center gap-2.5 mb-4 mt-2">
+                  <div className="flex items-center gap-2.5 mb-4 mt-2">
 
-                  <div className="p-2 bg-gradient-to-br from-[#60A5FA] to-[#2563EB] rounded-xl shadow-md"
-                       style={{ boxShadow: "0 4px 14px rgba(37,99,235,0.35)" }}>
-                    <LevelUpIcon />
-                  </div>
-                  <div>
-                    <p className="font-extrabold text-[#1E3A8A] text-[17px] leading-none" style={{ fontFamily: "var(--font-baloo)" }}>Level Up!</p>
-                    <p className="text-[11px] font-bold text-[#1E40AF] opacity-60 mt-0.5">Rank: Focused</p>       
-                  </div>
-                </div>
-
-                <div className="relative mb-2">
-                  <div className="w-full h-3.5 bg-white/70 rounded-full overflow-hidden border border-white shadow-inner">
-                    <div className="h-full rounded-full relative overflow-hidden" style={{ width: "75%", background: "linear-gradient(90deg, #60A5FA, #3B82F6, #2563EB)" }}>
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)", animation: "shimmer 2s linear infinite", backgroundSize: "200% 100%" }} />
+                    <div className="p-2 bg-gradient-to-br from-[#60A5FA] to-[#2563EB] rounded-xl shadow-md"
+                         style={{ boxShadow: "0 4px 14px rgba(37,99,235,0.35)" }}>
+                      <LevelUpIcon />
+                    </div>
+                    <div>
+                      <p className="font-extrabold text-[#1E3A8A] text-[17px] leading-none" style={{ fontFamily: "var(--font-baloo)" }}>Level Up!</p>
+                      <p className="text-[11px] font-bold text-[#1E40AF] opacity-60 mt-0.5">Rank: Focused</p>       
                     </div>
                   </div>
-                <div className="absolute -right-1 -top-1 bg-[#2563EB] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow">75%</div>
-              </div>
-              <div className="flex justify-between items-center text-[12px]">
-                <span className="font-bold text-[#1E40AF]">Lv 12</span>
-                <span className="font-extrabold text-[#1E3A8A]">750 / 1000 XP</span>
-              </div>
 
-                <div className="mt-3 flex gap-1.5 flex-wrap">
-                  {["⚡ Focus", "🎯 Sharp", "🔥 Hot"].map(badge => (
-                    <span key={badge} className="text-[10px] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
-                  ))}
+                  <div className="relative mb-2">
+                    <div className="w-full h-3.5 bg-white/70 rounded-full overflow-hidden border border-white shadow-inner">
+                      <div className="h-full rounded-full relative overflow-hidden" style={{ width: "75%", background: "linear-gradient(90deg, #60A5FA, #3B82F6, #2563EB)" }}>
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)", animation: "shimmer 2s linear infinite", backgroundSize: "200% 100%" }} />
+                      </div>
+                    </div>
+                  <div className="absolute -right-1 -top-1 bg-[#2563EB] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow">75%</div>
                 </div>
+                <div className="flex justify-between items-center text-[12px]">
+                  <span className="font-bold text-[#1E40AF]">Lv 12</span>
+                  <span className="font-extrabold text-[#1E3A8A]">750 / 1000 XP</span>
+                </div>
+
+                  <div className="mt-3 flex gap-1.5 flex-wrap">
+                    {["⚡ Focus", "🎯 Sharp", "🔥 Hot"].map(badge => (
+                      <span key={badge} className="text-[10px] font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded-full">{badge}</span>
+                    ))}
+                  </div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         <div className="awwwards-cursor absolute w-8 h-8 rounded-full border-2 border-[#58CC02] pointer-events-none z-[100] hidden lg:block opacity-0" />
       </div>
