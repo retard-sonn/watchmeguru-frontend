@@ -291,6 +291,3 @@ export default function InAppDemo() {
     </section>
   );
 }
-ction>
-  );
-}
