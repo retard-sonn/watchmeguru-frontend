@@ -8,7 +8,7 @@ export default function SignUpPage() {
       
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#A8C89A 1.5px, transparent 1.5px)', backgroundSize: '38px 38px', opacity: 0.45 }} />
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(212,237,202,0.6) 100%)' }} />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.015]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\'0 0 200 200\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%23111\\'/%3E%3C/svg%3E")' }} />
+      <div className="absolute inset-0 pointer-events-none noise-overlay" />
 
       <div className="absolute hidden lg:block" style={{ top: '15%', left: '12%', animation: 'float1 4s ease-in-out infinite alternate' }}>
         <div className="bg-[#DBEAFE] p-5 rounded-2xl border border-[#BFDBFE] rotate-[-4deg] shadow-lg w-56 relative">
@@ -38,13 +38,18 @@ export default function SignUpPage() {
           0% { transform: translateY(0px) rotate(3deg); }
           100% { transform: translateY(-20px) rotate(5deg); }
         }
+        .cl-rootBox { width: 100% !important; display: flex !important; justify-content: center !important; }
+        .cl-cardBox { box-shadow: none !important; background: transparent !important; border: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
+        .cl-card { box-shadow: none !important; background: transparent !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
         .cl-header { display: none !important; }
-        .cl-card { box-shadow: none !important; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
         .cl-footer { display: none !important; }
+        .cl-socialButtons { padding-bottom: 0 !important; }
+        .cl-dividerRow { margin-bottom: 1rem !important; }
+        .cl-form { padding: 0 !important; }
       `}</style>
 
       <div className="relative z-20 w-full max-w-[420px] px-4">
-        <div className="bg-white/90 backdrop-blur-2xl border border-white/60 p-6 sm:p-8 rounded-[2rem] shadow-[0_20px_60px_-8px_rgba(0,0,0,0.1)]">
+        <div className="bg-white/90 backdrop-blur-2xl border border-white/60 p-6 sm:p-8 rounded-[2rem] shadow-[0_20px_60px_-8px_rgba(0,0,0,0.1)] w-full overflow-hidden">
           <div className="flex flex-col items-center mb-6">
             <Link href="/">
               <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 sm:h-16 object-contain mb-4 hover:scale-105 transition-transform" />
