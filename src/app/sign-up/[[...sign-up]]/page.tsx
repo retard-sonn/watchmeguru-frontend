@@ -1,77 +1,56 @@
-"use client";
-import { SignUp, useUser } from "@clerk/nextjs";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-
-const BULLETS = [
-  "Your mentor checks in every morning. No excuses accepted.",
-  "Missed a session? WatchMeGuru notices before you do.",
-  "3 days inactive? Your parent gets a full report.",
-  "Reaches you on WhatsApp, Telegram or Discord.",
-];
+import { SignUp } from '@clerk/nextjs';
+import Link from 'next/link';
+import MascotPenguin from '../../landing/components/MascotPenguin';
 
 export default function SignUpPage() {
-  const { isLoaded, isSignedIn } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      router.replace("/dashboard");
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  if (isSignedIn) return null;
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #E8F5E0 0%, #D4EDCA 45%, #E0F0D5 100%)' }}>
       
-      <div
-        className="hidden lg:flex flex-col w-[42%] relative overflow-hidden"
-        style={{ background: "linear-gradient(165deg, #3D2E24 0%, #5B4636 40%, #7BA65B 85%, #94A84D 100%)" }}
-      >
-        
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div style={{ position: "absolute", width: 400, height: 400, top: "0%", left: "55%", background: "radial-gradient(circle, rgba(217,164,65,0.16) 0%, transparent 70%)", borderRadius: "50%" }} />
-          <div style={{ position: "absolute", width: 300, height: 300, top: "55%", left: "10%", background: "radial-gradient(circle, rgba(123,166,91,0.15) 0%, transparent 70%)", borderRadius: "50%" }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#A8C89A 1.5px, transparent 1.5px)', backgroundSize: '38px 38px', opacity: 0.45 }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(212,237,202,0.6) 100%)' }} />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.015]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\'0 0 200 200\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%23111\\'/%3E%3C/svg%3E")' }} />
+
+      <div className="absolute hidden lg:block" style={{ top: '15%', left: '12%', animation: 'float1 4s ease-in-out infinite alternate' }}>
+        <div className="bg-[#DBEAFE] p-5 rounded-2xl border border-[#BFDBFE] rotate-[-4deg] shadow-lg w-56 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-5 bg-white/40 shadow-sm rotate-[-3deg]" style={{ clipPath: 'polygon(2% 4%, 98% 0%, 100% 96%, 0% 100%)' }} />
+          <p className="font-extrabold text-[#1E3A8A] text-lg leading-tight mb-2" style={{ fontFamily: 'var(--font-baloo)' }}>Level Up!</p>
+          <p className="text-sm font-semibold text-[#1E40AF]">Your journey to consistency starts here.</p>
         </div>
+      </div>
 
-        <div className="relative z-10 flex flex-col h-full p-14">
-          <Link href="/" className="inline-block">
-            <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 w-auto object-contain" />
-          </Link>
-
-          <div className="flex-1 flex flex-col justify-center max-w-xs">
-            <div className="space-y-5">
-              {BULLETS.map((t, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "rgba(217,164,65,0.18)" }}>
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--mustard)" }} />
-                  </div>
-                  <p className="text-[14px] leading-relaxed" style={{ color: "rgba(253,249,240,0.65)" }}>{t}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="text-[12px]" style={{ color: "rgba(253,249,240,0.25)" }}>
-            JEE · NEET · UPSC · NDA · CBSE
+      <div className="absolute hidden lg:block" style={{ bottom: '15%', right: '12%', animation: 'float2 5s ease-in-out infinite alternate' }}>
+        <div className="bg-white/80 p-4 rounded-3xl border border-white/60 backdrop-blur-sm rotate-[3deg] shadow-xl w-48 relative">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-5 bg-white/60 shadow-sm rotate-[2deg]" style={{ clipPath: 'polygon(2% 4%, 98% 0%, 100% 96%, 0% 100%)' }} />
+          <MascotPenguin className="w-24 h-24 mx-auto" />
+          <div className="text-center mt-2">
+            <p className="font-bold text-[#1A3A0A] text-sm">Your Mentor</p>
+            <p className="text-xs text-[#3D6B2E] font-medium">Ready to guide you.</p>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6 md:p-16 overflow-y-auto texture-bg" style={{ background: "#FDF9F0" }}>
-        <div className="w-full max-w-[440px] py-8">
-          <Link href="/" className="mb-10 block lg:hidden">
-            <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 w-auto object-contain" />
-          </Link>
+      <style>{`
+        @keyframes float1 {
+          0% { transform: translateY(0px) rotate(-4deg); }
+          100% { transform: translateY(-15px) rotate(-2deg); }
+        }
+        @keyframes float2 {
+          0% { transform: translateY(0px) rotate(3deg); }
+          100% { transform: translateY(-20px) rotate(5deg); }
+        }
+        .cl-header { display: none !important; }
+        .cl-card { box-shadow: none !important; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+        .cl-footer { display: none !important; }
+      `}</style>
 
-          <div className="mb-8">
-            <h1 className="font-extrabold tracking-tight mb-2" style={{ fontFamily: "var(--font-baloo)", fontSize: "clamp(26px, 4vw, 32px)", color: "var(--earthy)" }}>
-              Plant your seed.
-            </h1>
-            <p className="text-[15px] font-medium" style={{ color: "var(--ink-light)" }}>
-              Your intelligent companion starts tomorrow.
-            </p>
+      <div className="relative z-20 w-full max-w-[420px] px-4">
+        <div className="bg-white/90 backdrop-blur-2xl border border-white/60 p-6 sm:p-8 rounded-[2rem] shadow-[0_20px_60px_-8px_rgba(0,0,0,0.1)]">
+          <div className="flex flex-col items-center mb-6">
+            <Link href="/">
+              <img src="/watchmeguru.png" alt="WatchMeGuru" className="h-14 sm:h-16 object-contain mb-4 hover:scale-105 transition-transform" />
+            </Link>
+            <h1 className="text-2xl font-extrabold text-[#1A3A0A]" style={{ fontFamily: 'var(--font-baloo)' }}>Join the Club</h1>
+            <p className="text-[13px] font-semibold text-[#3D6B2E] mt-1">Stop failing alone. Get your mentor.</p>
           </div>
 
           <SignUp
@@ -79,25 +58,21 @@ export default function SignUpPage() {
             signInUrl="/sign-in"
             appearance={{
               elements: {
-                rootBox: "w-full",
-                cardBox: "w-full shadow-none border-0 bg-transparent p-0",
-                card: "w-full shadow-none border-0 bg-transparent p-0",
-                header: "hidden",
-                main: "gap-4",
-                socialButtons: "w-full",
-                socialButtonsBlockButton: "w-full rounded-[14px] border border-[rgba(91,70,54,0.15)] font-medium text-[14px] py-3",
-                dividerRow: "my-5",
-                form: "gap-4",
-                formFieldInput: "rounded-[14px] border border-[rgba(91,70,54,0.15)] text-[14px] px-4 py-3.5",
-                formButtonPrimary: "w-full rounded-[14px] font-bold text-[15px] py-3.5",
-                footer: "pt-4",
-              },
+                rootBox: 'w-full',
+                cardBox: 'shadow-none bg-transparent p-0 m-0 border-0',
+                header: 'hidden',
+                footer: 'hidden',
+                formButtonPrimary: 'bg-gradient-to-r from-[#58CC02] to-[#46A302] hover:opacity-90 transition-opacity shadow-md text-white font-bold',
+              }
             }}
           />
 
-          <div className="mt-8 text-center">
-            <Link href="/" className="text-[13px] font-medium hover:underline" style={{ color: "var(--ink-muted)" }}>
-              ← Back to home
+          <div className="mt-6 pt-6 border-t border-black/5 flex flex-col items-center gap-3">
+            <p className="text-[13px] font-medium text-black/60">
+              Already have an account? <Link href="/sign-in" className="text-[#58CC02] font-bold hover:underline">Log in</Link>
+            </p>
+            <Link href="/" className="text-[12px] font-medium hover:underline text-black/40">
+              ? Back to home
             </Link>
           </div>
         </div>
